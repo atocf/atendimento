@@ -1,5 +1,6 @@
 package br.com.atendimento.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -36,5 +37,10 @@ public class CartaoService {
 	
 	public ErrorObject returnError(Long id) {
 		return new ErrorObject("Cartao selecionado não existe", "cartao_id", id);
+	}
+
+	public List<Cartao> findByChamado_Protocolo(Long protocolo) {
+		log.info("Consulta lista de cartões pelo protocolo: {}", protocolo);
+		return repository.findByChamado_Protocolo(protocolo);
 	}
 }

@@ -3,8 +3,6 @@ package br.com.atendimento.services;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +24,6 @@ import br.com.atendimento.wsdl.imp001.DadosRetornoContaCorrente;
 import br.com.atendimento.wsdl.imp001.ObterContasCorrentesPessoa;
 import br.com.atendimento.wsdl.imp001.ObterContasCorrentesPessoaResponse;
 import br.com.atendimento.wsdl.imp001.ParametrosObterContaCorrente;
-
-
 
 @Service
 public class IntegracaoService {
@@ -67,10 +63,19 @@ public class IntegracaoService {
 
 	private static final Logger log = LoggerFactory.getLogger(IntegracaoService.class);
 
-	public Chamado buscarDados(Chamado chamado, String cpf_cnpj)
+	public void buscarDados(Chamado chamado)
 			throws KeyManagementException, NoSuchAlgorithmException, ParseException {
 		
-		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(chamado.getCartao().size() > 0)) {
+		String cpf_cnpj = null;
+		
+		if(chamado.getCpf() != null) {
+			cpf_cnpj = chamado.getCpf();
+		} else if(chamado.getCnpj() != null) {
+			cpf_cnpj = chamado.getCnpj();
+		}
+		
+
+		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(cartaoService.findByChamado_Protocolo(chamado.getProtocolo()).size() > 0)) {
 			log.info("Consulta dados cartão do cpf: {}", chamado.getCpf());
 
 			ConsultarDadosCartao consultarDadosCartao = new ConsultarDadosCartao();
@@ -88,8 +93,6 @@ public class IntegracaoService {
 					&& resp.getConsultarDadosCartaoResult().getCartoes() != null
 					&& resp.getConsultarDadosCartaoResult().getCartoes().getCartao().size() > 0) {
 
-				Set<Cartao> cartoes = new HashSet<Cartao>();
-
 				for (br.com.atendimento.wsdl.cdtp004.Cartao cartao : resp.getConsultarDadosCartaoResult()
 						.getCartoes().getCartao()) {
 					Cartao c = new Cartao();
@@ -101,17 +104,17 @@ public class IntegracaoService {
 					c.setVirtualizavel(cartao.isVirtualizavel());
 					c.setDescricaotipocartao(cartao.getDescricaoTipoCartao());
 					c.setNumerobin(cartao.getNumeroBin());
+					c.setChamado(chamado);
 
-					cartoes.add(cartaoService.save(c));
+					cartaoService.save(c);
 				}
-
-				chamado.setCartao(cartoes);
 			}
 
 			log.info("Fim consulta dados cartão");
 		}
 
-		if (chamado.getSubmotivo().getDgp001()) {
+		if (chamado.getSubmotivo().getDgp001() && chamado.getDataatualizacaocadastral() == null) {
+
 			log.info("Consulta dados cliente do cpf/cnpj: {}", cpf_cnpj);
 
 			Dgp001Cliente resp = dgp001Service.consultaCliente(cpf_cnpj);
@@ -126,7 +129,7 @@ public class IntegracaoService {
 			log.info("Fim consulta dados cliente");
 		}
 
-		if (chamado.getSubmotivo().getDgp041() && chamado.getCpf() != null) {
+		if (chamado.getSubmotivo().getDgp041() && chamado.getCpf() != null && chamado.getEscopo() == null) {
 			log.info("Consulta scopo do cpf: {}", chamado.getCpf());
 
 			chamado.setEscopo(dgp041Service.consultaScopo(chamado.getCpf()));
@@ -134,7 +137,7 @@ public class IntegracaoService {
 			log.info("Fim consulta scopo");
 		}
 
-		if (chamado.getSubmotivo().getImp001() && !(chamado.getCartao().size() > 0)) {
+		if (chamado.getSubmotivo().getImp001() && !(contaService.findByChamado_Protocolo(chamado.getProtocolo()).size() > 0)) {
 			log.info("Consulta dados conta do cpf/cnpj: {}", cpf_cnpj);
 
 			ObterContasCorrentesPessoa obterContasCorrentesPessoa = new ObterContasCorrentesPessoa();
@@ -155,8 +158,6 @@ public class IntegracaoService {
 					&& resp.getObterContasCorrentesPessoaResult().getContas().getDadosRetornoContaCorrente()
 							.size() > 0) {
 				
-				Set<Conta> contas = new HashSet<Conta>();
-
 				for (DadosRetornoContaCorrente conta : resp.getObterContasCorrentesPessoaResult().getContas()
 						.getDadosRetornoContaCorrente()) {
 
@@ -169,11 +170,10 @@ public class IntegracaoService {
 					c.setSituacao(conta.getSituacao());
 					c.setDescricaosituacao(conta.getDescricaoSituacao());
 					c.setAbertura(conta.getAbertura().toGregorianCalendar().getTime());
+					c.setChamado(chamado);
 
-					contas.add(contaService.save(c));
+					contaService.save(c);
 				}
-
-				chamado.setConta(contas);
 			}
 
 			log.info("Fim consulta dados conta");
@@ -186,8 +186,5 @@ public class IntegracaoService {
 
 			log.info("Fim consulta status senha");
 		}
-
-		return chamado;
 	}
-
 }
