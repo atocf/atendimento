@@ -60,9 +60,11 @@ public class SubMotivo {
 	@Column(nullable = false)
 	private String nome;
 	
-	//Solicitar sincronismo
 	@Column(nullable = false, columnDefinition = "tinyint(1) DEFAULT 0")
 	private Boolean sincronismo = false;
+	
+	@Column(nullable = false, columnDefinition = "tinyint(1) DEFAULT 0")
+	private Boolean pix = false;
 	
 	//Consulta dados cartão
 	@Column(nullable = false, columnDefinition = "tinyint(1) DEFAULT 0")

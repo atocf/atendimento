@@ -194,17 +194,17 @@ public class ChamadoExcelExporter {
 					createCell(row, columnCount++, "Não encontrada", style, null);
 				}
 
-//				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
-//					String strCartao = "";
-//					for (Cartao cartao : chamado.getCartao()) {
-//						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
-//								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
-//								+ cartao.getDescricaotipocartao() + " | ";
-//					}
-//					createCell(row, columnCount++, strCartao, style, null);
-//				} else {
+				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
+					String strCartao = "";
+					for (Cartao cartao : chamado.getCartao()) {
+						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
+								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
+								+ cartao.getDescricaotipocartao() + " | ";
+					}
+					createCell(row, columnCount++, strCartao, style, null);
+				} else {
 					createCell(row, columnCount++, "Não encontrada", style, null);
-//				}
+				}
 
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
 				linkAbrir.setAddress(abrirLinkInicio + chamado.getOcorrencia() + abrirLinkFim);
@@ -222,19 +222,21 @@ public class ChamadoExcelExporter {
 			} else if (tipo.equals("Sincronizar")) {
 				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
 					for (Conta conta : chamado.getConta()) {
-						Row row = sheet.createRow(rowCount++);
-						int columnCount = 0;
+						if(conta.getDescricaosituacao().equals("LIBERADA")) {
+							Row row = sheet.createRow(rowCount++);
+							int columnCount = 0;
 
-						if (chamado.getCpf() != null) {
-							createCell(row, columnCount++, chamado.getCpf(), style, null);
-							log.info("CPF: {}", chamado.getCpf());
-						} else if (chamado.getCnpj() != null) {
-							createCell(row, columnCount++, chamado.getCnpj(), style, null);
-							log.info("CNPJ: {}", chamado.getCnpj());
-						}
+							if (chamado.getCpf() != null) {
+								createCell(row, columnCount++, chamado.getCpf(), style, null);
+								log.info("CPF: {}", chamado.getCpf());
+							} else if (chamado.getCnpj() != null) {
+								createCell(row, columnCount++, chamado.getCnpj(), style, null);
+								log.info("CNPJ: {}", chamado.getCnpj());
+							}
 
-						createCell(row, columnCount++, conta.getAgencia(), style, null);
-						createCell(row, columnCount++, conta.getNumeroconta(), style, null);
+							createCell(row, columnCount++, conta.getAgencia(), style, null);
+							createCell(row, columnCount++, conta.getNumeroconta(), style, null);
+						}						
 					}
 				}
 			}

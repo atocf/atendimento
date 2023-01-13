@@ -34,10 +34,22 @@ public class ExportarService {
 	    }
 	}
 	
-	public void exportarAtendimentoPf(HttpServletResponse response) throws IOException, ParseException {
+	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
 		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
 		
-		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Equipe("Pendente", "BACKOFFICE DÍGITAL");
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente", "BACKOFFICE DÍGITAL", false);
+	    
+	    if(list.size() > 0) {
+	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);
+	    	String[] namesCell = new String[] {"ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA", "OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR", "FECHAR"};	    	
+			excelExporter.export(response, "Atendimento", namesCell);
+	    }
+	}
+	
+	public void exportarAtendimentoPfPix(HttpServletResponse response) throws IOException, ParseException {
+		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
+		
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente", "BACKOFFICE DÍGITAL", true);
 	    
 	    if(list.size() > 0) {
 	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);

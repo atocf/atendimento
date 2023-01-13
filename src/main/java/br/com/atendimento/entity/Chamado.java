@@ -131,12 +131,10 @@ public class Chamado {
 
 	@Column(nullable = true, length = 1000)
 	private String observacao;
-	
-	
+		
 	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
 	private List<Conta> conta;
 	
-//	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
-//	private Set<Cartao> cartao;
-
+	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
+	private Set<Cartao> cartao;
 }
