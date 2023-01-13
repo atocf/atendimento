@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.atendimento.entity.Cartao;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
 import br.com.atendimento.util.DataUtils;
@@ -32,10 +33,10 @@ public class ChamadoExcelExporter {
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
 	private List<Chamado> list;
-	
+
 	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String abrirLinkFim = "%26flw_tema%3D004%26flw_tema_pai%3DFYB83%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3DPNQ%26devolve_nivel_acesso%3D%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
-	
+
 	private String fecharLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String fecharLinkFim = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
 
@@ -100,8 +101,8 @@ public class ChamadoExcelExporter {
 			cell.setCellValue((String) value);
 		}
 		cell.setCellStyle(style);
-		if(link != null) {
-			cell.setHyperlink((XSSFHyperlink)link);
+		if (link != null) {
+			cell.setHyperlink((XSSFHyperlink) link);
 		}
 	}
 
@@ -113,26 +114,26 @@ public class ChamadoExcelExporter {
 		XSSFFont font = workbook.createFont();
 		font.setFontHeight(11);
 		font.setColor(IndexedColors.BLACK.index);
-		
+
 		CellStyle style = workbook.createCellStyle();
 		style.setFont(font);
 		style.setAlignment(HorizontalAlignment.CENTER);
-		
+
 		CellStyle styleDescricao = workbook.createCellStyle();
 		styleDescricao.setFont(font);
 		styleDescricao.setAlignment(HorizontalAlignment.LEFT);
-		
+
 		XSSFFont fontLink = workbook.createFont();
 		fontLink.setFontHeight(11);
 		fontLink.setColor(IndexedColors.BLUE.index);
 		fontLink.setUnderline(FontUnderline.SINGLE);
-		
+
 		CellStyle styleLink = workbook.createCellStyle();
 		styleLink.setFont(fontLink);
 		styleLink.setAlignment(HorizontalAlignment.CENTER);
-		
+
 		XSSFCreationHelper helper = workbook.getCreationHelper();
-		
+
 		for (Chamado chamado : list) {
 			if (tipo.equals("Atendimento")) {
 				Row row = sheet.createRow(rowCount++);
@@ -144,11 +145,11 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, chamado.getQtdresolucao(), style, null);
 				createCell(row, columnCount++, chamado.getOcorrencia(), style, null);
 				createCell(row, columnCount++, chamado.getProtocolo(), style, null);
-				if(chamado.getCpf() != null) {
+				if (chamado.getCpf() != null) {
 					createCell(row, columnCount++, chamado.getCpf(), style, null);
-				} else if(chamado.getCnpj() != null) {
+				} else if (chamado.getCnpj() != null) {
 					createCell(row, columnCount++, chamado.getCnpj(), style, null);
-				}				
+				}
 				createCell(row, columnCount++, chamado.getCard(), style, null);
 				if (chamado.getSquad() != null) {
 					createCell(row, columnCount++, chamado.getSquad().getNome(), style, null);
@@ -160,7 +161,8 @@ public class ChamadoExcelExporter {
 				} else {
 					createCell(row, columnCount++, "", style, null);
 				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style, null);
+				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style,
+						null);
 				createCell(row, columnCount++, chamado.getObservacao(), style, null);
 				if (chamado.getCausaraiz() != null) {
 					createCell(row, columnCount++, chamado.getCausaraiz().getNome(), style, null);
@@ -180,20 +182,41 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++,
 						DataUtils.format(chamado.getDataatualizacaocadastral(), DataUtils.formatoData), style, null);
 				createCell(row, columnCount++, chamado.getEscopo(), style, null);
-				createCell(row, columnCount++, "CONTA", style, null);
-				createCell(row, columnCount++, "CARTAO", style, null);
-				
+
+				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
+					String strConta = "";
+					for (Conta conta : chamado.getConta()) {
+						strConta = strConta + "Tipo:" + conta.getTipoconta() + "-" + conta.getDescricaosituacao() + "-"
+								+ conta.getAgencia() + "/" + conta.getNumeroconta() + " | ";
+					}
+					createCell(row, columnCount++, strConta, style, null);
+				} else {
+					createCell(row, columnCount++, "Não encontrada", style, null);
+				}
+
+				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
+					String strCartao = "";
+					for (Cartao cartao : chamado.getCartao()) {
+						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
+								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
+								+ cartao.getDescricaotipocartao() + " | ";
+					}
+					createCell(row, columnCount++, strCartao, style, null);
+				} else {
+					createCell(row, columnCount++, "Não encontrada", style, null);
+				}
+
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
-				linkAbrir.setAddress(abrirLinkInicio+chamado.getOcorrencia()+abrirLinkFim);
-				createCell(row, columnCount++, "Abrir" , styleLink, linkAbrir);
-				
-				if(chamado.getSubmotivo().getEquipe().equals("BACKOFFICE DÍGITAL")) {
-					
+				linkAbrir.setAddress(abrirLinkInicio + chamado.getOcorrencia() + abrirLinkFim);
+				createCell(row, columnCount++, "Abrir", styleLink, linkAbrir);
+
+				if (chamado.getSubmotivo().getEquipe().equals("BACKOFFICE DÍGITAL")) {
+
 					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
-					linkFechar.setAddress(fecharLinkInicio+chamado.getOcorrencia()+fecharLinkFim);
+					linkFechar.setAddress(fecharLinkInicio + chamado.getOcorrencia() + fecharLinkFim);
 					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
 				}
-				
+
 				log.info("Protocolo: {}", chamado.getProtocolo());
 
 			} else if (tipo.equals("Sincronizar")) {
