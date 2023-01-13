@@ -7,12 +7,16 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -63,30 +67,32 @@ public class ChamadoExcelExporter {
 		log.info("Inicio da montagem do header");
 
 		sheet = workbook.createSheet(nameSheet);
+		sheet.setColumnWidth(0, 75);
 
 		Row row = sheet.createRow(0);
 
 		CellStyle style = workbook.createCellStyle();
 		style.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
 		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		style.setAlignment(HorizontalAlignment.CENTER);
 
 		XSSFFont font = workbook.createFont();
 		font.setBold(true);
-		font.setFontHeight(11);
+		font.setFontHeight(12);
 		font.setColor(IndexedColors.WHITE.index);
 		style.setFont(font);
 
 		int rowNumber = 0;
 
 		for (String name : namesCell) {
-			createCell(row, rowNumber, name, style);
+			createCell(row, rowNumber, name, style, null);
 			rowNumber++;
 		}
 
 		log.info("Fim da montagem do header");
 	}
 
-	private void createCell(Row row, int columnCount, Object value, CellStyle style) {
+	private void createCell(Row row, int columnCount, Object value, CellStyle style, XSSFHyperlink link) {
 		sheet.autoSizeColumn(columnCount);
 		Cell cell = row.createCell(columnCount);
 		if (value instanceof Integer) {
@@ -99,6 +105,9 @@ public class ChamadoExcelExporter {
 			cell.setCellValue((String) value);
 		}
 		cell.setCellStyle(style);
+		if(link != null) {
+			cell.setHyperlink((XSSFHyperlink)link);
+		}
 	}
 
 	private void writeDataLines(String tipo) throws ParseException {
@@ -106,65 +115,83 @@ public class ChamadoExcelExporter {
 
 		int rowCount = 1;
 
-		CellStyle style = workbook.createCellStyle();
 		XSSFFont font = workbook.createFont();
 		font.setFontHeight(11);
 		font.setColor(IndexedColors.BLACK.index);
+		
+		CellStyle style = workbook.createCellStyle();
 		style.setFont(font);
-
+		style.setAlignment(HorizontalAlignment.CENTER);
+		
+		XSSFFont fontLink = workbook.createFont();
+		font.setFontHeight(11);
+		font.setColor(IndexedColors.BLUE.index);
+		
+		CellStyle styleLink = workbook.createCellStyle();
+		styleLink.setFont(fontLink);
+		styleLink.setAlignment(HorizontalAlignment.CENTER);
+		
+		XSSFCreationHelper helper = workbook.getCreationHelper();
+		
 		for (Chamado chamado : list) {
 			if (tipo.equals("Atendimento")) {
 				Row row = sheet.createRow(rowCount++);
 				int columnCount = 0;
 
-				createCell(row, columnCount++, chamado.getAnalista().getNome(), style);
-				createCell(row, columnCount++, chamado.getCanalatendimento(), style);
-				createCell(row, columnCount++, chamado.getSubmotivo().getNome(), style);
-				createCell(row, columnCount++, chamado.getQtdresolucao(), style);
-				createCell(row, columnCount++, chamado.getOcorrencia(), style);
-				createCell(row, columnCount++, chamado.getProtocolo(), style);
+				createCell(row, columnCount++, chamado.getAnalista().getNome(), style, null);
+				createCell(row, columnCount++, chamado.getCanalatendimento(), style, null);
+				createCell(row, columnCount++, chamado.getSubmotivo().getNome(), style, null);
+				createCell(row, columnCount++, chamado.getQtdresolucao(), style, null);
+				createCell(row, columnCount++, chamado.getOcorrencia(), style, null);
+				createCell(row, columnCount++, chamado.getProtocolo(), style, null);
 				if(chamado.getCpf() != null) {
-					createCell(row, columnCount++, chamado.getCpf(), style);
+					createCell(row, columnCount++, chamado.getCpf(), style, null);
 				} else if(chamado.getCnpj() != null) {
-					createCell(row, columnCount++, chamado.getCnpj(), style);
+					createCell(row, columnCount++, chamado.getCnpj(), style, null);
 				}				
-				createCell(row, columnCount++, chamado.getCard(), style);
+				createCell(row, columnCount++, chamado.getCard(), style, null);
 				if (chamado.getSquad() != null) {
-					createCell(row, columnCount++, chamado.getSquad().getNome(), style);
+					createCell(row, columnCount++, chamado.getSquad().getNome(), style, null);
 				} else {
-					createCell(row, columnCount++, "", style);
+					createCell(row, columnCount++, "", style, null);
 				}
 				if (chamado.getStatus() != null) {
-					createCell(row, columnCount++, chamado.getStatus().getNome(), style);
+					createCell(row, columnCount++, chamado.getStatus().getNome(), style, null);
 				} else {
-					createCell(row, columnCount++, "", style);
+					createCell(row, columnCount++, "", style, null);
 				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style);
-				createCell(row, columnCount++, chamado.getObservacao(), style);
+				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style, null);
+				createCell(row, columnCount++, chamado.getObservacao(), style, null);
 				if (chamado.getCausaraiz() != null) {
-					createCell(row, columnCount++, chamado.getCausaraiz().getNome(), style);
+					createCell(row, columnCount++, chamado.getCausaraiz().getNome(), style, null);
 				} else {
-					createCell(row, columnCount++, "", style);
+					createCell(row, columnCount++, "", style, null);
 				}
 				createCell(row, columnCount++, DataUtils.format(chamado.getDataabertura(), DataUtils.formatoData),
-						style);
+						style, null);
 				createCell(row, columnCount++, DataUtils.format(chamado.getDatavencimento(), DataUtils.formatoData),
-						style);
-				createCell(row, columnCount++, chamado.getDescricao(), style);
-				createCell(row, columnCount++, chamado.getNome(), style);
-				createCell(row, columnCount++, chamado.getStatussenha(), style);
-				createCell(row, columnCount++, chamado.getEmail(), style);
-				createCell(row, columnCount++, chamado.getTelefone(), style);
-				createCell(row, columnCount++, chamado.getStatussms(), style);
+						style, null);
+				createCell(row, columnCount++, chamado.getDescricao(), style, null);
+				createCell(row, columnCount++, chamado.getNome(), style, null);
+				createCell(row, columnCount++, chamado.getStatussenha(), style, null);
+				createCell(row, columnCount++, chamado.getEmail(), style, null);
+				createCell(row, columnCount++, chamado.getTelefone(), style, null);
+				createCell(row, columnCount++, chamado.getStatussms(), style, null);
 				createCell(row, columnCount++,
-						DataUtils.format(chamado.getDataatualizacaocadastral(), DataUtils.formatoData), style);
-				createCell(row, columnCount++, chamado.getEscopo(), style);
-				createCell(row, columnCount++, "CONTA", style);
-				createCell(row, columnCount++, "CARTAO", style);
+						DataUtils.format(chamado.getDataatualizacaocadastral(), DataUtils.formatoData), style, null);
+				createCell(row, columnCount++, chamado.getEscopo(), style, null);
+				createCell(row, columnCount++, "CONTA", style, null);
+				createCell(row, columnCount++, "CARTAO", style, null);
+				
+				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
+				linkAbrir.setAddress(abrirLinkInicio+chamado.getOcorrencia()+abrirLinkFim);
+				createCell(row, columnCount++, "Abrir" , styleLink, linkAbrir);
 				
 				if(chamado.getSubmotivo().getEquipe().equals("BACKOFFICE DÍGITAL")) {
-					createCell(row, columnCount++, abrirLinkInicio+chamado.getOcorrencia()+abrirLinkFim, style);
-					createCell(row, columnCount++, fecharLinkInicio+chamado.getOcorrencia()+fecharLinkFim, style);
+					
+					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
+					linkFechar.setAddress(fecharLinkInicio+chamado.getOcorrencia()+fecharLinkFim);
+					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
 				}
 				
 				log.info("Protocolo: {}", chamado.getProtocolo());
@@ -178,15 +205,15 @@ public class ChamadoExcelExporter {
 						int columnCount = 0;
 
 						if (chamado.getCpf() != null) {
-							createCell(row, columnCount++, chamado.getCpf(), style);
+							createCell(row, columnCount++, chamado.getCpf(), style, null);
 							log.info("CPF: {}", chamado.getCpf());
 						} else if (chamado.getCnpj() != null) {
-							createCell(row, columnCount++, chamado.getCnpj(), style);
+							createCell(row, columnCount++, chamado.getCnpj(), style, null);
 							log.info("CNPJ: {}", chamado.getCnpj());
 						}
 
-						createCell(row, columnCount++, conta.getAgencia(), style);
-						createCell(row, columnCount++, conta.getNumeroconta(), style);
+						createCell(row, columnCount++, conta.getAgencia(), style, null);
+						createCell(row, columnCount++, conta.getNumeroconta(), style, null);
 					}
 				}
 			}
