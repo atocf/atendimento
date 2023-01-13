@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 **/src/main/java/**/wsdl/
 **/src/main/**/META-INF/
+application.properties
 
 ### STS ###
 .apt_generated
