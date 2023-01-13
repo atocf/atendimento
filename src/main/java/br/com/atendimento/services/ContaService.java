@@ -1,5 +1,6 @@
 package br.com.atendimento.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -36,6 +37,11 @@ public class ContaService {
 	
 	public ErrorObject returnError(Long id) {
 		return new ErrorObject("Conta selecionado não existe", "conta_id", id);
+	}
+
+	public List<Conta> findByChamado_Protocolo(Long protocolo) {
+		log.info("Consulta lista de contas pelo protocolo: {}", protocolo);
+		return repository.findByChamado_Protocolo(protocolo);
 	}
 
 }

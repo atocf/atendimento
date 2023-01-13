@@ -109,16 +109,14 @@ public class ImportarService {
 			String cpf_ou_cnpj = CpfUtils.valid(pd.getCpf());
 			if (cpf_ou_cnpj != null) {
 				chamado.setCpf(cpf_ou_cnpj);
-				chamado = integracaoService.buscarDados(chamado, chamado.getCpf());
 			} else {
 				cpf_ou_cnpj = CnpjUtils.valid(pd.getCpf());
 				if (cpf_ou_cnpj != null) {
 					chamado.setCnpj(cpf_ou_cnpj);
-					chamado = integracaoService.buscarDados(chamado, chamado.getCnpj());
 				}
 			}
 
-			chamadoService.save(chamado);
+			integracaoService.buscarDados(chamadoService.save(chamado)); 
 
 			total_importado++;
 

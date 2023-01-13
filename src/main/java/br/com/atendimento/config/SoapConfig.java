@@ -25,7 +25,7 @@ public class SoapConfig {
 	@Bean
 	public Jaxb2Marshaller marshallerImp001Client() {
 		Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-		jaxb2Marshaller.setPackagesToScan("br.com.bmg.atendimento.wsdl.imp001");
+		jaxb2Marshaller.setPackagesToScan("br.com.atendimento.wsdl.imp001");
 		return jaxb2Marshaller;
 	}
 	
@@ -40,7 +40,7 @@ public class SoapConfig {
 	@Bean
 	public Jaxb2Marshaller marshallerCdtp004Client() {
 		Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-		jaxb2Marshaller.setPackagesToScan("br.com.bmg.atendimento.wsdl.cdtp004");
+		jaxb2Marshaller.setPackagesToScan("br.com.atendimento.wsdl.cdtp004");
 		return jaxb2Marshaller;
 	}
 	
