@@ -32,6 +32,12 @@ public class ChamadoExcelExporter {
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
 	private List<Chamado> list;
+	
+	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
+	private String abrirLinkFim = "%26flw_tema%3D004%26flw_tema_pai%3DFYB83%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3DPNQ%26devolve_nivel_acesso%3D%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
+	
+	private String fecharLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
+	private String fecharLinkFim = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
 
 	private static final Logger log = LoggerFactory.getLogger(ChamadoExcelExporter.class);
 
@@ -107,7 +113,7 @@ public class ChamadoExcelExporter {
 		style.setFont(font);
 
 		for (Chamado chamado : list) {
-			if (tipo.equals("Atendimento PF")) {
+			if (tipo.equals("Atendimento")) {
 				Row row = sheet.createRow(rowCount++);
 				int columnCount = 0;
 
@@ -117,7 +123,11 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, chamado.getQtdresolucao(), style);
 				createCell(row, columnCount++, chamado.getOcorrencia(), style);
 				createCell(row, columnCount++, chamado.getProtocolo(), style);
-				createCell(row, columnCount++, chamado.getCpf(), style);
+				if(chamado.getCpf() != null) {
+					createCell(row, columnCount++, chamado.getCpf(), style);
+				} else if(chamado.getCnpj() != null) {
+					createCell(row, columnCount++, chamado.getCnpj(), style);
+				}				
 				createCell(row, columnCount++, chamado.getCard(), style);
 				if (chamado.getSquad() != null) {
 					createCell(row, columnCount++, chamado.getSquad().getNome(), style);
@@ -151,54 +161,12 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, chamado.getEscopo(), style);
 				createCell(row, columnCount++, "CONTA", style);
 				createCell(row, columnCount++, "CARTAO", style);
-
-				log.info("Protocolo: {}", chamado.getProtocolo());
-
-			} else if (tipo.equals("Atendimento PJ")) {
-				Row row = sheet.createRow(rowCount++);
-				int columnCount = 0;
-
-				createCell(row, columnCount++, chamado.getAnalista().getNome(), style);
-				createCell(row, columnCount++, chamado.getCanalatendimento(), style);
-				createCell(row, columnCount++, chamado.getSubmotivo().getNome(), style);
-				createCell(row, columnCount++, chamado.getQtdresolucao(), style);
-				createCell(row, columnCount++, chamado.getOcorrencia(), style);
-				createCell(row, columnCount++, chamado.getProtocolo(), style);
-				createCell(row, columnCount++, chamado.getCnpj(), style);
-				createCell(row, columnCount++, chamado.getCard(), style);
-				if (chamado.getSquad() != null) {
-					createCell(row, columnCount++, chamado.getSquad().getNome(), style);
-				} else {
-					createCell(row, columnCount++, "", style);
+				
+				if(chamado.getSubmotivo().getEquipe().equals("BACKOFFICE DÍGITAL")) {
+					createCell(row, columnCount++, abrirLinkInicio+chamado.getOcorrencia()+abrirLinkFim, style);
+					createCell(row, columnCount++, fecharLinkInicio+chamado.getOcorrencia()+fecharLinkFim, style);
 				}
-				if (chamado.getStatus() != null) {
-					createCell(row, columnCount++, chamado.getStatus().getNome(), style);
-				} else {
-					createCell(row, columnCount++, "", style);
-				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style);
-				createCell(row, columnCount++, chamado.getObservacao(), style);
-				if (chamado.getCausaraiz() != null) {
-					createCell(row, columnCount++, chamado.getCausaraiz().getNome(), style);
-				} else {
-					createCell(row, columnCount++, "", style);
-				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDataabertura(), DataUtils.formatoData),
-						style);
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatavencimento(), DataUtils.formatoData),
-						style);
-				createCell(row, columnCount++, chamado.getDescricao(), style);
-				createCell(row, columnCount++, chamado.getNome(), style);
-				createCell(row, columnCount++, chamado.getStatussenha(), style);
-				createCell(row, columnCount++, chamado.getEmail(), style);
-				createCell(row, columnCount++, chamado.getTelefone(), style);
-				createCell(row, columnCount++, chamado.getStatussms(), style);
-				createCell(row, columnCount++,
-						DataUtils.format(chamado.getDataatualizacaocadastral(), DataUtils.formatoData), style);
-				createCell(row, columnCount++, chamado.getEscopo(), style);
-				createCell(row, columnCount++, "CONTA", style);
-				createCell(row, columnCount++, "CARTAO", style);
-
+				
 				log.info("Protocolo: {}", chamado.getProtocolo());
 
 			} else if (tipo.equals("Sincronizar")) {
