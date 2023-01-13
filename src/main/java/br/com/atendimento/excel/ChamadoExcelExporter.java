@@ -11,6 +11,7 @@ import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.FontUnderline;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -67,7 +68,6 @@ public class ChamadoExcelExporter {
 		log.info("Inicio da montagem do header");
 
 		sheet = workbook.createSheet(nameSheet);
-		sheet.setColumnWidth(0, 75);
 
 		Row row = sheet.createRow(0);
 
@@ -123,9 +123,14 @@ public class ChamadoExcelExporter {
 		style.setFont(font);
 		style.setAlignment(HorizontalAlignment.CENTER);
 		
+		CellStyle styleDescricao = workbook.createCellStyle();
+		styleDescricao.setFont(font);
+		styleDescricao.setAlignment(HorizontalAlignment.LEFT);
+		
 		XSSFFont fontLink = workbook.createFont();
-		font.setFontHeight(11);
-		font.setColor(IndexedColors.BLUE.index);
+		fontLink.setFontHeight(11);
+		fontLink.setColor(IndexedColors.BLUE.index);
+		fontLink.setUnderline(FontUnderline.SINGLE);
 		
 		CellStyle styleLink = workbook.createCellStyle();
 		styleLink.setFont(fontLink);
@@ -171,7 +176,7 @@ public class ChamadoExcelExporter {
 						style, null);
 				createCell(row, columnCount++, DataUtils.format(chamado.getDatavencimento(), DataUtils.formatoData),
 						style, null);
-				createCell(row, columnCount++, chamado.getDescricao(), style, null);
+				createCell(row, columnCount++, chamado.getDescricao(), styleDescricao, null);
 				createCell(row, columnCount++, chamado.getNome(), style, null);
 				createCell(row, columnCount++, chamado.getStatussenha(), style, null);
 				createCell(row, columnCount++, chamado.getEmail(), style, null);
