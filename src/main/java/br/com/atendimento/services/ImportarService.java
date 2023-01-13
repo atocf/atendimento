@@ -228,6 +228,9 @@ public class ImportarService {
 							Optional<Status> s = statusService.findByNome(a.getStatus());
 							if (s.isPresent()) {
 								chamado.setStatus(s.get());
+								if(!(s.get().getNome().equals("ENCAMINHADO"))) {
+									chamado.setStatusintergrall("Finalizado");
+								}
 							}
 						}
 
