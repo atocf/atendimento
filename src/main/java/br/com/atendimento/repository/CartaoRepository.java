@@ -10,4 +10,5 @@ public interface CartaoRepository extends JpaRepository<Cartao, Long> {
 
 	List<Cartao> findByChamado_Protocolo(Long protocolo);
 
+	List<Cartao> findByChamado_Statusintergrall(String status_intergrall);
 }

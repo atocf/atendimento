@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.atendimento.entity.Cartao;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.excel.ChamadoExcelExporter;
 
@@ -19,6 +20,9 @@ public class ExportarService {
 	
 	@Autowired
 	private ChamadoService chamadoService;
+	
+	@Autowired
+	private CartaoService cartaoService;
 
 	private static final Logger log = LoggerFactory.getLogger(ExportarService.class);
 	
@@ -30,7 +34,7 @@ public class ExportarService {
 	    if(list.size() > 0) {
 	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);
 	    	String[] namesCell = new String[] {"CPF ou CNPJ", "Agência", "Conta"};	    	
-			excelExporter.export(response, "Sincronizar", namesCell);
+			excelExporter.export(response, "Sincronizar", namesCell, null);
 	    }
 	}
 	
@@ -39,10 +43,13 @@ public class ExportarService {
 		
 		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente", "BACKOFFICE DÍGITAL", false);
 	    
-	    if(list.size() > 0) {
+		if(list.size() > 0) {
 	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);
 	    	String[] namesCell = new String[] {"ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA", "OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR", "FECHAR"};	    	
-			excelExporter.export(response, "Atendimento", namesCell);
+			
+	    	List<Cartao> cartoes = cartaoService.findByChamado_Statusintergrall("Pendente");
+	    	
+	    	excelExporter.export(response, "Atendimento", namesCell, cartoes);
 	    }
 	}
 	
@@ -53,8 +60,9 @@ public class ExportarService {
 	    
 	    if(list.size() > 0) {
 	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);
+	    	
 	    	String[] namesCell = new String[] {"ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA", "OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR", "FECHAR"};	    	
-			excelExporter.export(response, "Atendimento", namesCell);
+			excelExporter.export(response, "Atendimento", namesCell, null);
 	    }
 	}
 	
@@ -66,7 +74,10 @@ public class ExportarService {
 	    if(list.size() > 0) {
 	    	ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list);
 	    	String[] namesCell = new String[] {"ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA", "OCORRENCIA", "PROTOCOLO", "CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR"};	    	
-			excelExporter.export(response, "Atendimento", namesCell);
+			
+	    	List<Cartao> cartoes = cartaoService.findByChamado_Statusintergrall("Pendente");
+	    	
+	    	excelExporter.export(response, "Atendimento", namesCell, cartoes);
 	    }
 	}
 }

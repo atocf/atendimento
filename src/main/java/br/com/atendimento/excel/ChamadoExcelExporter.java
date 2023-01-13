@@ -3,6 +3,7 @@ package br.com.atendimento.excel;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -47,10 +48,10 @@ public class ChamadoExcelExporter {
 		workbook = new XSSFWorkbook();
 	}
 
-	public void export(HttpServletResponse response, String nameSheet, String[] namesCell)
+	public void export(HttpServletResponse response, String nameSheet, String[] namesCell, List<Cartao> cartoes)
 			throws IOException, ParseException {
 		writeHeaderLine(nameSheet, namesCell);
-		writeDataLines(nameSheet);
+		writeDataLines(nameSheet, cartoes);
 
 		ServletOutputStream outputStream = response.getOutputStream();
 		workbook.write(outputStream);
@@ -106,7 +107,7 @@ public class ChamadoExcelExporter {
 		}
 	}
 
-	private void writeDataLines(String tipo) throws ParseException {
+	private void writeDataLines(String tipo, List<Cartao> cartoes) throws ParseException {
 		log.info("Inicio da leitura linha a linha");
 
 		int rowCount = 1;
@@ -194,14 +195,21 @@ public class ChamadoExcelExporter {
 					createCell(row, columnCount++, "Não encontrada", style, null);
 				}
 
-				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
-					String strCartao = "";
-					for (Cartao cartao : chamado.getCartao()) {
-						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
-								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
-								+ cartao.getDescricaotipocartao() + " | ";
+				if (cartoes != null && cartoes.size() > 0) {
+
+					List<Cartao> cartaoFilter = cartoes.stream()
+							.filter(c -> c.getChamado().getProtocolo().equals(chamado.getProtocolo()))
+							.collect(Collectors.toList());
+
+					if (cartaoFilter.size() > 0) {
+						String strCartao = "";
+						for (Cartao cartao : cartaoFilter) {
+							strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
+									+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
+									+ cartao.getDescricaotipocartao() + " | ";
+						}
+						createCell(row, columnCount++, strCartao, style, null);
 					}
-					createCell(row, columnCount++, strCartao, style, null);
 				} else {
 					createCell(row, columnCount++, "Não encontrada", style, null);
 				}
@@ -222,7 +230,7 @@ public class ChamadoExcelExporter {
 			} else if (tipo.equals("Sincronizar")) {
 				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
 					for (Conta conta : chamado.getConta()) {
-						if(conta.getDescricaosituacao().equals("LIBERADA")) {
+						if (conta.getDescricaosituacao().equals("LIBERADA")) {
 							Row row = sheet.createRow(rowCount++);
 							int columnCount = 0;
 
@@ -236,7 +244,7 @@ public class ChamadoExcelExporter {
 
 							createCell(row, columnCount++, conta.getAgencia(), style, null);
 							createCell(row, columnCount++, conta.getNumeroconta(), style, null);
-						}						
+						}
 					}
 				}
 			}

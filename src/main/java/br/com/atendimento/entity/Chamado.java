@@ -2,7 +2,6 @@ package br.com.atendimento.entity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -134,7 +133,4 @@ public class Chamado {
 		
 	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
 	private List<Conta> conta;
-	
-	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
-	private Set<Cartao> cartao;
 }
