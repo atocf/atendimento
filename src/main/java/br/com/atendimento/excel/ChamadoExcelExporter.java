@@ -142,7 +142,7 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, chamado.getAnalista().getNome(), style, null);
 				createCell(row, columnCount++, chamado.getCanalatendimento(), style, null);
 				createCell(row, columnCount++, chamado.getSubmotivo().getNome(), style, null);
-				createCell(row, columnCount++, chamado.getQtdresolucao(), style, null);
+				createCell(row, columnCount++, chamado.getReabertura(), style, null);
 				createCell(row, columnCount++, chamado.getOcorrencia(), style, null);
 				createCell(row, columnCount++, chamado.getProtocolo(), style, null);
 				if (chamado.getCpf() != null) {
@@ -194,17 +194,17 @@ public class ChamadoExcelExporter {
 					createCell(row, columnCount++, "Não encontrada", style, null);
 				}
 
-				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
-					String strCartao = "";
-					for (Cartao cartao : chamado.getCartao()) {
-						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
-								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
-								+ cartao.getDescricaotipocartao() + " | ";
-					}
-					createCell(row, columnCount++, strCartao, style, null);
-				} else {
+//				if (chamado.getCartao() != null && chamado.getCartao().size() > 0) {
+//					String strCartao = "";
+//					for (Cartao cartao : chamado.getCartao()) {
+//						strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
+//								+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
+//								+ cartao.getDescricaotipocartao() + " | ";
+//					}
+//					createCell(row, columnCount++, strCartao, style, null);
+//				} else {
 					createCell(row, columnCount++, "Não encontrada", style, null);
-				}
+//				}
 
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
 				linkAbrir.setAddress(abrirLinkInicio + chamado.getOcorrencia() + abrirLinkFim);
