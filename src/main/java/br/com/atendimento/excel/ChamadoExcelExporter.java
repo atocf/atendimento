@@ -22,17 +22,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
-import br.com.atendimento.services.ContaService;
 import br.com.atendimento.util.DataUtils;
 
 public class ChamadoExcelExporter {
-
-	@Autowired
-	private ContaService contaService;
 
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
@@ -202,10 +197,8 @@ public class ChamadoExcelExporter {
 				log.info("Protocolo: {}", chamado.getProtocolo());
 
 			} else if (tipo.equals("Sincronizar")) {
-
-				List<Conta> contas = contaService.findByChamado_Protocolo(chamado.getProtocolo());
-				if (contas.size() > 0) {
-					for (Conta conta : contas) {
+				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
+					for (Conta conta : chamado.getConta()) {
 						Row row = sheet.createRow(rowCount++);
 						int columnCount = 0;
 
