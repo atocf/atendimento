@@ -43,4 +43,8 @@ public class CartaoService {
 		log.info("Consulta lista de cartões pelo protocolo: {}", protocolo);
 		return repository.findByChamado_Protocolo(protocolo);
 	}
+
+	public List<Cartao> findByChamado_Statusintergrall(String status_intergrall) {
+		return repository.findByChamado_Statusintergrall(status_intergrall);
+	}
 }

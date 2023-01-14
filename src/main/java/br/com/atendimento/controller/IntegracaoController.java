@@ -25,9 +25,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/teste")
-@Api(tags = "Teste", description = "Endpoint´s de teste de integração")
-public class TesteController {
+@RequestMapping("/integracao")
+@Api(tags = "Integracao", description = "Endpoint´s de teste de integração")
+public class IntegracaoController {
 	
 	@Autowired
 	private Imp003Service imp003Service;

@@ -39,9 +39,9 @@ public class ExportarController {
 		service.exportarSincronismo(response);
 	}
 	
-	@GetMapping(path = { "/atendimento/pf" })
+	@GetMapping(path = { "/atendimento/pf/geral" })
 	@ApiOperation("Gerar planilha para atendimento PF.")
-	public void exportarAtendimentoPf(HttpServletResponse response) throws IOException, ParseException {
+	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
 		response.setContentType("application/octet-stream");
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
@@ -50,7 +50,21 @@ public class ExportarController {
 		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
 		
-		service.exportarAtendimentoPf(response);
+		service.exportarAtendimentoPfGeral(response);
+	}
+	
+	@GetMapping(path = { "/atendimento/pf/pix" })
+	@ApiOperation("Gerar planilha para atendimento PF.")
+	public void exportarAtendimentoPfPix(HttpServletResponse response) throws IOException, ParseException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+		
+		service.exportarAtendimentoPfPix(response);
 	}
 	
 	@GetMapping(path = { "/atendimento/pj" })

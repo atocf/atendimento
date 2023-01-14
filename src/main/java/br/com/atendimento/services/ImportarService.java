@@ -84,6 +84,9 @@ public class ImportarService {
 			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getNum_protocolo()));
 			if (chamadoExit.isPresent()) {
 				chamado = chamadoExit.get();
+				if(chamado.getStatus() != null && !(chamado.getStatus().getNome().equals("ENCAMINHADO"))) {
+					chamado.setStatus(null);
+				}
 			} else {
 				chamado = new Chamado();
 			}
@@ -225,6 +228,9 @@ public class ImportarService {
 							Optional<Status> s = statusService.findByNome(a.getStatus());
 							if (s.isPresent()) {
 								chamado.setStatus(s.get());
+								if(!(s.get().getNome().equals("ENCAMINHADO"))) {
+									chamado.setStatusintergrall("Finalizado");
+								}
 							}
 						}
 
