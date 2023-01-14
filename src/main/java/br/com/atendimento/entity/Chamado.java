@@ -3,6 +3,7 @@ package br.com.atendimento.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -131,6 +132,6 @@ public class Chamado {
 	@Column(nullable = true, length = 1000)
 	private String observacao;
 		
-	@OneToMany(mappedBy = "chamado", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "chamado", targetEntity = Conta.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	private List<Conta> conta;
 }

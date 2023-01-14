@@ -3,7 +3,6 @@ package br.com.atendimento.excel;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -24,16 +23,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.atendimento.entity.Cartao;
+import br.com.atendimento.dto.export.ExportDto;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
-import br.com.atendimento.util.DataUtils;
 
 public class ChamadoExcelExporter {
 
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
-	private List<Chamado> list;
+	private List<ExportDto> listExportDto;
+	private List<Chamado> listChamado;
 
 	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String abrirLinkFim = "%26flw_tema%3D004%26flw_tema_pai%3DFYB83%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3DPNQ%26devolve_nivel_acesso%3D%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
@@ -43,15 +42,16 @@ public class ChamadoExcelExporter {
 
 	private static final Logger log = LoggerFactory.getLogger(ChamadoExcelExporter.class);
 
-	public ChamadoExcelExporter(List<Chamado> list) {
-		this.list = list;
+	public ChamadoExcelExporter(List<Chamado> listChamado, List<ExportDto> listExportDto) {
+		this.listChamado = listChamado;
+		this.listExportDto = listExportDto;
 		workbook = new XSSFWorkbook();
 	}
 
-	public void export(HttpServletResponse response, String nameSheet, String[] namesCell, List<Cartao> cartoes)
+	public void export(HttpServletResponse response, String nameSheet, String[] namesCell)
 			throws IOException, ParseException {
 		writeHeaderLine(nameSheet, namesCell);
-		writeDataLines(nameSheet, cartoes);
+		writeDataLines(nameSheet);
 
 		ServletOutputStream outputStream = response.getOutputStream();
 		workbook.write(outputStream);
@@ -107,7 +107,7 @@ public class ChamadoExcelExporter {
 		}
 	}
 
-	private void writeDataLines(String tipo, List<Cartao> cartoes) throws ParseException {
+	private void writeDataLines(String tipo) throws ParseException {
 		log.info("Inicio da leitura linha a linha");
 
 		int rowCount = 1;
@@ -135,99 +135,8 @@ public class ChamadoExcelExporter {
 
 		XSSFCreationHelper helper = workbook.getCreationHelper();
 
-		for (Chamado chamado : list) {
-			if (tipo.equals("Atendimento")) {
-				Row row = sheet.createRow(rowCount++);
-				int columnCount = 0;
-
-				createCell(row, columnCount++, chamado.getAnalista().getNome(), style, null);
-				createCell(row, columnCount++, chamado.getCanalatendimento(), style, null);
-				createCell(row, columnCount++, chamado.getSubmotivo().getNome(), style, null);
-				createCell(row, columnCount++, chamado.getReabertura(), style, null);
-				createCell(row, columnCount++, chamado.getOcorrencia(), style, null);
-				createCell(row, columnCount++, chamado.getProtocolo(), style, null);
-				if (chamado.getCpf() != null) {
-					createCell(row, columnCount++, chamado.getCpf(), style, null);
-				} else if (chamado.getCnpj() != null) {
-					createCell(row, columnCount++, chamado.getCnpj(), style, null);
-				}
-				createCell(row, columnCount++, chamado.getCard(), style, null);
-				if (chamado.getSquad() != null) {
-					createCell(row, columnCount++, chamado.getSquad().getNome(), style, null);
-				} else {
-					createCell(row, columnCount++, "", style, null);
-				}
-				if (chamado.getStatus() != null) {
-					createCell(row, columnCount++, chamado.getStatus().getNome(), style, null);
-				} else {
-					createCell(row, columnCount++, "", style, null);
-				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatastatus(), DataUtils.formatoData), style,
-						null);
-				createCell(row, columnCount++, chamado.getObservacao(), style, null);
-				if (chamado.getCausaraiz() != null) {
-					createCell(row, columnCount++, chamado.getCausaraiz().getNome(), style, null);
-				} else {
-					createCell(row, columnCount++, "", style, null);
-				}
-				createCell(row, columnCount++, DataUtils.format(chamado.getDataabertura(), DataUtils.formatoData),
-						style, null);
-				createCell(row, columnCount++, DataUtils.format(chamado.getDatavencimento(), DataUtils.formatoData),
-						style, null);
-				createCell(row, columnCount++, chamado.getDescricao(), styleDescricao, null);
-				createCell(row, columnCount++, chamado.getNome(), style, null);
-				createCell(row, columnCount++, chamado.getStatussenha(), style, null);
-				createCell(row, columnCount++, chamado.getEmail(), style, null);
-				createCell(row, columnCount++, chamado.getTelefone(), style, null);
-				createCell(row, columnCount++, chamado.getStatussms(), style, null);
-				createCell(row, columnCount++,
-						DataUtils.format(chamado.getDataatualizacaocadastral(), DataUtils.formatoData), style, null);
-				createCell(row, columnCount++, chamado.getEscopo(), style, null);
-
-				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
-					String strConta = "";
-					for (Conta conta : chamado.getConta()) {
-						strConta = strConta + "Tipo:" + conta.getTipoconta() + "-" + conta.getDescricaosituacao() + "-"
-								+ conta.getAgencia() + "/" + conta.getNumeroconta() + " | ";
-					}
-					createCell(row, columnCount++, strConta, style, null);
-				} else {
-					createCell(row, columnCount++, "Não encontrada", style, null);
-				}
-
-				if (cartoes != null && cartoes.size() > 0) {
-
-					List<Cartao> cartaoFilter = cartoes.stream()
-							.filter(c -> c.getChamado().getProtocolo().equals(chamado.getProtocolo()))
-							.collect(Collectors.toList());
-
-					if (cartaoFilter.size() > 0) {
-						String strCartao = "";
-						for (Cartao cartao : cartaoFilter) {
-							strCartao = strCartao + "(" + cartao.getDescricaostatuscartao() + ") "
-									+ cartao.getNumerocartao().substring(cartao.getNumerocartao().length() - 4) + " "
-									+ cartao.getDescricaotipocartao() + " | ";
-						}
-						createCell(row, columnCount++, strCartao, style, null);
-					}
-				} else {
-					createCell(row, columnCount++, "Não encontrada", style, null);
-				}
-
-				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
-				linkAbrir.setAddress(abrirLinkInicio + chamado.getOcorrencia() + abrirLinkFim);
-				createCell(row, columnCount++, "Abrir", styleLink, linkAbrir);
-
-				if (chamado.getSubmotivo().getEquipe().equals("BACKOFFICE DÍGITAL")) {
-
-					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
-					linkFechar.setAddress(fecharLinkInicio + chamado.getOcorrencia() + fecharLinkFim);
-					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
-				}
-
-				log.info("Protocolo: {}", chamado.getProtocolo());
-
-			} else if (tipo.equals("Sincronizar")) {
+		if (tipo.equals("Sincronizar")) {
+			for (Chamado chamado : listChamado) {
 				if (chamado.getConta() != null && chamado.getConta().size() > 0) {
 					for (Conta conta : chamado.getConta()) {
 						if (conta.getDescricaosituacao().equals("LIBERADA")) {
@@ -247,6 +156,50 @@ public class ChamadoExcelExporter {
 						}
 					}
 				}
+			}
+		} else if (tipo.equals("Atendimento")) {
+			for (ExportDto e : listExportDto) {
+				Row row = sheet.createRow(rowCount++);
+				int columnCount = 0;
+
+				createCell(row, columnCount++, e.getAnalista(), style, null);
+				createCell(row, columnCount++, e.getC_atendimento(), style, null);
+				createCell(row, columnCount++, e.getSub_motivo(), style, null);
+				createCell(row, columnCount++, e.getReabertura(), style, null);
+				createCell(row, columnCount++, e.getOcorrencia(), style, null);
+				createCell(row, columnCount++, e.getProtocolo(), style, null);
+				createCell(row, columnCount++, e.getCpf_cnpj(), style, null);
+				createCell(row, columnCount++, e.getCard(), style, null);
+				createCell(row, columnCount++, e.getSquad(), style, null);
+				createCell(row, columnCount++, e.getStatus(), style, null);
+				createCell(row, columnCount++, e.getData_status(), style, null);
+				createCell(row, columnCount++, e.getObservacao(), style, null);
+				createCell(row, columnCount++, e.getCausa_raiz(), style, null);
+				createCell(row, columnCount++, e.getDt_aberta(), style, null);
+				createCell(row, columnCount++, e.getDt_vencimento(), style, null);
+				createCell(row, columnCount++, e.getDescricao(), styleDescricao, null);
+				createCell(row, columnCount++, e.getNome(), style, null);
+				createCell(row, columnCount++, e.getStatus_senha(), style, null);
+				createCell(row, columnCount++, e.getEmail(), style, null);
+				createCell(row, columnCount++, e.getTelefone(), style, null);
+				createCell(row, columnCount++, e.getTelefone_sms(), style, null);
+				createCell(row, columnCount++, e.getAtualizacao_cadastral(), style, null);
+				createCell(row, columnCount++, e.getEscopo(), style, null);
+				createCell(row, columnCount++, e.getConta(), style, null);
+				createCell(row, columnCount++, e.getCartoes(), style, null);
+
+				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
+				linkAbrir.setAddress(abrirLinkInicio + e.getObservacao() + abrirLinkFim);
+				createCell(row, columnCount++, "Abrir", styleLink, linkAbrir);
+
+				if (e.getEquipe().equals("BACKOFFICE DÍGITAL")) {
+
+					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
+					linkFechar.setAddress(fecharLinkInicio + e.getObservacao() + fecharLinkFim);
+					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
+				}
+
+				log.info("Protocolo: {}", e.getProtocolo());
 			}
 		}
 
