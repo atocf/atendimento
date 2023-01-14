@@ -189,13 +189,13 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, e.getCartoes(), style, null);
 
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
-				linkAbrir.setAddress(abrirLinkInicio + e.getObservacao() + abrirLinkFim);
+				linkAbrir.setAddress(abrirLinkInicio + e.getOcorrencia() + abrirLinkFim);
 				createCell(row, columnCount++, "Abrir", styleLink, linkAbrir);
 
 				if (e.getEquipe().equals("BACKOFFICE DÍGITAL")) {
 
 					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
-					linkFechar.setAddress(fecharLinkInicio + e.getObservacao() + fecharLinkFim);
+					linkFechar.setAddress(fecharLinkInicio + e.getOcorrencia() + fecharLinkFim);
 					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
 				}
 
