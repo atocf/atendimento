@@ -16,7 +16,7 @@ import br.com.atendimento.client.Cdtp004Client;
 import br.com.atendimento.client.Imp001Client;
 import br.com.atendimento.services.Dgp001Service;
 import br.com.atendimento.services.Dgp041Service;
-import br.com.atendimento.services.Imp003Service;
+import br.com.atendimento.services.Imp013Service;
 import br.com.atendimento.wsdl.cdtp004.ConsultarDadosCartao;
 import br.com.atendimento.wsdl.cdtp004.ConsultarDadosCartaoResponse;
 import br.com.atendimento.wsdl.imp001.ObterContasCorrentesPessoa;
@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 public class IntegracaoController {
 	
 	@Autowired
-	private Imp003Service imp003Service;
+	private Imp013Service imp003Service;
 	
 	@GetMapping(path = { "/imp003/pin/{cpf}" })
 	@ApiOperation("Consultar o status do Pin Eletrônico pelo CPF: {cpf}.")

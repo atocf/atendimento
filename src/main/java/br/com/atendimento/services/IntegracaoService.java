@@ -53,7 +53,7 @@ public class IntegracaoService {
 	private String imp001SenhaWs;
 
 	@Autowired
-	private Imp003Service imp003Service;
+	private Imp013Service imp003Service;
 
 	@Autowired
 	private ContaService contaService;

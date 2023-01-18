@@ -1,4 +1,4 @@
-package br.com.atendimento.dto.imp003;
+package br.com.atendimento.dto.imp013;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Imp003GetPinEletronicoStatus {
+public class Imp013GetPinEletronicoStatus {
 	
-	private Imp003GetPinEletronicoStatusData data;
+	private Imp013GetPinEletronicoStatusData data;
 }
