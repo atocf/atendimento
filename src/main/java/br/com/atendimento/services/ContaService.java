@@ -39,9 +39,9 @@ public class ContaService {
 		return new ErrorObject("Conta selecionado não existe", "conta_id", id);
 	}
 
-	public List<Conta> findByChamado_Protocolo(Long protocolo) {
-		log.info("Consulta lista de contas pelo protocolo: {}", protocolo);
-		return repository.findByChamado_Protocolo(protocolo);
+	public List<Conta> findByChamado_Ocorrencia(Long ocorrencia) {
+		log.info("Consulta lista de contas pelo ocorrencia: {}", ocorrencia);
+		return repository.findByChamado_Ocorrencia(ocorrencia);
 	}
 
 }

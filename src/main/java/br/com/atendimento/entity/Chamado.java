@@ -37,7 +37,7 @@ public class Chamado {
 
 	@Id
 	@Column(nullable = false, unique = true)
-	private Long protocolo;
+	private Long ocorrencia;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idstatus")
@@ -51,8 +51,8 @@ public class Chamado {
 	@Column(nullable = true, columnDefinition = "TIMESTAMP")
 	private Date datastatus;
 
-	@Column(nullable = false, unique = true)
-	private Long ocorrencia;
+	@Column(nullable = false)
+	private Long protocolo;
 
 	@Column(nullable = false)
 	private String canalatendimento;

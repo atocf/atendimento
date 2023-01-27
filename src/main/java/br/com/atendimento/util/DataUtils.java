@@ -9,6 +9,7 @@ public class DataUtils {
 	public static SimpleDateFormat usformatoDataHora = new SimpleDateFormat("yyyy-MM-dd");
 	public static SimpleDateFormat formatoDataHora = new SimpleDateFormat("dd/MM/yyyy hh:mm"); 
 	public static SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy"); 
+	public static SimpleDateFormat tracoformatoData = new SimpleDateFormat("dd-MM-yyyy");
 	
 	public static Date convert(String x, SimpleDateFormat format) throws ParseException {
 		if(x != null) {

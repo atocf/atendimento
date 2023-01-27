@@ -50,7 +50,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
+					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES",
 					"ABRIR" };
@@ -147,7 +147,7 @@ public class ExportarService {
 				e.setCartoes("Não encontrada");
 			}
 
-			List<Cartao> cartoes = cartaoService.findByChamado_Protocolo(chamado.getProtocolo());
+			List<Cartao> cartoes = cartaoService.findByChamado_Ocorrencia(chamado.getOcorrencia());
 			if (cartoes.size() > 0) {
 				String strCartao = "";
 				for (Cartao cartao : cartoes) {
