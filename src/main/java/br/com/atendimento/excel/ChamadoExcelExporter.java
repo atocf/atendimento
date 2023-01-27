@@ -221,10 +221,10 @@ public class ChamadoExcelExporter {
 		CellStyle style = workbook.createCellStyle();
 		style.setFont(font);
 		if (linha.equals("Prioridade")) {
-			style.setFillForegroundColor(IndexedColors.RED1.index);
+			style.setFillForegroundColor(IndexedColors.CORAL.index);
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		} else if (linha.equals("Vencido")) {
-			style.setFillForegroundColor(IndexedColors.BLUE_GREY.index);
+			style.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.index);
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		}
 		if (descricao) {
