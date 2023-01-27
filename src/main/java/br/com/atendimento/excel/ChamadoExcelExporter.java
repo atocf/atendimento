@@ -9,6 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -74,6 +75,14 @@ public class ChamadoExcelExporter {
 		style.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
 		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		style.setAlignment(HorizontalAlignment.CENTER);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);		
+		style.setBottomBorderColor(IndexedColors.BLACK.index);
+		style.setTopBorderColor(IndexedColors.BLACK.index);
+		style.setLeftBorderColor(IndexedColors.BLACK.index);
+		style.setRightBorderColor(IndexedColors.BLACK.index);
 
 		XSSFFont font = workbook.createFont();
 		font.setBold(true);
@@ -220,6 +229,17 @@ public class ChamadoExcelExporter {
 
 		CellStyle style = workbook.createCellStyle();
 		style.setFont(font);
+		
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
+		
+		style.setBottomBorderColor(IndexedColors.BLACK.index);
+		style.setTopBorderColor(IndexedColors.BLACK.index);
+		style.setLeftBorderColor(IndexedColors.BLACK.index);
+		style.setRightBorderColor(IndexedColors.BLACK.index);
+		
 		if (linha.equals("Prioridade")) {
 			style.setFillForegroundColor(IndexedColors.CORAL.index);
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -227,6 +247,7 @@ public class ChamadoExcelExporter {
 			style.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.index);
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		}
+		
 		if (descricao) {
 			style.setAlignment(HorizontalAlignment.LEFT);
 		} else {
