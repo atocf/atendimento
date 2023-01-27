@@ -72,6 +72,8 @@ public class ImportarService {
 			iDto.setMsg("Nenhum item encontrado para importação");
 			return iDto;
 		}
+		
+		chamadoService.updateAllFinalizado(list.get(0).getArea_responsavel());
 
 		log.info("Lendo a lista importada.");
 

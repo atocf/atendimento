@@ -62,4 +62,7 @@ public class ChamadoService {
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix(status_intergrall, equipe, pix);
 	}
 
+	public void updateAllFinalizado(String equipe) {
+		repository.updateAllFinalizado(equipe);	
+	}
 }
