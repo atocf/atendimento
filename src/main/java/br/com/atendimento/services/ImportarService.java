@@ -220,7 +220,7 @@ public class ImportarService {
 			List<PlanilhaAntigaDto> list = PlanilhaAntigaExcelImport.excelToChamado(file.getInputStream(), sheet);
 			for (PlanilhaAntigaDto a : list) {
 				log.info("Ocorrência:{}", a.getOcorrencia());
-				if (a.getProtocolo() != null) {
+				if (a.getOcorrencia() != null) {
 
 					Optional<Chamado> chamadoExit = chamadoService.findById(a.getOcorrencia());
 

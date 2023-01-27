@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class PlanilhaAntigaDto {
 	
-	private Long protocolo;
 	
 	private String analista;	
 	
@@ -28,36 +27,5 @@ public class PlanilhaAntigaDto {
 	private Date data_status;	
 	
 	private Long ocorrencia;
-	
-	private String descricao;	
-	
-	private String submotivo; 
-	
-	private String cpf;
-	
-	private String canal_de_atendimento;	
-	
-	private Date data_abertura;	
-	
-	private Date data_vencimento;
-	
-	private String nome;	
-	
-	private String status_senha;	
-	
-	private String email;	
-	
-	private String telefone;	
-	
-	private String telefone_sms;	
-	
-	private String ultima_atualizacao_cadastral;	
-	
-	private String escopo;	
-	
-	private String conta;	
-	
-	private String cartoes;	
-	
-	private String reabertura;	
+
 }
