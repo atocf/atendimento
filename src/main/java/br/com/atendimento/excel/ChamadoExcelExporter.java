@@ -2,12 +2,14 @@ package br.com.atendimento.excel;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import br.com.atendimento.dto.export.ExportDto;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
+import br.com.atendimento.util.DataUtils;
 
 public class ChamadoExcelExporter {
 
@@ -50,7 +53,7 @@ public class ChamadoExcelExporter {
 
 	public void export(HttpServletResponse response, String nameSheet, String[] namesCell)
 			throws IOException, ParseException {
-		writeHeaderLine(nameSheet, namesCell);
+		writeHeaderLine(DataUtils.format(new Date(), DataUtils.tracoformatoData), namesCell);
 		writeDataLines(nameSheet);
 
 		ServletOutputStream outputStream = response.getOutputStream();
@@ -72,6 +75,14 @@ public class ChamadoExcelExporter {
 		style.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
 		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		style.setAlignment(HorizontalAlignment.CENTER);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);		
+		style.setBottomBorderColor(IndexedColors.BLACK.index);
+		style.setTopBorderColor(IndexedColors.BLACK.index);
+		style.setLeftBorderColor(IndexedColors.BLACK.index);
+		style.setRightBorderColor(IndexedColors.BLACK.index);
 
 		XSSFFont font = workbook.createFont();
 		font.setBold(true);
@@ -112,27 +123,6 @@ public class ChamadoExcelExporter {
 
 		int rowCount = 1;
 
-		XSSFFont font = workbook.createFont();
-		font.setFontHeight(11);
-		font.setColor(IndexedColors.BLACK.index);
-
-		CellStyle style = workbook.createCellStyle();
-		style.setFont(font);
-		style.setAlignment(HorizontalAlignment.CENTER);
-
-		CellStyle styleDescricao = workbook.createCellStyle();
-		styleDescricao.setFont(font);
-		styleDescricao.setAlignment(HorizontalAlignment.LEFT);
-
-		XSSFFont fontLink = workbook.createFont();
-		fontLink.setFontHeight(11);
-		fontLink.setColor(IndexedColors.BLUE.index);
-		fontLink.setUnderline(FontUnderline.SINGLE);
-
-		CellStyle styleLink = workbook.createCellStyle();
-		styleLink.setFont(fontLink);
-		styleLink.setAlignment(HorizontalAlignment.CENTER);
-
 		XSSFCreationHelper helper = workbook.getCreationHelper();
 
 		if (tipo.equals("Sincronizar")) {
@@ -144,15 +134,17 @@ public class ChamadoExcelExporter {
 							int columnCount = 0;
 
 							if (chamado.getCpf() != null) {
-								createCell(row, columnCount++, chamado.getCpf(), style, null);
+								createCell(row, columnCount++, chamado.getCpf(), getStyle(false, false, ""), null);
 								log.info("CPF: {}", chamado.getCpf());
 							} else if (chamado.getCnpj() != null) {
-								createCell(row, columnCount++, chamado.getCnpj(), style, null);
+								createCell(row, columnCount++, chamado.getCnpj(), getStyle(false, false, ""),
+										null);
 								log.info("CNPJ: {}", chamado.getCnpj());
 							}
 
-							createCell(row, columnCount++, conta.getAgencia(), style, null);
-							createCell(row, columnCount++, conta.getNumeroconta(), style, null);
+							createCell(row, columnCount++, conta.getAgencia(), getStyle(false, false, ""), null);
+							createCell(row, columnCount++, conta.getNumeroconta(), getStyle(false, false, ""),
+									null);
 						}
 					}
 				}
@@ -161,42 +153,43 @@ public class ChamadoExcelExporter {
 			for (ExportDto e : listExportDto) {
 				Row row = sheet.createRow(rowCount++);
 				int columnCount = 0;
-
-				createCell(row, columnCount++, e.getAnalista(), style, null);
-				createCell(row, columnCount++, e.getC_atendimento(), style, null);
-				createCell(row, columnCount++, e.getSub_motivo(), style, null);
-				createCell(row, columnCount++, e.getReabertura(), style, null);
-				createCell(row, columnCount++, e.getOcorrencia(), style, null);
-				createCell(row, columnCount++, e.getProtocolo(), style, null);
-				createCell(row, columnCount++, e.getCpf_cnpj(), style, null);
-				createCell(row, columnCount++, e.getCard(), style, null);
-				createCell(row, columnCount++, e.getSquad(), style, null);
-				createCell(row, columnCount++, e.getStatus(), style, null);
-				createCell(row, columnCount++, e.getData_status(), style, null);
-				createCell(row, columnCount++, e.getObservacao(), style, null);
-				createCell(row, columnCount++, e.getCausa_raiz(), style, null);
-				createCell(row, columnCount++, e.getDt_aberta(), style, null);
-				createCell(row, columnCount++, e.getDt_vencimento(), style, null);
-				createCell(row, columnCount++, e.getDescricao(), styleDescricao, null);
-				createCell(row, columnCount++, e.getNome(), style, null);
-				createCell(row, columnCount++, e.getStatus_senha(), style, null);
-				createCell(row, columnCount++, e.getEmail(), style, null);
-				createCell(row, columnCount++, e.getTelefone(), style, null);
-				createCell(row, columnCount++, e.getTelefone_sms(), style, null);
-				createCell(row, columnCount++, e.getAtualizacao_cadastral(), style, null);
-				createCell(row, columnCount++, e.getEscopo(), style, null);
-				createCell(row, columnCount++, e.getConta(), style, null);
-				createCell(row, columnCount++, e.getCartoes(), style, null);
+				String linha = validaPrioridadeouVencido(e.getDt_vencimento(), e.getC_atendimento());
+				
+				createCell(row, columnCount++, e.getAnalista(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getC_atendimento(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getSub_motivo(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getReabertura(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getOcorrencia(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getProtocolo(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getCpf_cnpj(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getCard(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getSquad(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getStatus(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getData_status(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getObservacao(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getCausa_raiz(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getDt_aberta(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getDt_vencimento(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getDescricao(), getStyle(false, true, linha), null);
+				createCell(row, columnCount++, e.getNome(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getStatus_senha(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getEmail(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getTelefone(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getTelefone_sms(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getAtualizacao_cadastral(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getEscopo(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getConta(), getStyle(false, false, linha), null);
+				createCell(row, columnCount++, e.getCartoes(), getStyle(false, false, linha), null);
 
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
 				linkAbrir.setAddress(abrirLinkInicio + e.getOcorrencia() + abrirLinkFim);
-				createCell(row, columnCount++, "Abrir", styleLink, linkAbrir);
+				createCell(row, columnCount++, "Abrir", getStyle(true, false, linha), linkAbrir);
 
 				if (e.getEquipe().equals("BACKOFFICE DÍGITAL")) {
 
 					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
 					linkFechar.setAddress(fecharLinkInicio + e.getOcorrencia() + fecharLinkFim);
-					createCell(row, columnCount++, "Fechar", styleLink, linkFechar);
+					createCell(row, columnCount++, "Fechar", getStyle(true, false, linha), linkFechar);
 				}
 
 				log.info("Protocolo: {}", e.getProtocolo());
@@ -204,5 +197,63 @@ public class ChamadoExcelExporter {
 		}
 
 		log.info("Fim da leitura linha a linha");
+	}
+
+	private String validaPrioridadeouVencido(String dt_vencimento, String c_atendimento) throws ParseException {
+		
+		if (c_atendimento.equals("CONSUMIDOR.GOV") || c_atendimento.equals("BACEN") || c_atendimento.equals("PROCON")
+				|| c_atendimento.equals("PROCON FONE")) {
+			return "Prioridade";
+		}
+		
+		Date dtVencimento = DataUtils.convert(dt_vencimento, DataUtils.formatoData);
+		Date dtAtual = new Date();
+
+		if (dtAtual.equals(dtVencimento) || dtAtual.after(dtVencimento)) {
+			return "Vencido";
+		}
+		
+		return "";
+	}
+
+	private CellStyle getStyle(Boolean link, Boolean descricao, String linha) {
+
+		XSSFFont font = workbook.createFont();
+		font.setFontHeight(11);
+		if (link) {
+			font.setColor(IndexedColors.BLUE.index);
+			font.setUnderline(FontUnderline.SINGLE);
+		} else {
+			font.setColor(IndexedColors.BLACK.index);
+		}
+
+		CellStyle style = workbook.createCellStyle();
+		style.setFont(font);
+		
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
+		
+		style.setBottomBorderColor(IndexedColors.BLACK.index);
+		style.setTopBorderColor(IndexedColors.BLACK.index);
+		style.setLeftBorderColor(IndexedColors.BLACK.index);
+		style.setRightBorderColor(IndexedColors.BLACK.index);
+		
+		if (linha.equals("Prioridade")) {
+			style.setFillForegroundColor(IndexedColors.CORAL.index);
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		} else if (linha.equals("Vencido")) {
+			style.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.index);
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		}
+		
+		if (descricao) {
+			style.setAlignment(HorizontalAlignment.LEFT);
+		} else {
+			style.setAlignment(HorizontalAlignment.CENTER);
+		}
+
+		return style;
 	}
 }

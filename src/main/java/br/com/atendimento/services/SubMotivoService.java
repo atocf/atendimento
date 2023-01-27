@@ -17,10 +17,10 @@ import br.com.atendimento.repository.SubMotivoRepository;
 
 @Service
 public class SubMotivoService {
-	
+
 	@Autowired
 	private SubMotivoRepository repository;
-	
+
 	@Autowired
 	private AnalistaService analistaService;
 
@@ -36,12 +36,12 @@ public class SubMotivoService {
 		log.info("Buscando o submotivo por id: {}", id);
 		return repository.findById(id);
 	}
-	
+
 	public Optional<SubMotivo> findByNome(String nome) {
 		log.info("Buscando o submotivo pelo nome: {}", nome);
 		return repository.findByNome(nome);
 	}
-	
+
 	public SubMotivo save(SubMotivo x) {
 		log.info("Salvando ou Atualização o submotivo {}", x.getNome());
 		return repository.save(x);
@@ -52,13 +52,17 @@ public class SubMotivoService {
 		repository.deleteById(id);
 	}
 
-	public SubMotivo findSubMotivo(String produto, String tipopublico, String variedadeproduto, String motivo, String nome, String equipe, String analista, String status_integrall) {
+	public SubMotivo findSubMotivo(String produto, String tipopublico, String variedadeproduto, String motivo,
+			String nome, String equipe, String analista, String status_integrall) {
 		Optional<SubMotivo> subMotivo = repository.findByNomeAndEquipe(nome, equipe);
 		Analista a = analistaService.findAnalista(analista);
-		if(subMotivo.isPresent()) {
-			subMotivo.get().setAnalista(a); 
+		if (subMotivo.isPresent()) {
+			if (a != null) {
+				a = subMotivo.get().getAnalista();
+			}
+			subMotivo.get().setAnalista(a);
 			return subMotivo.get();
-		} 		
+		}
 		return save(new SubMotivo(a, produto, tipopublico, variedadeproduto, motivo, nome, equipe));
 	}
 }

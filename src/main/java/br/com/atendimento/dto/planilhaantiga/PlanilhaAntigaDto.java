@@ -27,7 +27,7 @@ public class PlanilhaAntigaDto {
 	
 	private Date data_status;	
 	
-	private String ocorrencia;
+	private Long ocorrencia;
 	
 	private String descricao;	
 	

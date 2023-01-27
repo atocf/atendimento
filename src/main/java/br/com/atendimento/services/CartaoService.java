@@ -39,9 +39,9 @@ public class CartaoService {
 		return new ErrorObject("Cartao selecionado não existe", "cartao_id", id);
 	}
 
-	public List<Cartao> findByChamado_Protocolo(Long protocolo) {
-		log.info("Consulta lista de cartões pelo protocolo: {}", protocolo);
-		return repository.findByChamado_Protocolo(protocolo);
+	public List<Cartao> findByChamado_Ocorrencia(Long ocorrencia) {
+		log.info("Consulta lista de cartões pelo ocorrencia: {}", ocorrencia);
+		return repository.findByChamado_Ocorrencia(ocorrencia);
 	}
 
 	public List<Cartao> findByChamado_Statusintergrall(String status_intergrall) {

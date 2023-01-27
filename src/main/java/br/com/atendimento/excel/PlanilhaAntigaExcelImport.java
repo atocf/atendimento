@@ -18,7 +18,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.atendimento.dto.planilhaantiga.PlanilhaAntigaDto;
-import br.com.atendimento.util.CpfUtils;
 
 public class PlanilhaAntigaExcelImport {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -95,27 +94,27 @@ public class PlanilhaAntigaExcelImport {
 						break;
 						
 					case 8:
-						atendimento.setOcorrencia(returnCellToString(currentCell));
+						atendimento.setOcorrencia(returnCellToLong(currentCell));
 						break;
 						
 					case 9:
-						atendimento.setDescricao(returnCellToString(currentCell));
+						//atendimento.setDescricao(returnCellToString(currentCell));
 						break;
 						
 					case 10:
-						atendimento.setSubmotivo(returnCellToString(currentCell));
+						//atendimento.setSubmotivo(returnCellToString(currentCell));
 						break;
 						
 					case 11:
-						atendimento.setCpf(CpfUtils.valid(returnCellToString(currentCell)));
+						//atendimento.setCpf(returnCellToString(currentCell));
 						break;
 						
 					case 12:
-						atendimento.setCanal_de_atendimento(returnCellToString(currentCell));
+						//atendimento.setCanal_de_atendimento(returnCellToString(currentCell));
 						break;
 						
 					case 13:
-						atendimento.setData_abertura(returnCellToDate(currentCell));
+						//atendimento.setData_abertura(returnCellToDate(currentCell));
 						break;
 						
 					case 14:
@@ -123,47 +122,47 @@ public class PlanilhaAntigaExcelImport {
 						break;
 						
 					case 15:
-						atendimento.setData_vencimento(returnCellToDate(currentCell));
+						//atendimento.setData_vencimento(returnCellToDate(currentCell));
 						break;
 						
 					case 16:
-						atendimento.setNome(returnCellToString(currentCell));
+						//atendimento.setNome(returnCellToString(currentCell));
 						break;
 					
 					case 17:
-						atendimento.setStatus_senha(returnCellToString(currentCell));
+						//atendimento.setStatus_senha(returnCellToString(currentCell));
 						break;
 						
 					case 18:
-						atendimento.setEmail(returnCellToString(currentCell));
+						//atendimento.setEmail(returnCellToString(currentCell));
 						break;
 						
 					case 19:
-						atendimento.setTelefone(returnCellToString(currentCell));
+						//atendimento.setTelefone(returnCellToString(currentCell));
 						break;
 						
 					case 20:
-						atendimento.setTelefone_sms(returnCellToString(currentCell));
+						//atendimento.setTelefone_sms(returnCellToString(currentCell));
 						break;
 						
 					case 21:
-						atendimento.setUltima_atualizacao_cadastral(returnCellToString(currentCell));
+						//atendimento.setUltima_atualizacao_cadastral(returnCellToString(currentCell));
 						break;
 						
 					case 22:
-						atendimento.setEscopo(returnCellToString(currentCell));
+						//atendimento.setEscopo(returnCellToString(currentCell));
 						break;
 						
 					case 23:
-						atendimento.setConta(returnCellToString(currentCell));
+						//atendimento.setConta(returnCellToString(currentCell));
 						break;
 						
 					case 24:
-						atendimento.setCartoes(returnCellToString(currentCell));
+						//atendimento.setCartoes(returnCellToString(currentCell));
 						break;
 						
 					case 25:
-						atendimento.setReabertura(returnCellToString(currentCell));
+						//atendimento.setReabertura(returnCellToString(currentCell));
 						break;
 
 					default:

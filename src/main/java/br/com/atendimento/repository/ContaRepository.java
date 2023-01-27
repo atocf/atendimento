@@ -8,6 +8,6 @@ import br.com.atendimento.entity.Conta;
 
 public interface ContaRepository extends JpaRepository<Conta, Long> {
 
-	List<Conta> findByChamado_Protocolo(Long protocolo);
+	List<Conta> findByChamado_Ocorrencia(Long ocorrencia);
 
 }

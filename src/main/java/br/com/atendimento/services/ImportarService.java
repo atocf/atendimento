@@ -77,11 +77,11 @@ public class ImportarService {
 
 		for (ImportarBacklogDto pd : list) {
 
-			log.info("Protocolo lido: {}", pd.getNum_protocolo());
+			log.info("Ocorrência lido: {}", pd.getOcorrencia());
 
 			Chamado chamado = null;
 
-			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getNum_protocolo()));
+			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getOcorrencia()));
 			if (chamadoExit.isPresent()) {
 				chamado = chamadoExit.get();
 				if(chamado.getStatus() != null && !(chamado.getStatus().getNome().equals("ENCAMINHADO"))) {
@@ -123,7 +123,7 @@ public class ImportarService {
 
 			total_importado++;
 
-			log.info("Protocolo salvo: {}", pd.getNum_protocolo());
+			log.info("Ocorrência salvo: {}", pd.getOcorrencia());
 		}
 
 		log.info("Fim da leitura da lista importada.");
@@ -156,11 +156,11 @@ public class ImportarService {
 
 		for (ImportarAberturaDto pd : list) {
 
-			log.info("Protocolo lido: {}", pd.getNum_protocolo());
+			log.info("Ocorrência lido: {}", pd.getAbertura_ocorrencia());
 
 			Chamado chamado = null;
 
-			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getNum_protocolo()));
+			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getAbertura_ocorrencia()));
 			if (chamadoExit.isPresent()) {
 				chamado = chamadoExit.get();
 			} else {
@@ -199,7 +199,7 @@ public class ImportarService {
 
 			total_importado++;
 
-			log.info("Protocolo salvo: {}", pd.getNum_protocolo());
+			log.info("Ocorrência salvo: {}", pd.getAbertura_ocorrencia());
 		}
 
 		log.info("Fim da leitura da lista importada.");
@@ -215,10 +215,10 @@ public class ImportarService {
 		try {
 			List<PlanilhaAntigaDto> list = PlanilhaAntigaExcelImport.excelToChamado(file.getInputStream(), sheet);
 			for (PlanilhaAntigaDto a : list) {
-				log.info("Protocolo:{}", a.getProtocolo());
+				log.info("Ocorrência:{}", a.getOcorrencia());
 				if (a.getProtocolo() != null) {
 
-					Optional<Chamado> chamadoExit = chamadoService.findById(a.getProtocolo());
+					Optional<Chamado> chamadoExit = chamadoService.findById(a.getOcorrencia());
 
 					if (chamadoExit.isPresent()) {
 

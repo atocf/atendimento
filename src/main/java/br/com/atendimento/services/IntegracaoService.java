@@ -53,7 +53,7 @@ public class IntegracaoService {
 	private String imp001SenhaWs;
 
 	@Autowired
-	private Imp003Service imp003Service;
+	private Imp013Service imp003Service;
 
 	@Autowired
 	private ContaService contaService;
@@ -75,7 +75,7 @@ public class IntegracaoService {
 		}
 		
 
-		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(cartaoService.findByChamado_Protocolo(chamado.getProtocolo()).size() > 0)) {
+		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(cartaoService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
 			log.info("Consulta dados cartão do cpf: {}", chamado.getCpf());
 
 			ConsultarDadosCartao consultarDadosCartao = new ConsultarDadosCartao();
@@ -137,7 +137,7 @@ public class IntegracaoService {
 			log.info("Fim consulta scopo");
 		}
 
-		if (chamado.getSubmotivo().getImp001() && !(contaService.findByChamado_Protocolo(chamado.getProtocolo()).size() > 0)) {
+		if (chamado.getSubmotivo().getImp001() && !(contaService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
 			log.info("Consulta dados conta do cpf/cnpj: {}", cpf_cnpj);
 
 			ObterContasCorrentesPessoa obterContasCorrentesPessoa = new ObterContasCorrentesPessoa();
