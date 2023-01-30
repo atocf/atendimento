@@ -26,4 +26,6 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 	@Modifying(clearAutomatically = true)
 	@Query(value = "UPDATE chamado set statusintergrall = 'Finalizado' WHERE ocorrencia in (SELECT o FROM ( SELECT c.ocorrencia as o FROM chamado c INNER JOIN sub_motivo sm on sm.id = c.idsubmotivo Where sm.equipe = ?1 order by c.ocorrencia) as s)", nativeQuery = true)
 	int updateAllFinalizado(String equipe);
+
+	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(String status_intergrall, String equipe);
 }
