@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,17 +18,18 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.atendimento.dto.planilhaantiga.PlanilhaAntigaDto;
+import br.com.atendimento.dto.planilhaantiga.PlanilhaDto;
 
-public class PlanilhaAntigaExcelImport {
+public class PlanilhaExcelImport {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	static String[] HEADERs = { "ANALISTA", "PLANILHA SERVIO", "CARD", "SQUAD", "OBSERVAÇÃO", "CAUSA RAIZ", "STATUS",
-			"DATA-STATUS", "OCORRENCIA", "DESCRIÇÃO", "SUBMOTIVO", "CPF", "CANAL DE ATENDIMENTO", "DATA ABERTURA",
-			"PROTOCOLO", "DATA VENCIMENTO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
-			"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "REABERTURA" };
+	static String[] HEADERs = { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA", "OCORRENCIA",
+			"PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA",
+			"DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+			"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR", "FECHAR" };
+
 	static String SHEET = "16-09-2022";
-	
-	static SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
+
+	static SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 	public static boolean hasExcelFormat(MultipartFile file) {
 
@@ -38,14 +40,15 @@ public class PlanilhaAntigaExcelImport {
 		return true;
 	}
 
-	public static List<PlanilhaAntigaDto> excelToChamado(InputStream is, String sheetName) throws ParseException {
+	public static List<PlanilhaDto> excelToChamado(InputStream is, String sheetName) throws ParseException {
 		try {
+			ZipSecureFile.setMinInflateRatio(0);
 			Workbook workbook = new XSSFWorkbook(is);
 
 			Sheet sheet = workbook.getSheet(sheetName);
 			Iterator<Row> rows = sheet.iterator();
 
-			List<PlanilhaAntigaDto> list = new ArrayList<PlanilhaAntigaDto>();
+			List<PlanilhaDto> list = new ArrayList<PlanilhaDto>();
 
 			int rowNumber = 0;
 			while (rows.hasNext()) {
@@ -58,43 +61,43 @@ public class PlanilhaAntigaExcelImport {
 
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-				PlanilhaAntigaDto atendimento = new PlanilhaAntigaDto();
+				PlanilhaDto atendimento = new PlanilhaDto();
 
 				int cellIdx = 0;
 				while (cellsInRow.hasNext()) {
 					Cell currentCell = cellsInRow.next();
-					
+
 					switch (cellIdx) {
 					case 0:
 						atendimento.setAnalista(returnCellToString(currentCell));
 						break;
-
-					case 2:
+						
+					case 4:
+						atendimento.setOcorrencia(returnCellToLong(currentCell));
+						break;
+					
+					case 7:
 						atendimento.setCard(returnCellToString(currentCell));
 						break;
 
-					case 3:
+					case 8:
 						atendimento.setSquad(returnCellToString(currentCell));
 						break;
 
-					case 4:
-						atendimento.setObservcao(returnCellToString(currentCell));
-						break;
-						
-					case 5:
-						atendimento.setCausa_raiz(returnCellToString(currentCell));
-						break;
-						
-					case 6:
+					case 9:
 						atendimento.setStatus(returnCellToString(currentCell));
 						break;
-						
-					case 7:
+
+					case 10:
 						atendimento.setData_status(returnCellToDate(currentCell));
 						break;
-						
-					case 8:
-						atendimento.setOcorrencia(returnCellToLong(currentCell));
+
+					case 11:
+						atendimento.setObservacao(returnCellToString(currentCell));
+						break;
+
+					case 12:
+						atendimento.setCausa_raiz(returnCellToString(currentCell));
 						break;
 
 					default:
@@ -114,23 +117,14 @@ public class PlanilhaAntigaExcelImport {
 			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
 		}
 	}
-	
+
 	private static String returnCellToString(Cell currentCell) {
-		if(currentCell.getCellType().equals(CellType.STRING)) {
+		if (currentCell.getCellType().equals(CellType.STRING)) {
 			return currentCell.getStringCellValue();
-		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+		} else if (currentCell.getCellType().equals(CellType.NUMERIC)) {
 			return String.valueOf((long) currentCell.getNumericCellValue());
-		} 
+		}
 		return "";
-	}
-	
-	private static Date returnCellToDate(Cell currentCell) throws ParseException {
-		if(currentCell.getCellType().equals(CellType.STRING)) {
-			return formato.parse(currentCell.getStringCellValue());
-		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
-			return currentCell.getDateCellValue();
-		} 
-		return null;
 	}
 	
 	private static Long returnCellToLong(Cell currentCell) {
@@ -138,6 +132,15 @@ public class PlanilhaAntigaExcelImport {
 			return Long.parseLong(currentCell.getStringCellValue());
 		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
 			return (long) currentCell.getNumericCellValue();
+		} 
+		return null;
+	}
+	
+	private static Date returnCellToDate(Cell currentCell) throws ParseException {
+		if(currentCell.getCellType().equals(CellType.STRING)) {
+			return formato.parse(currentCell.getStringCellValue());
+		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+			return currentCell.getDateCellValue();
 		} 
 		return null;
 	}

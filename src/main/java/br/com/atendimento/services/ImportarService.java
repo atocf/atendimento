@@ -19,11 +19,13 @@ import br.com.atendimento.dto.importar.ImportarAberturaDto;
 import br.com.atendimento.dto.importar.ImportarBacklogDto;
 import br.com.atendimento.dto.importar.ResponseImportDto;
 import br.com.atendimento.dto.planilhaantiga.PlanilhaAntigaDto;
+import br.com.atendimento.dto.planilhaantiga.PlanilhaDto;
 import br.com.atendimento.entity.Analista;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Squad;
 import br.com.atendimento.entity.Status;
 import br.com.atendimento.excel.PlanilhaAntigaExcelImport;
+import br.com.atendimento.excel.PlanilhaExcelImport;
 import br.com.atendimento.util.CnpjUtils;
 import br.com.atendimento.util.CpfUtils;
 import br.com.atendimento.util.DataUtils;
@@ -73,6 +75,8 @@ public class ImportarService {
 			return iDto;
 		}
 
+		chamadoService.updateAllFinalizado(list.get(0).getArea_responsavel());
+
 		log.info("Lendo a lista importada.");
 
 		for (ImportarBacklogDto pd : list) {
@@ -84,7 +88,7 @@ public class ImportarService {
 			Optional<Chamado> chamadoExit = chamadoService.findById(Long.parseLong(pd.getOcorrencia()));
 			if (chamadoExit.isPresent()) {
 				chamado = chamadoExit.get();
-				if(chamado.getStatus() != null && !(chamado.getStatus().getNome().equals("ENCAMINHADO"))) {
+				if (chamado.getStatus() != null && !(chamado.getStatus().getNome().equals("ENCAMINHADO"))) {
 					chamado.setStatus(null);
 				}
 			} else {
@@ -119,7 +123,7 @@ public class ImportarService {
 				}
 			}
 
-			integracaoService.buscarDados(chamadoService.save(chamado)); 
+			integracaoService.buscarDados(chamadoService.save(chamado));
 
 			total_importado++;
 
@@ -216,7 +220,7 @@ public class ImportarService {
 			List<PlanilhaAntigaDto> list = PlanilhaAntigaExcelImport.excelToChamado(file.getInputStream(), sheet);
 			for (PlanilhaAntigaDto a : list) {
 				log.info("Ocorrência:{}", a.getOcorrencia());
-				if (a.getProtocolo() != null) {
+				if (a.getOcorrencia() != null) {
 
 					Optional<Chamado> chamadoExit = chamadoService.findById(a.getOcorrencia());
 
@@ -228,7 +232,7 @@ public class ImportarService {
 							Optional<Status> s = statusService.findByNome(a.getStatus());
 							if (s.isPresent()) {
 								chamado.setStatus(s.get());
-								if(!(s.get().getNome().equals("ENCAMINHADO"))) {
+								if (!(s.get().getNome().equals("ENCAMINHADO"))) {
 									chamado.setStatusintergrall("Finalizado");
 								}
 							}
@@ -258,5 +262,55 @@ public class ImportarService {
 		} catch (IOException e) {
 			throw new RuntimeException("fail to store excel data: " + e.getMessage());
 		}
+	}
+
+	public void importarPlanilha(MultipartFile file, String sheet) throws ParseException {
+		try {
+			List<PlanilhaDto> list = PlanilhaExcelImport.excelToChamado(file.getInputStream(), sheet);
+			for (PlanilhaDto a : list) {
+				log.info("Ocorrência:{}", a.getOcorrencia());
+				if (a.getOcorrencia() != null) {
+
+					Optional<Chamado> chamadoExit = chamadoService.findById(a.getOcorrencia());
+
+					if (chamadoExit.isPresent()) {
+
+						Chamado chamado = chamadoExit.get();
+
+						if (a.getStatus() != null) {
+							Optional<Status> s = statusService.findByNome(a.getStatus());
+							if (s.isPresent()) {
+								chamado.setStatus(s.get());
+								if (!(s.get().getNome().equals("ENCAMINHADO"))) {
+									chamado.setStatusintergrall("Finalizado");
+								}
+							}
+						}
+
+						Optional<Analista> analista = analistaService.findByNome(a.getAnalista());
+						if (analista.isPresent()) {
+							chamado.setAnalista(analista.get());
+						}
+
+						if (a.getSquad() != null) {
+							Optional<Squad> s = squadService.findByNome(a.getSquad());
+							if (s.isPresent()) {
+								chamado.setSquad(s.get());
+							}
+						}
+						chamado.setCard(a.getCard());
+						chamado.setObservacao(a.getObservacao());
+						chamado.setDatastatus(a.getData_status());
+						chamado.setCausaraiz(causaRaizService.findCausaRaiz(a.getCausa_raiz()));
+
+						chamadoService.save(chamado);
+					}
+
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("fail to store excel data: " + e.getMessage());
+		}
+
 	}
 }
