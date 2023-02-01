@@ -62,5 +62,5 @@ public class SubMotivoDtoPut {
 	private Boolean imp001;
 	
 	@NotNull
-	private Boolean imp003;
+	private Boolean imp013;
 }

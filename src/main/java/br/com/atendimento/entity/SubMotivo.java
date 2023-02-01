@@ -84,7 +84,7 @@ public class SubMotivo {
 	
 	//Consulta status senha
 	@Column(nullable = false, columnDefinition = "tinyint(1) DEFAULT 1")
-	private Boolean imp003 = true;
+	private Boolean imp013 = true;
 	
 	public SubMotivo(Analista analista, String produto, String tipopublico, String variedadeproduto, String motivo, String nome, String equipe) {
 		super();

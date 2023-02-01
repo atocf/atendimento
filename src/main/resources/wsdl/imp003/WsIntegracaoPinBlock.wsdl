@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="CadastrarPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ParametroParametrosPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ParametroBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ParametroPinBlock" type="tns:PatrametrosPinBlock" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ParametroBase">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ModeloBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="SenhaWs" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="LoginWs" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="UrlWs" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="IdOrigemIntegracao" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ModeloBase" />
+      <s:complexType name="PatrametrosPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ModeloBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="NumeroCartao" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Agencia" type="s:short" />
+              <s:element minOccurs="1" maxOccurs="1" name="Conta" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="CPF" type="s:decimal" />
+              <s:element minOccurs="0" maxOccurs="1" name="PinBlock" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Pan" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Origem" type="s:short" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CadastrarPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CadastrarPinBlockResult" type="tns:RetornoCadastrarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoCadastrarPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="RetornoBase">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Observacao" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="StatusProcessamento" type="tns:StatusProcessamento" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="StatusProcessamento">
+        <s:restriction base="s:string">
+          <s:enumeration value="NaoDefinido" />
+          <s:enumeration value="ProcessadoSucesso" />
+          <s:enumeration value="InformacaoSolicitadaNaoEncontrada" />
+          <s:enumeration value="SemPermissaoAcesso" />
+          <s:enumeration value="ProcessadoComErro" />
+          <s:enumeration value="ContaAgenciaInformadaInvalida" />
+          <s:enumeration value="CartaoDeCreditoInvalido" />
+          <s:enumeration value="ProcessadoComExcecao" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="CadastrarPinBlockTemporario">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CadastrarPinBlockTemporarioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CadastrarPinBlockTemporarioResult" type="tns:RetornoCadastrarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CadastrarPinBlockToken">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CadastrarPinBlockTokenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CadastrarPinBlockTokenResult" type="tns:RetornoCadastrarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CadastrarPinBlockCVV">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+            <s:element minOccurs="1" maxOccurs="1" name="cvv" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CadastrarPinBlockCVVResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CadastrarPinBlockCVVResult" type="tns:RetornoCadastrarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AlterarPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AlterarPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AlterarPinBlockResult" type="tns:RetornoAlterarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoAlterarPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AlterarPinBlockToken">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AlterarPinBlockTokenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AlterarPinBlockTokenResult" type="tns:RetornoAlterarPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AtualizarMotivoBloqueio">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametrosMotivo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ParametrosMotivo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ParametroBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Origem" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="Agencia" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="Conta" type="s:decimal" />
+              <s:element minOccurs="1" maxOccurs="1" name="CPF" type="s:decimal" />
+              <s:element minOccurs="1" maxOccurs="1" name="Motivo" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AtualizarMotivoBloqueioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AtualizarMotivoBloqueioResult" type="tns:RetornoAtualizarMotivo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoAtualizarMotivo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ValidarPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidarPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidarPinBlockResult" type="tns:RetornoValidacaoPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoValidacaoPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="PinblockValido" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="CodigoInvalido" type="tns:RetValidacaoPin" />
+              <s:element minOccurs="0" maxOccurs="1" name="DescricaoInvalido" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="RetValidacaoPin">
+        <s:restriction base="s:string">
+          <s:enumeration value="Sucesso" />
+          <s:enumeration value="ClienteNaoEncontrado" />
+          <s:enumeration value="ClienteInativo" />
+          <s:enumeration value="ClienteBloqueado" />
+          <s:enumeration value="SenhaBloqueada" />
+          <s:enumeration value="SenhaInvalida" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ValidarComplexidadePin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidarComplexidadePinResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidarComplexidadePinResult" type="tns:RetornoValidacaoComplexidadePin" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoValidacaoComplexidadePin">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ComplexidadeValida" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="MotivoRejeicao" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ValidarComplexidadeLista">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidarComplexidadeListaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidarComplexidadeListaResult" type="tns:RetornoValidacaoComplexidadeLista" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoValidacaoComplexidadeLista">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ComplexidadeValida" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="MotivoRejeicao" type="tns:ArrayOfPoliticaSenha" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPoliticaSenha">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PoliticaSenha" nillable="true" type="tns:PoliticaSenha" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PoliticaSenha">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Codigo" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MotivoRejeicao" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ConsultarSenhaPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConsultarSenhaPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConsultarSenhaPinBlockResult" type="tns:RetornoConsultarSenhaPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoConsultarSenhaPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="CodigoSituacao" type="tns:Situacao" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="Situacao">
+        <s:restriction base="s:string">
+          <s:enumeration value="Inexistente" />
+          <s:enumeration value="Ativo" />
+          <s:enumeration value="Inativo" />
+          <s:enumeration value="Bloqueado" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ConsultarMotivoBloqueio">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametrosMotivo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConsultarMotivoBloqueioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConsultarMotivoBloqueioResult" type="tns:RetornoConsultarMotivo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoConsultarMotivo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Motivo" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="MotivoDescrição" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DesbloquearPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DesbloquearPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DesbloquearPinBlockResult" type="tns:RetornoDesbloquearPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoDesbloquearPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DesbloquearPinBlockTemporario">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DesbloquearPinBlockTemporarioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DesbloquearPinBlockTemporarioResult" type="tns:RetornoDesbloquearPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="InativarPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="InativarPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InativarPinBlockResult" type="tns:RetornoInativaPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoInativaPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BloquearPinBlock">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BloquearPinBlockResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BloquearPinBlockResult" type="tns:RetornoBloquearPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoBloquearPinBlock">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="EnviarSenhaProcessadora">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EnviarSenhaProcessadoraResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EnviarSenhaProcessadoraResult" type="tns:RetornoEnviarSenhaProcessadora" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoEnviarSenhaProcessadora">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ConsultarStatusServidor">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConsultarStatusServidorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConsultarStatusServidorResult" type="tns:RetornoStatusServidor" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoStatusServidor">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="VersaoAplicacao" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="NomeServidor" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Servidores" type="tns:ArrayOfStatusServidor" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfStatusServidor">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="StatusServidor" nillable="true" type="tns:StatusServidor" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="StatusServidor">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Nome" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Observacao" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ValidarProcessosExternos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="parametros" type="tns:ParametroParametrosPinBlock" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidarProcessosExternosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidarProcessosExternosResult" type="tns:RetornoProcessosExternos" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetornoProcessosExternos">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RetornoBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Processos" type="tns:ArrayOfString" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CadastrarPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockTemporarioSoapIn">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockTemporario" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockTemporarioSoapOut">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockTemporarioResponse" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockTokenSoapIn">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockToken" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockTokenSoapOut">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockCVVSoapIn">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockCVV" />
+  </wsdl:message>
+  <wsdl:message name="CadastrarPinBlockCVVSoapOut">
+    <wsdl:part name="parameters" element="tns:CadastrarPinBlockCVVResponse" />
+  </wsdl:message>
+  <wsdl:message name="AlterarPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:AlterarPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="AlterarPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:AlterarPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="AlterarPinBlockTokenSoapIn">
+    <wsdl:part name="parameters" element="tns:AlterarPinBlockToken" />
+  </wsdl:message>
+  <wsdl:message name="AlterarPinBlockTokenSoapOut">
+    <wsdl:part name="parameters" element="tns:AlterarPinBlockTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="AtualizarMotivoBloqueioSoapIn">
+    <wsdl:part name="parameters" element="tns:AtualizarMotivoBloqueio" />
+  </wsdl:message>
+  <wsdl:message name="AtualizarMotivoBloqueioSoapOut">
+    <wsdl:part name="parameters" element="tns:AtualizarMotivoBloqueioResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidarPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidarPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="ValidarPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidarPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidarComplexidadePinSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidarComplexidadePin" />
+  </wsdl:message>
+  <wsdl:message name="ValidarComplexidadePinSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidarComplexidadePinResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidarComplexidadeListaSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidarComplexidadeLista" />
+  </wsdl:message>
+  <wsdl:message name="ValidarComplexidadeListaSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidarComplexidadeListaResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarSenhaPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:ConsultarSenhaPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarSenhaPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:ConsultarSenhaPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarMotivoBloqueioSoapIn">
+    <wsdl:part name="parameters" element="tns:ConsultarMotivoBloqueio" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarMotivoBloqueioSoapOut">
+    <wsdl:part name="parameters" element="tns:ConsultarMotivoBloqueioResponse" />
+  </wsdl:message>
+  <wsdl:message name="DesbloquearPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:DesbloquearPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="DesbloquearPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:DesbloquearPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="DesbloquearPinBlockTemporarioSoapIn">
+    <wsdl:part name="parameters" element="tns:DesbloquearPinBlockTemporario" />
+  </wsdl:message>
+  <wsdl:message name="DesbloquearPinBlockTemporarioSoapOut">
+    <wsdl:part name="parameters" element="tns:DesbloquearPinBlockTemporarioResponse" />
+  </wsdl:message>
+  <wsdl:message name="InativarPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:InativarPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="InativarPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:InativarPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="BloquearPinBlockSoapIn">
+    <wsdl:part name="parameters" element="tns:BloquearPinBlock" />
+  </wsdl:message>
+  <wsdl:message name="BloquearPinBlockSoapOut">
+    <wsdl:part name="parameters" element="tns:BloquearPinBlockResponse" />
+  </wsdl:message>
+  <wsdl:message name="EnviarSenhaProcessadoraSoapIn">
+    <wsdl:part name="parameters" element="tns:EnviarSenhaProcessadora" />
+  </wsdl:message>
+  <wsdl:message name="EnviarSenhaProcessadoraSoapOut">
+    <wsdl:part name="parameters" element="tns:EnviarSenhaProcessadoraResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarStatusServidorSoapIn">
+    <wsdl:part name="parameters" element="tns:ConsultarStatusServidor" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarStatusServidorSoapOut">
+    <wsdl:part name="parameters" element="tns:ConsultarStatusServidorResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidarProcessosExternosSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidarProcessosExternos" />
+  </wsdl:message>
+  <wsdl:message name="ValidarProcessosExternosSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidarProcessosExternosResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WsIntegracaoPinBlockSoap">
+    <wsdl:operation name="CadastrarPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cadastramento de PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:CadastrarPinBlockSoapIn" />
+      <wsdl:output message="tns:CadastrarPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockTemporario">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cadastramento de PinBlock Temporário</wsdl:documentation>
+      <wsdl:input message="tns:CadastrarPinBlockTemporarioSoapIn" />
+      <wsdl:output message="tns:CadastrarPinBlockTemporarioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockToken">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cadastramento de PinBlock com token</wsdl:documentation>
+      <wsdl:input message="tns:CadastrarPinBlockTokenSoapIn" />
+      <wsdl:output message="tns:CadastrarPinBlockTokenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockCVV">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cadastramento de PinBlock com CVV</wsdl:documentation>
+      <wsdl:input message="tns:CadastrarPinBlockCVVSoapIn" />
+      <wsdl:output message="tns:CadastrarPinBlockCVVSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterarPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Alteração de PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:AlterarPinBlockSoapIn" />
+      <wsdl:output message="tns:AlterarPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterarPinBlockToken">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Alteração de PinBlock com token</wsdl:documentation>
+      <wsdl:input message="tns:AlterarPinBlockTokenSoapIn" />
+      <wsdl:output message="tns:AlterarPinBlockTokenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AtualizarMotivoBloqueio">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Atualizar Motivo Bloqueio</wsdl:documentation>
+      <wsdl:input message="tns:AtualizarMotivoBloqueioSoapIn" />
+      <wsdl:output message="tns:AtualizarMotivoBloqueioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidarPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Validação de PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:ValidarPinBlockSoapIn" />
+      <wsdl:output message="tns:ValidarPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidarComplexidadePin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Validação do nível de complexidade do Pin</wsdl:documentation>
+      <wsdl:input message="tns:ValidarComplexidadePinSoapIn" />
+      <wsdl:output message="tns:ValidarComplexidadePinSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidarComplexidadeLista">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retorna lista de validação do nível de complexidade do Pin</wsdl:documentation>
+      <wsdl:input message="tns:ValidarComplexidadeListaSoapIn" />
+      <wsdl:output message="tns:ValidarComplexidadeListaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarSenhaPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Consultar Senha PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:ConsultarSenhaPinBlockSoapIn" />
+      <wsdl:output message="tns:ConsultarSenhaPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarMotivoBloqueio">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Consultar Motivo Bloqueio</wsdl:documentation>
+      <wsdl:input message="tns:ConsultarMotivoBloqueioSoapIn" />
+      <wsdl:output message="tns:ConsultarMotivoBloqueioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DesbloquearPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Desbloquear PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:DesbloquearPinBlockSoapIn" />
+      <wsdl:output message="tns:DesbloquearPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DesbloquearPinBlockTemporario">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Desbloquear PinBlock Temporário</wsdl:documentation>
+      <wsdl:input message="tns:DesbloquearPinBlockTemporarioSoapIn" />
+      <wsdl:output message="tns:DesbloquearPinBlockTemporarioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InativarPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Inativação de PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:InativarPinBlockSoapIn" />
+      <wsdl:output message="tns:InativarPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BloquearPinBlock">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Bloquear PinBlock</wsdl:documentation>
+      <wsdl:input message="tns:BloquearPinBlockSoapIn" />
+      <wsdl:output message="tns:BloquearPinBlockSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EnviarSenhaProcessadora">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Enviar Senha p/ Processadora</wsdl:documentation>
+      <wsdl:input message="tns:EnviarSenhaProcessadoraSoapIn" />
+      <wsdl:output message="tns:EnviarSenhaProcessadoraSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarStatusServidor">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Consultar status do servidor</wsdl:documentation>
+      <wsdl:input message="tns:ConsultarStatusServidorSoapIn" />
+      <wsdl:output message="tns:ConsultarStatusServidorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidarProcessosExternos">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Validar Processos Externos</wsdl:documentation>
+      <wsdl:input message="tns:ValidarProcessosExternosSoapIn" />
+      <wsdl:output message="tns:ValidarProcessosExternosSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="WsIntegracaoPinBlockHttpGet" />
+  <wsdl:portType name="WsIntegracaoPinBlockHttpPost" />
+  <wsdl:binding name="WsIntegracaoPinBlockSoap" type="tns:WsIntegracaoPinBlockSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CadastrarPinBlock">
+      <soap:operation soapAction="http://tempuri.org/CadastrarPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockTemporario">
+      <soap:operation soapAction="http://tempuri.org/CadastrarPinBlockTemporario" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockToken">
+      <soap:operation soapAction="http://tempuri.org/CadastrarPinBlockToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CadastrarPinBlockCVV">
+      <soap:operation soapAction="http://tempuri.org/CadastrarPinBlockCVV" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterarPinBlock">
+      <soap:operation soapAction="http://tempuri.org/AlterarPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterarPinBlockToken">
+      <soap:operation soapAction="http://tempuri.org/AlterarPinBlockToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AtualizarMotivoBloqueio">
+      <soap:operation soapAction="http://tempuri.org/AtualizarMotivoBloqueio" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidarPinBlock">
+      <soap:operation soapAction="http://tempuri.org/ValidarPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidarComplexidadePin">
+      <soap:operation soapAction="http://tempuri.org/ValidarComplexidadePin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidarComplexidadeLista">
+      <soap:operation soapAction="http://tempuri.org/ValidarComplexidadeLista" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarSenhaPinBlock">
+      <soap:operation soapAction="http://tempuri.org/ConsultarSenhaPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarMotivoBloqueio">
+      <soap:operation soapAction="http://tempuri.org/ConsultarMotivoBloqueio" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DesbloquearPinBlock">
+      <soap:operation soapAction="http://tempuri.org/DesbloquearPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DesbloquearPinBlockTemporario">
+      <soap:operation soapAction="http://tempuri.org/DesbloquearPinBlockTemporario" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InativarPinBlock">
+      <soap:operation soapAction="http://tempuri.org/InativarPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BloquearPinBlock">
+      <soap:operation soapAction="http://tempuri.org/BloquearPinBlock" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarSenhaProcessadora">
+      <soap:operation soapAction="http://tempuri.org/EnviarSenhaProcessadora" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarStatusServidor">
+      <soap:operation soapAction="http://tempuri.org/ConsultarStatusServidor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidarProcessosExternos">
+      <soap:operation soapAction="http://tempuri.org/ValidarProcessosExternos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WsIntegracaoPinBlockHttpGet" type="tns:WsIntegracaoPinBlockHttpGet">
+    <http:binding verb="GET" />
+  </wsdl:binding>
+  <wsdl:binding name="WsIntegracaoPinBlockHttpPost" type="tns:WsIntegracaoPinBlockHttpPost">
+    <http:binding verb="POST" />
+  </wsdl:binding>
+  <wsdl:service name="WsIntegracaoPinBlock">
+    <wsdl:port name="WsIntegracaoPinBlockSoap" binding="tns:WsIntegracaoPinBlockSoap">
+      <soap:address location="http://wsip.bancobmg.com.br/IMP003/WsIntegracaoPinBlock.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WsIntegracaoPinBlockHttpGet" binding="tns:WsIntegracaoPinBlockHttpGet">
+      <http:address location="http://wsip.bancobmg.com.br/IMP003/WsIntegracaoPinBlock.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WsIntegracaoPinBlockHttpPost" binding="tns:WsIntegracaoPinBlockHttpPost">
+      <http:address location="http://wsip.bancobmg.com.br/IMP003/WsIntegracaoPinBlock.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
