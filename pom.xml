@@ -118,6 +118,11 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox-swagger.version}</version>
 		</dependency>
+		<!--Selenium-->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+        </dependency>
 		<!-- spring-ws -->
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
