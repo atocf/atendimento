@@ -182,6 +182,21 @@
 							</schemaIncludes>
 						</configuration>
 					</execution>
+					<execution>
+						<id>imp003</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaLanguage>WSDL</schemaLanguage>
+							<generatePackage>br.com.atendimento.wsdl.imp003</generatePackage>
+							<generateDirectory>${project.basedir}/src/main/java</generateDirectory>
+							<schemaDirectory>${project.basedir}/src/main/resources/wsdl/imp003</schemaDirectory>
+							<schemaIncludes>
+								<include>*.wsdl</include>
+							</schemaIncludes>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
