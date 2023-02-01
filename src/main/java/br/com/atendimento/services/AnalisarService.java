@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import br.com.atendimento.dto.analisar.ResponseAnalisarDto;
-import br.com.atendimento.dto.analisar.ResponseDevolverDto;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
 
@@ -30,6 +29,15 @@ public class AnalisarService {
 	private CausaRaizService causaRaizService;
 
 	@Autowired
+	private Dgp018Service dgp018Service;
+	
+	@Autowired
+	private Dgp180Service dgp180Service;
+	
+	@Autowired
+	private Imp013Service imp013Service;
+	
+	@Autowired
 	private MsgService msgService;
 
 	@Value("${chromedriver.path}")
@@ -47,6 +55,7 @@ public class AnalisarService {
 				+ respPjnoPj.getTotal_devolver_fila_errada_bmg_empresa());
 		resp.setTotal_devolver_atendimento_conta_existente(resp.getTotal_devolver_atendimento_conta_existente()
 				+ respAberturaConta.getTotal_devolver_atendimento_conta_existente());
+		resp.setTotal_chamado_analisado_fechar(resp.getTotal_chamado_analisado_fechar() + respAberturaConta.getTotal_chamado_analisado_fechar());
 
 		return resp;
 	}
@@ -55,32 +64,66 @@ public class AnalisarService {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 
 		int conta_existente = 0;
+		int total_fechar = 0;
 
 		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome("Pendente",
 				"BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE FINALIZAR ABERTURA DE CONTA");
 		if (list.size() > 0) {
 			for (Chamado chamado : list) {
-				if (chamado.getConta().size() > 0) {
-					for (Conta conta : chamado.getConta()) {
-						if (!(conta.getDescricaosituacao().equals("DESATIVADA"))) {
-							chamado.setStatus(statusService.findByNome("DEVOLVER").get());
-							chamado.setCausaraiz(causaRaizService.findById(49L).get());
-							chamado.setDatastatus(new Date());
-							chamado.setMsg(msgService.findById(1L).get());
-							chamadoService.save(chamado);
-							conta_existente++;
+				if (chamado.getCpf() != null) {
+					if (chamado.getConta().size() > 0) {
+						for (Conta conta : chamado.getConta()) {
+							if (conta.getDescricaosituacao().equals("LIBERADA")) {
+								String st = dgp018Service.consultaStatus(chamado.getCpf());
+								if (st != null && st.equals("SENHA_TEMPORARIA_PROMOVIDA")) {
+									chamado.setStatussenha("Ativar Temporaria");
+									atualizarChamado(chamado, null, null, 52L, null);
+									total_fechar++;
+								} else {
+									atualizarChamado(chamado, "DEVOLVER", null, 49L, 1L);
+									conta_existente++;
+								}
+							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+								atualizarChamado(chamado, "DEVOLVER", null, 49L, 1L);
+								conta_existente++;
+							} else if (conta.getDescricaosituacao().equals("DESATIVADA")) {
+								resetOnboarding(chamado, 51L);
+								total_fechar++;
+							}
 						}
+					} else {
+						resetOnboarding(chamado, 50L);
+						total_fechar++;
 					}
-					if (chamado.getStatus() == null) {
-						//resetOnboarding(chamado);
-					}
-				} else {
-					//resetOnboarding(chamado);
 				}
 			}
 		}
 
+		resp.setTotal_devolver_atendimento_conta_existente(conta_existente);
+		resp.setTotal_chamado_analisado_fechar(total_fechar);
 		return resp;
+	}
+
+	private void resetOnboarding(Chamado chamado, Long cauzaRaiz) {
+		dgp018Service.limpezaCadastro(chamado.getCpf());
+		dgp180Service.deleteRedis(chamado.getCpf());
+		imp013Service.inativarPinEletronico(chamado.getCpf());
+		atualizarChamado(chamado, "FECHAR", null, cauzaRaiz, 4L);	
+	}
+
+	private void atualizarChamado(Chamado chamado, String status, Long analista, Long cauzaRaiz, Long msg) {
+		if(status != null) {
+			chamado.setStatus(statusService.findByNome(status).get());
+		}
+		if (analista != null) {
+			chamado.setAnalista(analistaService.findById(analista).get());
+		}
+		chamado.setCausaraiz(causaRaizService.findById(cauzaRaiz).get());
+		chamado.setDatastatus(new Date());
+		if(msg != null) {
+			chamado.setMsg(msgService.findById(msg).get());
+		}
+		chamadoService.save(chamado);
 	}
 
 	private ResponseAnalisarDto validaPjnoPj() {
@@ -91,19 +134,12 @@ public class AnalisarService {
 		List<Chamado> devolverBmgEmpresa = chamadoService
 				.findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull("Pendente", "BACKOFFICE DÍGITAL");
 
-		resp.setTotal_devolver_fila_errada_bmg_empresa(devolverBmgEmpresa.size());
-
 		if (devolverBmgEmpresa.size() > 0) {
 			for (Chamado c : devolverBmgEmpresa) {
-				c.setStatus(statusService.findByNome("DEVOLVER").get());
-				c.setAnalista(analistaService.findById(14L).get());
-				c.setCausaraiz(causaRaizService.findById(1L).get());
-				c.setDatastatus(new Date());
-				c.setMsg(msgService.findById(2L).get());
-				chamadoService.save(c);
+				atualizarChamado(c, "DEVOLVER", 14L, 1L, 2L);
 			}
 		}
-
+		resp.setTotal_devolver_fila_errada_bmg_empresa(devolverBmgEmpresa.size());
 		return resp;
 	}
 }
