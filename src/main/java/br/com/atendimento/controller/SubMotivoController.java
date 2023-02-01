@@ -103,7 +103,7 @@ public class SubMotivoController {
 			record.setDgp001(submotivo.getDgp001());
 			record.setDgp041(submotivo.getDgp041());
 			record.setImp001(submotivo.getImp001());
-			record.setImp003(submotivo.getImp003());
+			record.setImp013(submotivo.getImp013());
 			SubMotivo updated = service.save(record);
 			return ResponseEntity.ok().body(updated);
 		}).orElse(ResponseEntity.notFound().build());

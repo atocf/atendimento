@@ -60,6 +60,9 @@ public class IntegracaoService {
 
 	@Autowired
 	private CartaoService cartaoService;
+	
+	@Autowired
+	private ChamadoService chamadoService;
 
 	private static final Logger log = LoggerFactory.getLogger(IntegracaoService.class);
 
@@ -179,12 +182,14 @@ public class IntegracaoService {
 			log.info("Fim consulta dados conta");
 		}
 
-		if (chamado.getSubmotivo().getImp003() && chamado.getCpf() != null) {
+		if (chamado.getSubmotivo().getImp013() && chamado.getCpf() != null) {
 			log.info("Consulta status senha do cpf: {}", chamado.getCpf());
 
 			chamado.setStatussenha(imp003Service.consultaStatusPin(chamado.getCpf()));
 
 			log.info("Fim consulta status senha");
 		}
+		
+		chamadoService.save(chamado);
 	}
 }
