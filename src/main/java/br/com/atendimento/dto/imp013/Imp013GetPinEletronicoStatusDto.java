@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Imp013GetPinEletronicoStatusData {
+public class Imp013GetPinEletronicoStatusDto {
 	
-	private Integer codigoStatus;
-	private String descricaoStatus;
+	private Imp013GetPinEletronicoStatusDataDto data;
 }

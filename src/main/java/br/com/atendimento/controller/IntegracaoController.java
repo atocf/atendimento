@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.atendimento.client.Cdtp004Client;
 import br.com.atendimento.client.Imp001Client;
 import br.com.atendimento.services.Dgp001Service;
+import br.com.atendimento.services.Dgp018Service;
 import br.com.atendimento.services.Dgp041Service;
 import br.com.atendimento.services.Imp013Service;
 import br.com.atendimento.wsdl.cdtp004.ConsultarDadosCartao;
@@ -32,10 +33,19 @@ public class IntegracaoController {
 	@Autowired
 	private Imp013Service imp003Service;
 	
+	@Autowired
+	private Dgp018Service dgp018Service;
+	
 	@GetMapping(path = { "/imp003/pin/{cpf}" })
 	@ApiOperation("Consultar o status do Pin Eletrônico pelo CPF: {cpf}.")
 	public ResponseEntity<String> consultaStatusPin(@PathVariable String cpf) {
 		return ResponseEntity.ok(imp003Service.consultaStatusPin(cpf));
+	}
+	
+	@GetMapping(path = { "/imp003/pin/inativar/{cpf}" })
+	@ApiOperation("Permite inativar o Pin Eletrônico pelo CPF: {cpf}.")
+	public ResponseEntity<String> inativarPinEletronico(@PathVariable String cpf) {
+		return ResponseEntity.ok(imp003Service.inativarPinEletronico(cpf));
 	}
 	
 	@Autowired
@@ -62,6 +72,12 @@ public class IntegracaoController {
 	@ApiOperation("Consultar os dados cadastrais pelo CPF: {cpf}.")
 	public ResponseEntity<?> consultaCliente(@PathVariable String cpf) {
 		return ResponseEntity.ok(dgp001Service.consultaCliente(cpf));
+	}
+	
+	@GetMapping(path = { "/dgp018/status/{cpf}" })
+	@ApiOperation("Método para retorno do status por CPF: {cpf}.")
+	public ResponseEntity<String> consultaStatus(@PathVariable String cpf) {
+		return ResponseEntity.ok(dgp018Service.consultaStatus(cpf));
 	}
 	
 	@Autowired

@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import br.com.atendimento.dto.imp013.Imp013GetPinEletronicoStatus;
+import br.com.atendimento.dto.imp013.Imp013GetPinEletronicoStatusDto;
 
 @Service
 public class Imp013Service {
@@ -27,6 +27,9 @@ public class Imp013Service {
 
 	@Value("${imp013.header.authorization}")
 	private String imp013HeaderAuthorization;
+	
+	@Value("${imp013.header.authorization.inativar}")
+	private String imp013HeaderAuthorizationInativar;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -48,8 +51,36 @@ public class Imp013Service {
 
 			Gson g = new Gson();
 			if (response.getStatusCode() == HttpStatus.OK) {
-				Imp013GetPinEletronicoStatus pinStatus = g.fromJson(response.getBody(),
-						new TypeToken<Imp013GetPinEletronicoStatus>() {
+				Imp013GetPinEletronicoStatusDto pinStatus = g.fromJson(response.getBody(),
+						new TypeToken<Imp013GetPinEletronicoStatusDto>() {
+						}.getType());
+				if (pinStatus != null && pinStatus.getData() != null) {
+					return pinStatus.getData().getDescricaoStatus();
+				}
+			}
+		} catch (HttpStatusCodeException e) {
+			return null;
+		}
+		return null;
+	}
+	
+	public String inativarPinEletronico(String cpf) {
+		log.info("Permite inativar o Pin Eletrônico pelo CPF: {}", cpf);
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", imp013HeaderAuthorizationInativar);
+			HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(
+					imp013Host + "/v1/pin/eletronico/inativar?cpf=" + cpf, HttpMethod.POST, requestEntity,
+					String.class);
+
+			Gson g = new Gson();
+			if (response.getStatusCode() == HttpStatus.OK) {
+				Imp013GetPinEletronicoStatusDto pinStatus = g.fromJson(response.getBody(),
+						new TypeToken<Imp013GetPinEletronicoStatusDto>() {
 						}.getType());
 				if (pinStatus != null && pinStatus.getData() != null) {
 					return pinStatus.getData().getDescricaoStatus();
