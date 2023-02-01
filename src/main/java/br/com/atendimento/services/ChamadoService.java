@@ -70,4 +70,10 @@ public class ChamadoService {
 		log.info("Consultar protocolos que tem que ser devolvidos por serem CNPJ");
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(status_intergrall, equipe);
 	}
+
+	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(String status_intergrall, String equipe,
+			String submotivo) {
+		log.info("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
+		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(status_intergrall, equipe, submotivo);
+	}
 }
