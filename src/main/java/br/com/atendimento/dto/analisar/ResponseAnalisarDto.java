@@ -15,4 +15,6 @@ public class ResponseAnalisarDto {
 	private int total_devolver_fila_errada_fraude;
 	private int total_devolver_fila_errada_geare;
 	private int total_devolver_fila_errada_geback;
+	private int total_devolver_atendimento_conta_existente;
 }
+

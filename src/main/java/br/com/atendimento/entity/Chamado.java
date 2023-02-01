@@ -134,4 +134,8 @@ public class Chamado {
 		
 	@OneToMany(mappedBy = "chamado", targetEntity = Conta.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	private List<Conta> conta;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idmsg")
+	private Msg msg;
 }

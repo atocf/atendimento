@@ -29,76 +29,69 @@ public class AnalisarService {
 	@Autowired
 	private CausaRaizService causaRaizService;
 
+	@Autowired
+	private MsgService msgService;
+
 	@Value("${chromedriver.path}")
 	private String chromedriverPath;
 
 	private static final Logger log = LoggerFactory.getLogger(AnalisarService.class);
 
-	
-
 	public ResponseAnalisarDto analisar() {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
-		
+
 		ResponseAnalisarDto respAberturaConta = validaAberturaConta();
-		
-		resp.setTotal_devolver_fila_errada(resp.getTotal_devolver_fila_errada() + respAberturaConta.getTotal_devolver_fila_errada());
-		resp.setTotal_devolver_fila_errada_bmg_empresa(resp.getTotal_devolver_fila_errada_bmg_empresa() + respAberturaConta.getTotal_devolver_fila_errada_bmg_empresa());
-		resp.setTotal_devolver_fila_errada_conta_corrente(resp.getTotal_devolver_fila_errada_conta_corrente() + respAberturaConta.getTotal_devolver_fila_errada_conta_corrente());
-		resp.setTotal_devolver_fila_errada_fraude(resp.getTotal_devolver_fila_errada_fraude() + respAberturaConta.getTotal_devolver_fila_errada_fraude());
-		resp.setTotal_devolver_fila_errada_geare(resp.getTotal_devolver_fila_errada_geare() + respAberturaConta.getTotal_devolver_fila_errada_geare());
-		resp.setTotal_devolver_fila_errada_geback(resp.getTotal_devolver_fila_errada_geback() + respAberturaConta.getTotal_devolver_fila_errada_geback());
-		
+		ResponseAnalisarDto respPjnoPj = validaPjnoPj();
+
+		resp.setTotal_devolver_fila_errada_bmg_empresa(resp.getTotal_devolver_fila_errada_bmg_empresa()
+				+ respPjnoPj.getTotal_devolver_fila_errada_bmg_empresa());
+		resp.setTotal_devolver_atendimento_conta_existente(resp.getTotal_devolver_atendimento_conta_existente()
+				+ respAberturaConta.getTotal_devolver_atendimento_conta_existente());
+
 		return resp;
 	}
-	
-	
+
 	private ResponseAnalisarDto validaAberturaConta() {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
-		
-		List<Chamado> list = chamadoService
-				.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome("Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE FINALIZAR ABERTURA DE CONTA");
-		if(list.size() > 0) {
-			for(Chamado chamado : list) {
-				if(chamado.getConta().size() > 0) {
-					for(Conta conta : chamado.getConta()) {
-						if(!(conta.getDescricaosituacao().equals("DESATIVADA"))) {
+
+		int conta_existente = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome("Pendente",
+				"BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE FINALIZAR ABERTURA DE CONTA");
+		if (list.size() > 0) {
+			for (Chamado chamado : list) {
+				if (chamado.getConta().size() > 0) {
+					for (Conta conta : chamado.getConta()) {
+						if (!(conta.getDescricaosituacao().equals("DESATIVADA"))) {
 							chamado.setStatus(statusService.findByNome("DEVOLVER").get());
-							chamado.setCausaraiz(causaRaizService.findById(1L).get()); //definir causa raiz preciso do texto para isso 
+							chamado.setCausaraiz(causaRaizService.findById(49L).get());
 							chamado.setDatastatus(new Date());
+							chamado.setMsg(msgService.findById(1L).get());
 							chamadoService.save(chamado);
+							conta_existente++;
 						}
 					}
-				}
-				if(chamado.getStatus() == null) {
-					
+					if (chamado.getStatus() == null) {
+						//resetOnboarding(chamado);
+					}
+				} else {
+					//resetOnboarding(chamado);
 				}
 			}
 		}
-		
-		
-		
+
 		return resp;
 	}
 
-
-
-
-
-
-
-
-
-
-
-	public ResponseDevolverDto devolver() {
-		ResponseDevolverDto resp = new ResponseDevolverDto();
+	private ResponseAnalisarDto validaPjnoPj() {
+		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 
 		log.info("Buscando lista de chamados para devolver para fila BMG Empresas");
 
 		List<Chamado> devolverBmgEmpresa = chamadoService
 				.findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull("Pendente", "BACKOFFICE DÍGITAL");
 
-		resp.setTotal_devolver_bmg_empresa(devolverBmgEmpresa.size());
+		resp.setTotal_devolver_fila_errada_bmg_empresa(devolverBmgEmpresa.size());
 
 		if (devolverBmgEmpresa.size() > 0) {
 			for (Chamado c : devolverBmgEmpresa) {
@@ -106,6 +99,7 @@ public class AnalisarService {
 				c.setAnalista(analistaService.findById(14L).get());
 				c.setCausaraiz(causaRaizService.findById(1L).get());
 				c.setDatastatus(new Date());
+				c.setMsg(msgService.findById(2L).get());
 				chamadoService.save(c);
 			}
 		}

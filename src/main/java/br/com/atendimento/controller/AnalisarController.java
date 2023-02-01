@@ -6,13 +6,11 @@ import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.atendimento.dto.analisar.ResponseAnalisarDto;
-import br.com.atendimento.dto.analisar.ResponseDevolverDto;
 import br.com.atendimento.services.AnalisarService;
 import io.swagger.annotations.Api;
 
@@ -24,11 +22,6 @@ public class AnalisarController {
 	@Autowired
 	private AnalisarService service;
 
-	@PostMapping("/devolver")
-	public ResponseEntity<?> devolver() throws IOException, ParseException {
-		return new ResponseEntity<ResponseDevolverDto>(service.devolver(), HttpStatus.CREATED);
-	}
-	
 	@PostMapping()
 	public ResponseEntity<?> analisar() throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.analisar(), HttpStatus.CREATED);

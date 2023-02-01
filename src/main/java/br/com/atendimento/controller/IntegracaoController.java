@@ -17,6 +17,7 @@ import br.com.atendimento.client.Imp001Client;
 import br.com.atendimento.services.Dgp001Service;
 import br.com.atendimento.services.Dgp018Service;
 import br.com.atendimento.services.Dgp041Service;
+import br.com.atendimento.services.Dgp180Service;
 import br.com.atendimento.services.Imp013Service;
 import br.com.atendimento.wsdl.cdtp004.ConsultarDadosCartao;
 import br.com.atendimento.wsdl.cdtp004.ConsultarDadosCartaoResponse;
@@ -32,9 +33,6 @@ public class IntegracaoController {
 	
 	@Autowired
 	private Imp013Service imp003Service;
-	
-	@Autowired
-	private Dgp018Service dgp018Service;
 	
 	@GetMapping(path = { "/imp003/pin/{cpf}" })
 	@ApiOperation("Consultar o status do Pin Eletrônico pelo CPF: {cpf}.")
@@ -74,6 +72,9 @@ public class IntegracaoController {
 		return ResponseEntity.ok(dgp001Service.consultaCliente(cpf));
 	}
 	
+	@Autowired
+	private Dgp018Service dgp018Service;
+	
 	@GetMapping(path = { "/dgp018/status/{cpf}" })
 	@ApiOperation("Método para retorno do status por CPF: {cpf}.")
 	public ResponseEntity<String> consultaStatus(@PathVariable String cpf) {
@@ -87,4 +88,13 @@ public class IntegracaoController {
     public ConsultarDadosCartaoResponse item(@RequestBody ConsultarDadosCartao itemRequest) throws KeyManagementException, NoSuchAlgorithmException{
         return cdtp004Client.consultarDadosCartao(itemRequest);
     }
+	
+	@Autowired
+	private Dgp180Service dgp180Service;
+	
+	@GetMapping(path = { "/dgp180/redis/delete/{cpf}" })
+	@ApiOperation("Método para deletar os dados no REDIS por CPF: {cpf}.")
+	public ResponseEntity<String> deleteRedis(@PathVariable String cpf) {
+		return ResponseEntity.ok(dgp180Service.deleteRedis(cpf));
+	}
 }
