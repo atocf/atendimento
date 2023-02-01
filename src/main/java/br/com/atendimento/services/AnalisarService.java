@@ -30,13 +30,13 @@ public class AnalisarService {
 
 	@Autowired
 	private Dgp018Service dgp018Service;
-	
+
 	@Autowired
 	private Dgp180Service dgp180Service;
-	
+
 	@Autowired
 	private Imp013Service imp013Service;
-	
+
 	@Autowired
 	private MsgService msgService;
 
@@ -50,13 +50,42 @@ public class AnalisarService {
 
 		ResponseAnalisarDto respAberturaConta = validaAberturaConta();
 		ResponseAnalisarDto respPjnoPj = validaPjnoPj();
+		ResponseAnalisarDto respTokenSenhaBloqqueada = validaSenhaBloqueada();
 
 		resp.setTotal_devolver_fila_errada_bmg_empresa(resp.getTotal_devolver_fila_errada_bmg_empresa()
 				+ respPjnoPj.getTotal_devolver_fila_errada_bmg_empresa());
 		resp.setTotal_devolver_atendimento_conta_existente(resp.getTotal_devolver_atendimento_conta_existente()
 				+ respAberturaConta.getTotal_devolver_atendimento_conta_existente());
-		resp.setTotal_chamado_analisado_fechar(resp.getTotal_chamado_analisado_fechar() + respAberturaConta.getTotal_chamado_analisado_fechar());
+		resp.setTotal_chamado_analisado_fechar(
+				resp.getTotal_chamado_analisado_fechar() + respAberturaConta.getTotal_chamado_analisado_fechar());
+		resp.setTotal_devolver_atendimento_senha_bloqueada(resp.getTotal_devolver_atendimento_senha_bloqueada()
+				+ respTokenSenhaBloqqueada.getTotal_devolver_atendimento_senha_bloqueada());
 
+		return resp;
+	}
+
+	private ResponseAnalisarDto validaSenhaBloqueada() {
+		ResponseAnalisarDto resp = new ResponseAnalisarDto();
+
+		int senha_bloqueada = 0;
+
+		List<Chamado> list1 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO RECEBE TOKEN");
+
+		List<Chamado> list2 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "ERRO DE TOKEN");
+		if (list1.size() > 0) {
+			if (list2.size() > 0) {
+				list1.addAll(list2);
+			}
+			for (Chamado c : list1) {
+				if (c.getStatussenha() != null && c.getStatussenha().equals("Bloqueado")) {
+					atualizarChamado(c, "DEVOLVER", null, 53L, 5L);
+					senha_bloqueada++;
+				}
+			}
+		}
+		resp.setTotal_devolver_atendimento_senha_bloqueada(senha_bloqueada);
 		return resp;
 	}
 
@@ -66,35 +95,33 @@ public class AnalisarService {
 		int conta_existente = 0;
 		int total_fechar = 0;
 
-		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome("Pendente",
-				"BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE FINALIZAR ABERTURA DE CONTA");
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE FINALIZAR ABERTURA DE CONTA");
 		if (list.size() > 0) {
 			for (Chamado chamado : list) {
-				if (chamado.getCpf() != null) {
-					if (chamado.getConta().size() > 0) {
-						for (Conta conta : chamado.getConta()) {
-							if (conta.getDescricaosituacao().equals("LIBERADA")) {
-								String st = dgp018Service.consultaStatus(chamado.getCpf());
-								if (st != null && st.equals("SENHA_TEMPORARIA_PROMOVIDA")) {
-									chamado.setStatussenha("Ativar Temporaria");
-									atualizarChamado(chamado, null, null, 52L, null);
-									total_fechar++;
-								} else {
-									atualizarChamado(chamado, "DEVOLVER", null, 49L, 1L);
-									conta_existente++;
-								}
-							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+				if (chamado.getConta().size() > 0) {
+					for (Conta conta : chamado.getConta()) {
+						if (conta.getDescricaosituacao().equals("LIBERADA")) {
+							String st = dgp018Service.consultaStatus(chamado.getCpf());
+							if (st != null && st.equals("SENHA_TEMPORARIA_PROMOVIDA")) {
+								chamado.setStatussenha("Ativar Temporaria");
+								atualizarChamado(chamado, null, null, 52L, null);
+								total_fechar++;
+							} else {
 								atualizarChamado(chamado, "DEVOLVER", null, 49L, 1L);
 								conta_existente++;
-							} else if (conta.getDescricaosituacao().equals("DESATIVADA")) {
-								resetOnboarding(chamado, 51L);
-								total_fechar++;
 							}
+						} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+							atualizarChamado(chamado, "DEVOLVER", null, 49L, 1L);
+							conta_existente++;
+						} else if (conta.getDescricaosituacao().equals("DESATIVADA")) {
+							resetOnboarding(chamado, 51L);
+							total_fechar++;
 						}
-					} else {
-						resetOnboarding(chamado, 50L);
-						total_fechar++;
 					}
+				} else {
+					resetOnboarding(chamado, 50L);
+					total_fechar++;
 				}
 			}
 		}
@@ -108,11 +135,11 @@ public class AnalisarService {
 		dgp018Service.limpezaCadastro(chamado.getCpf());
 		dgp180Service.deleteRedis(chamado.getCpf());
 		imp013Service.inativarPinEletronico(chamado.getCpf());
-		atualizarChamado(chamado, "FECHAR", null, cauzaRaiz, 4L);	
+		atualizarChamado(chamado, "FECHAR", null, cauzaRaiz, 4L);
 	}
 
 	private void atualizarChamado(Chamado chamado, String status, Long analista, Long cauzaRaiz, Long msg) {
-		if(status != null) {
+		if (status != null) {
 			chamado.setStatus(statusService.findByNome(status).get());
 		}
 		if (analista != null) {
@@ -120,7 +147,7 @@ public class AnalisarService {
 		}
 		chamado.setCausaraiz(causaRaizService.findById(cauzaRaiz).get());
 		chamado.setDatastatus(new Date());
-		if(msg != null) {
+		if (msg != null) {
 			chamado.setMsg(msgService.findById(msg).get());
 		}
 		chamadoService.save(chamado);

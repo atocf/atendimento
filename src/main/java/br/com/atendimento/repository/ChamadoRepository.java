@@ -29,6 +29,6 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 
 	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(String status_intergrall, String equipe);
 
-	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(String status_intergrall, String equipe,
+	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(String status_intergrall, String equipe,
 			String submotivo);
 }

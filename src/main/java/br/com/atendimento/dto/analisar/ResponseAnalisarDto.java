@@ -16,6 +16,7 @@ public class ResponseAnalisarDto {
 	private int total_devolver_fila_errada_geare;
 	private int total_devolver_fila_errada_geback;
 	private int total_devolver_atendimento_conta_existente;
+	private int total_devolver_atendimento_senha_bloqueada;
 	private int total_chamado_analisado_fechar;
 }
 
