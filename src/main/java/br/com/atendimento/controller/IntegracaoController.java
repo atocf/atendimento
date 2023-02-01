@@ -81,6 +81,12 @@ public class IntegracaoController {
 		return ResponseEntity.ok(dgp018Service.consultaStatus(cpf));
 	}
 	
+	@GetMapping(path = { "/dgp018/limpeza/{cpf}" })
+	@ApiOperation("Método para limpar o cadastro por CPF: {cpf}.")
+	public ResponseEntity<String> limpezaCadastro(@PathVariable String cpf) {
+		return ResponseEntity.ok(dgp018Service.limpezaCadastro(cpf));
+	}
+	
 	@Autowired
 	private Cdtp004Client cdtp004Client;
 	

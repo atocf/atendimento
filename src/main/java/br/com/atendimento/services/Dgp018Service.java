@@ -57,5 +57,33 @@ public class Dgp018Service {
 		}
 		return null;
 	}
+	
+	public String limpezaCadastro(String cpf) {
+
+		log.info(" Método para retorno do status por CPF: {}", cpf);
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("cpfCliente", cpf);
+			HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(dgp018Host + "/limpeza-cadastro", HttpMethod.POST,
+					requestEntity, String.class);
+
+			Gson g = new Gson();
+			if (response.getStatusCode() == HttpStatus.OK) {
+				Dgp018StatusDto resp = g.fromJson(response.getBody(),
+						new TypeToken<Dgp018StatusDto>() {
+						}.getType());
+				if (resp != null) {
+					return resp.getStatus();
+				}
+			}
+		} catch (HttpStatusCodeException e) {
+			return null;
+		}
+		return null;
+	}
 
 }
