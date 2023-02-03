@@ -3,14 +3,18 @@ package br.com.atendimento.controller;
 import java.io.IOException;
 import java.text.ParseException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.atendimento.dto.analisar.ResponseAnalisarDto;
+import br.com.atendimento.dto.analisar.ResponseAnalisarMassaDto;
 import br.com.atendimento.services.AnalisarService;
 import io.swagger.annotations.Api;
 
@@ -25,5 +29,10 @@ public class AnalisarController {
 	@PostMapping()
 	public ResponseEntity<?> analisar() throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.analisar(), HttpStatus.CREATED);
+	}
+	
+	@PostMapping(value = "/massa")
+	public ResponseEntity<?> massa(@RequestBody @Valid ResponseAnalisarMassaDto massa) throws IOException, ParseException {
+		return new ResponseEntity<ResponseAnalisarDto>(service.massa(massa), HttpStatus.CREATED);
 	}
 }

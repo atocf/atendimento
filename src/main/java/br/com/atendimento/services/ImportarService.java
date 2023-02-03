@@ -250,7 +250,7 @@ public class ImportarService {
 							}
 						}
 						chamado.setCard(a.getCard());
-						chamado.setObservacao(a.getObservcao());
+						chamado.setObservacao(StringUtils.truncate(a.getObservcao(), 5000));
 						chamado.setDatastatus(a.getData_status());
 						chamado.setCausaraiz(causaRaizService.findCausaRaiz(a.getCausa_raiz()));
 
@@ -299,7 +299,7 @@ public class ImportarService {
 							}
 						}
 						chamado.setCard(a.getCard());
-						chamado.setObservacao(a.getObservacao());
+						chamado.setObservacao(StringUtils.truncate(a.getObservacao(), 5000));
 						chamado.setDatastatus(a.getData_status());
 						chamado.setCausaraiz(causaRaizService.findCausaRaiz(a.getCausa_raiz()));
 

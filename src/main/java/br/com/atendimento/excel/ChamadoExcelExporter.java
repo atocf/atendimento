@@ -191,6 +191,8 @@ public class ChamadoExcelExporter {
 					linkFechar.setAddress(fecharLinkInicio + e.getOcorrencia() + fecharLinkFim);
 					createCell(row, columnCount++, "Fechar", getStyle(true, false, linha), linkFechar);
 				}
+				
+				createCell(row, columnCount++, e.getMsg(), getStyle(false, false, linha), null);
 
 				log.info("Protocolo: {}", e.getProtocolo());
 			}

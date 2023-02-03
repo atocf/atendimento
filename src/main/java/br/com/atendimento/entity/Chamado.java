@@ -129,7 +129,7 @@ public class Chamado {
 	@JoinColumn(name = "idcausaraiz")
 	private CausaRaiz causaraiz;
 
-	@Column(nullable = true, length = 1000)
+	@Column(nullable = true, length = 5000)
 	private String observacao;
 		
 	@OneToMany(mappedBy = "chamado", targetEntity = Conta.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL) 

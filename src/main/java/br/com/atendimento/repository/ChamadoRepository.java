@@ -1,5 +1,6 @@
 package br.com.atendimento.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -31,4 +32,7 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 
 	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(String status_intergrall, String equipe,
 			String submotivo);
+
+	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNullAndDataabertura(
+			String status_intergrall, String equipe, String submotivo, Date data);
 }
