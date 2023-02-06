@@ -52,8 +52,8 @@ public class ExportarService {
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
-					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES",
-					"ABRIR", "MSG" };
+					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
+					"FECHAR", "DEVOLVER", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -70,7 +70,7 @@ public class ExportarService {
 					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "MSG"  };
+					"FECHAR", "DEVOLVER", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -87,7 +87,7 @@ public class ExportarService {
 					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "MSG" };
+					"FECHAR", "DEVOLVER", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -159,7 +159,10 @@ public class ExportarService {
 			} else {
 				e.setCartoes("Não encontrada");
 			}
-			e.setMsg(chamado.getMsg().getDescricao());
+			if (chamado.getMsg() != null) {
+				e.setMsg(chamado.getMsg().getDescricao());
+			}
+
 			listExportDto.add(e);
 		}
 		return listExportDto;

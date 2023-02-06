@@ -27,7 +27,7 @@ public class ChamadoService {
 	}
 
 	public Chamado save(Chamado x) {
-		log.info("Salvando ou Atualização o chamado {}", x.getProtocolo());
+		log.info("Salvando ou Atualização o chamado {}", x.getOcorrencia());
 		return repository.save(x);
 	}
 

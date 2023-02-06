@@ -43,9 +43,11 @@ public class ExportarController {
 	@ApiOperation("Gerar planilha para atendimento PF.")
 	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
 		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
 
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=CHAMADOS INTERGRALL - NOVA PLANILHA.xlsx";
+		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
 		
 		service.exportarAtendimentoPfGeral(response);
