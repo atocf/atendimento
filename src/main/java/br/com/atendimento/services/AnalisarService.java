@@ -102,83 +102,83 @@ public class AnalisarService {
 		int devolver = 0;
 		int fechar = 0;
 
-		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
-				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE CADASTRAR A SENHA ELETRÔNICA");
-
-		if (list.size() > 0) {
-			for (Chamado c : list) {
-				if (c.getStatussenha().equals("Ativo")) {
-					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
-					} else {
-						atualizarChamado(c, "DEVOLVER", 14L, 60L, 7L);
-					}
-					devolver++;
-				} else if (c.getStatussenha().equals("Bloqueado")) {
-					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
-					} else {
-						atualizarChamado(c, "DEVOLVER", 14L, 16L, 7L);
-					}
-					devolver++;
-				} else if (c.getStatussenha().equals("Inativo")) {
-					if (c.getConta().size() > 0) {
-						for (Conta conta : c.getConta()) {
-							if (conta.getDescricaosituacao().equals("LIBERADA")) {
-								// Ativar senha -- ver para integrar
-								atualizarChamado(c, "FECHAR", null, 19L, 7L);
-								fechar++;
-							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
-								// Ativar senha -- ver para integrar
-								atualizarChamado(c, "FECHAR", null, 19L, 7L);
-								fechar++;
-							}
-						}
-					}
-					fechar++;
-				} else if (c.getStatussenha().equals("Temporaria")) {
-					for (Conta conta : c.getConta()) {
-						if (conta.getDescricaosituacao().equals("LIBERADA")) {
-							// Ativar senha temporaria -- ver para integrar
-							atualizarChamado(c, "FECHAR", null, 22L, 7L);
-							fechar++;
-						} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
-							// Ativar senha temporaria -- ver para integrar
-							atualizarChamado(c, "FECHAR", null, 22L, 7L);
-							fechar++;
-						}
-					}
-					fechar++;
-				} else if (c.getStatussenha().equals("Inexistente")) {
-					if (c.getConta().size() > 0) {
-						for (Conta conta : c.getConta()) {
-							if (conta.getDescricaosituacao().equals("LIBERADA")) {
-								// Criar senha -- ver para integrar
-								atualizarChamado(c, "FECHAR", null, 23L, 7L);
-								fechar++;
-							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
-								// Criar senha -- ver para integrar
-								atualizarChamado(c, "FECHAR", null, 23L, 7L);
-								fechar++;
-							}
-						}
-					} else {
-						List<Cartao> cartoes = cartaoService.findByChamado_Ocorrencia(c.getOcorrencia());
-						if (cartoes.size() > 0) {
-							for (Cartao cartao : cartoes) {
-								if (cartao.getDescricaotipocartao().equals("BMG Multi")) {
-									atualizarChamado(c, "FECHAR", null, 61L, 9L);
-									fechar++;
-								} else if (cartao.getDescricaotipocartao().equals("BMG Card")) {
-									atualizarChamado(c, "FECHAR", null, 62L, 8L);
-									fechar++;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+//		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+//				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO CONSEGUE CADASTRAR A SENHA ELETRÔNICA");
+//
+//		if (list.size() > 0) {
+//			for (Chamado c : list) {
+//				if (c.getStatussenha().equals("Ativo")) {
+//					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
+//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//					} else {
+//						atualizarChamado(c, "DEVOLVER", 14L, 60L, 7L);
+//					}
+//					devolver++;
+//				} else if (c.getStatussenha().equals("Bloqueado")) {
+//					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
+//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//					} else {
+//						atualizarChamado(c, "DEVOLVER", 14L, 16L, 7L);
+//					}
+//					devolver++;
+//				} else if (c.getStatussenha().equals("Inativo")) {
+//					if (c.getConta().size() > 0) {
+//						for (Conta conta : c.getConta()) {
+//							if (conta.getDescricaosituacao().equals("LIBERADA")) {
+//								// Ativar senha -- ver para integrar
+//								atualizarChamado(c, "FECHAR", null, 19L, 7L);
+//								fechar++;
+//							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+//								// Ativar senha -- ver para integrar
+//								atualizarChamado(c, "FECHAR", null, 19L, 7L);
+//								fechar++;
+//							}
+//						}
+//					}
+//					fechar++;
+//				} else if (c.getStatussenha().equals("Temporaria")) {
+//					for (Conta conta : c.getConta()) {
+//						if (conta.getDescricaosituacao().equals("LIBERADA")) {
+//							// Ativar senha temporaria -- ver para integrar
+//							atualizarChamado(c, "FECHAR", null, 22L, 7L);
+//							fechar++;
+//						} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+//							// Ativar senha temporaria -- ver para integrar
+//							atualizarChamado(c, "FECHAR", null, 22L, 7L);
+//							fechar++;
+//						}
+//					}
+//					fechar++;
+//				} else if (c.getStatussenha().equals("Inexistente")) {
+//					if (c.getConta().size() > 0) {
+//						for (Conta conta : c.getConta()) {
+//							if (conta.getDescricaosituacao().equals("LIBERADA")) {
+//								// Criar senha -- ver para integrar
+//								atualizarChamado(c, "FECHAR", null, 23L, 7L);
+//								fechar++;
+//							} else if (conta.getDescricaosituacao().equals("BLOQUEADA")) {
+//								// Criar senha -- ver para integrar
+//								atualizarChamado(c, "FECHAR", null, 23L, 7L);
+//								fechar++;
+//							}
+//						}
+//					} else {
+//						List<Cartao> cartoes = cartaoService.findByChamado_Ocorrencia(c.getOcorrencia());
+//						if (cartoes.size() > 0) {
+//							for (Cartao cartao : cartoes) {
+//								if (cartao.getDescricaotipocartao().equals("BMG Multi")) {
+//									atualizarChamado(c, "FECHAR", null, 61L, 9L);
+//									fechar++;
+//								} else if (cartao.getDescricaotipocartao().equals("BMG Card")) {
+//									atualizarChamado(c, "FECHAR", null, 62L, 8L);
+//									fechar++;
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		resp.setTotal_devolver_atendimento(devolver);
 		resp.setTotal_fechar(fechar);

@@ -38,7 +38,7 @@ public class CausaRaiz {
 	@Column(nullable = false, unique = true)
 	private String nome;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, length = 1000)
 	private String descricao;
 	
 	public CausaRaiz(String nome, String descricao) {
