@@ -1,6 +1,7 @@
 package br.com.atendimento.services;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class AnalisarService {
 		resp = validaPjnoPj(resp);
 		resp = validarPixComplementar(resp);
 		resp = validaAberturaConta(resp);
+//		resp = validaToken(resp);
 
 //		ResponseAnalisarDto respTokenSenhaBloqqueada = validaSenhaBloqueada();
 //		ResponseAnalisarDto respSenhaEletronica = validarSenhaEletronica();
@@ -90,7 +92,7 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado chamado : list) {
-				if (chamado.getConta().size() > 0) {
+				if (chamado.getConta().size() > 0 && chamado.getStatus() == null) {
 
 					Boolean liberada = false;
 					Boolean bloqueada = false;
@@ -161,6 +163,36 @@ public class AnalisarService {
 		}
 
 		resp.setTotal_fechar(fechar);
+		return resp;
+	}
+	
+	private ResponseAnalisarDto validaToken(ResponseAnalisarDto resp) {
+		
+		List<Chamado> list = new ArrayList<>();
+		
+		List<Chamado> list1 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO RECEBE TOKEN");
+		
+		if(list1.size() > 0) {
+			list.addAll(list1);
+		}
+		
+		List<Chamado> list2 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "ERRO DE TOKEN");
+		
+		if(list2.size() > 0) {
+			list.addAll(list2);
+		}
+		
+		if(list.size() > 0) {
+			for(Chamado c : list) {
+				if(c.getStatus() == null) {
+					//validar e-mail valido 
+					//validar celular valido 
+				}
+			}
+		}
+		
 		return resp;
 	}
 
