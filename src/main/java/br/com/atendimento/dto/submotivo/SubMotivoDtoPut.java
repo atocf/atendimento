@@ -63,4 +63,7 @@ public class SubMotivoDtoPut {
 	
 	@NotNull
 	private Boolean imp013;
+	
+	@NotNull
+	private Long kibana_id;
 }

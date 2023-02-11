@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import br.com.atendimento.dto.export.ExportDto;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
+import br.com.atendimento.util.CpfUtils;
 import br.com.atendimento.util.DataUtils;
 
 public class ChamadoExcelExporter {
@@ -36,6 +37,8 @@ public class ChamadoExcelExporter {
 	private XSSFSheet sheet;
 	private List<ExportDto> listExportDto;
 	private List<Chamado> listChamado;
+	
+	private String abrirLinkJira = "https://bancobmg.atlassian.net/browse/";
 
 	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String abrirLinkFim = "%26flw_tema%3D004%26flw_tema_pai%3DFYB83%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3DPNQ%26devolve_nivel_acesso%3D%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
@@ -45,8 +48,13 @@ public class ChamadoExcelExporter {
 	private String fecharLinkFimFinalizarPf = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Finalizar";
 
 	private String fecharLinkInicioPj = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DF%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
-	private String fecharLinkFimDevolverPj = "%26flw_tema%3D027%26flw_tema_pai%3DFYBA5%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Finalizar&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
 	private String fecharLinkFimFinalizarPj = "%26flw_tema%3D027%26flw_tema_pai%3DFYBA5%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Finalizar&titulo=Tarefa%20-%20Finalizar";
+
+	private String kibanaLinkInicio = "https://83362e5bd5b2472bba402e27688896a6.us-east-1.aws.found.io:9243/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-7d%2Fd,to:now))&_a=(columns:!(detail.cpf,detail.uri,detail.responseCode,detail.request,detail.response),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.cpf,negate:!f,params:(query:'";
+	private String kibanaLinkMeio1 = "'),type:phrase),query:(match_phrase:(detail.cpf:'";
+	private String kibanaLinkMeio2 = "'))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.uri,negate:!f,params:!(";
+	private String kibanaLinkMeio3 = "),type:phrases),query:(bool:(minimum_should_match:1,should:!(";
+	private String kibanaLinkFim = ")))),('$state':(store:appState),meta:(alias:!n,disabled:!t,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.responseCode,negate:!t,params:(query:200),type:phrase),query:(match_phrase:(detail.responseCode:200)))),hideChart:!t,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,interval:auto,query:(language:lucene,query:''),sort:!(!(detail.responseCode,desc),!(content.HEADER.TIMESTAMP,desc)))";
 
 	private static final Logger log = LoggerFactory.getLogger(ChamadoExcelExporter.class);
 
@@ -210,8 +218,8 @@ public class ChamadoExcelExporter {
 				}
 			}
 		} else if (tipo.equals("Atendimento")) {
-			
-			CellStyle style = null;			
+
+			CellStyle style = null;
 			CellStyle descricaoStyle = null;
 			CellStyle linkStyle = null;
 
@@ -242,7 +250,13 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, e.getOcorrencia(), style, null);
 				createCell(row, columnCount++, e.getProtocolo(), style, null);
 				createCell(row, columnCount++, e.getCpf_cnpj(), style, null);
-				createCell(row, columnCount++, e.getCard(), style, null);
+				if(e.getCard() != null) {
+					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
+					linkJira.setAddress(abrirLinkJira + e.getCard());
+					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
+				} else {
+					createCell(row, columnCount++, e.getCard(), style, null);
+				}
 				createCell(row, columnCount++, e.getSquad(), style, null);
 				createCell(row, columnCount++, e.getStatus(), style, null);
 				createCell(row, columnCount++, e.getData_status(), style, null);
@@ -270,20 +284,39 @@ public class ChamadoExcelExporter {
 					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
 					linkFechar.setAddress(fecharLinkInicioPf + e.getOcorrencia() + fecharLinkFimFinalizarPf);
 					createCell(row, columnCount++, "Fechar", linkStyle, linkFechar);
-					
+
 					XSSFHyperlink linkDevolver = helper.createHyperlink(HyperlinkType.URL);
 					linkDevolver.setAddress(fecharLinkInicioPf + e.getOcorrencia() + fecharLinkFimDevolverPf);
 					createCell(row, columnCount++, "Devolver", linkStyle, linkDevolver);
-					
+
 				} else if (e.getEquipe().equals("BMG EMPRESAS")) {
 
 					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
 					linkFechar.setAddress(fecharLinkInicioPj + e.getOcorrencia() + fecharLinkFimFinalizarPj);
 					createCell(row, columnCount++, "Fechar", linkStyle, linkFechar);
-					
-					XSSFHyperlink linkDevolver = helper.createHyperlink(HyperlinkType.URL);
-					linkDevolver.setAddress(fecharLinkInicioPf + e.getOcorrencia() + fecharLinkFimDevolverPj);
-					createCell(row, columnCount++, "Devolver", linkStyle, linkDevolver);
+
+					createCell(row, columnCount++, "", style, null);
+				}
+
+				if (CpfUtils.valid(e.getCpf_cnpj()) != null && e.getKibana() != null && e.getKibana().length > 0) {
+					String uri = "";
+					String match = "";
+					int v = 0;
+					for (String s : e.getKibana()) {
+						if (v > 0) {
+							uri = uri + ",";
+							match = match + ",";
+						}
+						uri = uri + s;
+						match = match + "(match_phrase:(detail.uri:" + s + "))";
+						v++;
+					}
+					XSSFHyperlink linkKibana = helper.createHyperlink(HyperlinkType.URL);
+					linkKibana.setAddress(kibanaLinkInicio + e.getCpf_cnpj() + kibanaLinkMeio1 + e.getCpf_cnpj()
+							+ kibanaLinkMeio2 + uri + kibanaLinkMeio3 + match + kibanaLinkFim);
+					createCell(row, columnCount++, "Kibana", linkStyle, linkKibana);
+				} else {
+					createCell(row, columnCount++, "", style, null);
 				}
 
 				createCell(row, columnCount++, e.getMsg(), style, null);

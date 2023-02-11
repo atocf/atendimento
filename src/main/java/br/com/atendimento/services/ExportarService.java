@@ -53,7 +53,7 @@ public class ExportarService {
 					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"FECHAR", "DEVOLVER", "KIBANA", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -70,7 +70,7 @@ public class ExportarService {
 					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"FECHAR", "DEVOLVER", "KIBANA", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -87,7 +87,7 @@ public class ExportarService {
 					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
 					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
 					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"FECHAR", "DEVOLVER", "KIBANA", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -99,6 +99,9 @@ public class ExportarService {
 			e.setAnalista(chamado.getAnalista().getNome());
 			e.setC_atendimento(chamado.getCanalatendimento());
 			e.setSub_motivo(chamado.getSubmotivo().getNome());
+			if(chamado.getSubmotivo().getKibana() != null) {
+				e.setKibana(chamado.getSubmotivo().getKibana().getLink());
+			}			
 			e.setEquipe(chamado.getSubmotivo().getEquipe());
 			e.setReabertura(chamado.getReabertura());
 			e.setOcorrencia(chamado.getOcorrencia());
