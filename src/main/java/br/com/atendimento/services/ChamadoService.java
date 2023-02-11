@@ -1,5 +1,6 @@
 package br.com.atendimento.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class ChamadoService {
 	}
 
 	public Chamado save(Chamado x) {
-		log.info("Salvando ou Atualização o chamado {}", x.getProtocolo());
+		log.info("Salvando ou Atualização o chamado {}", x.getOcorrencia());
 		return repository.save(x);
 	}
 
@@ -63,17 +64,30 @@ public class ChamadoService {
 	}
 
 	public void updateAllFinalizado(String equipe) {
-		repository.updateAllFinalizado(equipe);	
+		repository.updateAllFinalizado(equipe);
 	}
 
-	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(String status_intergrall, String equipe) {
+	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(String status_intergrall,
+			String equipe) {
 		log.info("Consultar protocolos que tem que ser devolvidos por serem CNPJ");
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(status_intergrall, equipe);
 	}
 
-	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(String status_intergrall, String equipe,
-			String submotivo) {
+	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+			String status_intergrall, String equipe, String submotivo) {
 		log.info("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
-		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(status_intergrall, equipe, submotivo);
+		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(status_intergrall,
+				equipe, submotivo);
+	}
+
+	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNullAndDataabertura(
+			String status_intergrall, String equipe, String submotivo, Date data) {
+		log.info("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
+		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNullAndDataabertura(
+				status_intergrall, equipe, submotivo, data);
+	}
+
+	public List<Chamado> findByStatusintergrallAndStatus_Nome(String status_intergrall, String status) {
+		return repository.findByStatusintergrallAndStatus_Nome(status_intergrall, status);
 	}
 }

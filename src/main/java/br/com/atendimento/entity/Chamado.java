@@ -129,7 +129,7 @@ public class Chamado {
 	@JoinColumn(name = "idcausaraiz")
 	private CausaRaiz causaraiz;
 
-	@Column(nullable = true, length = 1000)
+	@Column(nullable = true, length = 5000)
 	private String observacao;
 		
 	@OneToMany(mappedBy = "chamado", targetEntity = Conta.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
@@ -138,4 +138,10 @@ public class Chamado {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idmsg")
 	private Msg msg;
+	
+	@Column(nullable = false, columnDefinition = "tinyint(0) DEFAULT 0")
+	private Boolean massa = false;
+	
+	@Column(nullable = false, columnDefinition = "tinyint(0) DEFAULT 0")
+	private Boolean analisado = false;
 }

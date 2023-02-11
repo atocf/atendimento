@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 public class ResponseAnalisarDto {
 	
 	private int total_devolver_fila_errada;
-	private int total_devolver_fila_errada_bmg_empresa;
 	private int total_devolver_fila_errada_conta_corrente;
+	private int total_devolver_fila_errada_bmg_empresa; 
 	private int total_devolver_fila_errada_fraude;
 	private int total_devolver_fila_errada_geare;
 	private int total_devolver_fila_errada_geback;
-	private int total_devolver_atendimento_conta_existente;
-	private int total_devolver_atendimento_senha_bloqueada;
-	private int total_chamado_analisado_fechar;
+	private int total_devolver_atendimento;
+	private int total_fechar;
 }
 

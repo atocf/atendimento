@@ -61,7 +61,7 @@ public class ExportarController {
 		String currentDateTime = dateFormatter.format(new Date());
 
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
+		String headerValue = "attachment; filename=PIX" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
 		
 		service.exportarAtendimentoPfPix(response);

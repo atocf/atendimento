@@ -35,4 +35,5 @@ public class ExportDto {
 	private String escopo;
 	private String conta;
 	private String cartoes;
+	private String Msg;
 }
