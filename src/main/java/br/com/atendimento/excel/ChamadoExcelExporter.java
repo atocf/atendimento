@@ -37,7 +37,7 @@ public class ChamadoExcelExporter {
 	private XSSFSheet sheet;
 	private List<ExportDto> listExportDto;
 	private List<Chamado> listChamado;
-	
+
 	private String abrirLinkJira = "https://bancobmg.atlassian.net/browse/";
 
 	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
@@ -250,31 +250,6 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, e.getOcorrencia(), style, null);
 				createCell(row, columnCount++, e.getProtocolo(), style, null);
 				createCell(row, columnCount++, e.getCpf_cnpj(), style, null);
-				if(e.getCard() != null) {
-					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
-					linkJira.setAddress(abrirLinkJira + e.getCard());
-					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
-				} else {
-					createCell(row, columnCount++, e.getCard(), style, null);
-				}
-				createCell(row, columnCount++, e.getSquad(), style, null);
-				createCell(row, columnCount++, e.getStatus(), style, null);
-				createCell(row, columnCount++, e.getData_status(), style, null);
-				createCell(row, columnCount++, e.getObservacao(), style, null);
-				createCell(row, columnCount++, e.getCausa_raiz(), style, null);
-				createCell(row, columnCount++, e.getDt_aberta(), style, null);
-				createCell(row, columnCount++, e.getDt_vencimento(), style, null);
-				createCell(row, columnCount++, e.getDescricao(), descricaoStyle, null);
-				createCell(row, columnCount++, e.getNome(), style, null);
-				createCell(row, columnCount++, e.getStatus_senha(), style, null);
-				createCell(row, columnCount++, e.getEmail(), style, null);
-				createCell(row, columnCount++, e.getTelefone(), style, null);
-				createCell(row, columnCount++, e.getTelefone_sms(), style, null);
-				createCell(row, columnCount++, e.getAtualizacao_cadastral(), style, null);
-				createCell(row, columnCount++, e.getEscopo(), style, null);
-				createCell(row, columnCount++, e.getConta(), style, null);
-				createCell(row, columnCount++, e.getCartoes(), style, null);
-
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
 				linkAbrir.setAddress(abrirLinkInicio + e.getOcorrencia() + abrirLinkFim);
 				createCell(row, columnCount++, "Abrir", linkStyle, linkAbrir);
@@ -318,10 +293,33 @@ public class ChamadoExcelExporter {
 				} else {
 					createCell(row, columnCount++, "", style, null);
 				}
-
+				if (e.getCard() != null) {
+					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
+					linkJira.setAddress(abrirLinkJira + e.getCard());
+					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
+				} else {
+					createCell(row, columnCount++, e.getCard(), style, null);
+				}
+				createCell(row, columnCount++, e.getSquad(), style, null);
+				createCell(row, columnCount++, e.getStatus(), style, null);
+				createCell(row, columnCount++, e.getData_status(), style, null);
+				createCell(row, columnCount++, e.getObservacao(), style, null);
+				createCell(row, columnCount++, e.getCausa_raiz(), style, null);
+				createCell(row, columnCount++, e.getDt_aberta(), style, null);
+				createCell(row, columnCount++, e.getDt_vencimento(), style, null);
+				createCell(row, columnCount++, e.getDescricao(), descricaoStyle, null);
+				createCell(row, columnCount++, e.getNome(), style, null);
+				createCell(row, columnCount++, e.getStatus_senha(), style, null);
+				createCell(row, columnCount++, e.getEmail(), style, null);
+				createCell(row, columnCount++, e.getTelefone(), style, null);
+				createCell(row, columnCount++, e.getTelefone_sms(), style, null);
+				createCell(row, columnCount++, e.getAtualizacao_cadastral(), style, null);
+				createCell(row, columnCount++, e.getEscopo(), style, null);
+				createCell(row, columnCount++, e.getConta(), style, null);
+				createCell(row, columnCount++, e.getCartoes(), style, null);
 				createCell(row, columnCount++, e.getMsg(), style, null);
 
-				log.info("Protocolo: {}", e.getProtocolo());
+				log.info("Ocorrencia: {}", e.getOcorrencia());
 			}
 		}
 
