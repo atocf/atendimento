@@ -90,4 +90,8 @@ public class ChamadoService {
 	public List<Chamado> findByStatusintergrallAndStatus_Nome(String status_intergrall, String status) {
 		return repository.findByStatusintergrallAndStatus_Nome(status_intergrall, status);
 	}
+
+	public List<Chamado> buscaListaOcorrenciaCpf(String status_intergrall, String equipe) {
+		return repository.buscaListaOcorrenciaCpf(status_intergrall, equipe);
+	}
 }

@@ -86,7 +86,11 @@ public class SubMotivo {
 	@Column(nullable = false, columnDefinition = "tinyint(1) DEFAULT 1")
 	private Boolean imp013 = true;
 	
-	public SubMotivo(Analista analista, String produto, String tipopublico, String variedadeproduto, String motivo, String nome, String equipe) {
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idkibana")
+	private Kibana kibana;
+	
+	public SubMotivo(Analista analista, String produto, String tipopublico, String variedadeproduto, String motivo, String nome, String equipe, Kibana kibana) {
 		super();
 		this.analista = analista;
 		this.produto = produto;
@@ -95,5 +99,6 @@ public class SubMotivo {
 		this.motivo = motivo;
 		this.nome = nome;
 		this.equipe = equipe;
+		this.kibana = kibana;
 	}
 }

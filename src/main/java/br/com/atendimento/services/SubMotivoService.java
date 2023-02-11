@@ -63,6 +63,6 @@ public class SubMotivoService {
 			subMotivo.get().setAnalista(a);
 			return subMotivo.get();
 		}
-		return save(new SubMotivo(a, produto, tipopublico, variedadeproduto, motivo, nome, equipe));
+		return save(new SubMotivo(a, produto, tipopublico, variedadeproduto, motivo, nome, equipe, null));
 	}
 }

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import br.com.atendimento.entity.Analista;
+import br.com.atendimento.entity.Kibana;
 import br.com.atendimento.entity.SubMotivo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +49,10 @@ public class SubMotivoDtoPost {
 	@NotEmpty
 	private String equipe;
 	
-	public SubMotivo converter(Analista analista) {		
-		return new SubMotivo(analista, produto, tipopublico, variedadeproduto, motivo, nome, equipe);
+	@NotNull
+	private Long kibana_id;
+	
+	public SubMotivo converter(Analista analista, Kibana kibana) {		
+		return new SubMotivo(analista, produto, tipopublico, variedadeproduto, motivo, nome, equipe, kibana);
 	}	
 }

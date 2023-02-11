@@ -37,4 +37,18 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 			String status_intergrall, String equipe, String submotivo, Date data);
 
 	List<Chamado> findByStatusintergrallAndStatus_Nome(String status_intergrall, String status);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "SELECT c.*\r\n"
+			+ "FROM chamado c\r\n"
+			+ "INNER JOIN sub_motivo sm on sm.id = c.idsubmotivo \r\n"
+			+ "LEFT OUTER JOIN squad q on c.idsquad = q.id \r\n"
+			+ "Where  c.statusintergrall = ?1 and sm.equipe = ?2\r\n"
+			+ "and c.cpf in (SELECT c.cpf\r\n"
+			+ "FROM chamado c\r\n"
+			+ "INNER JOIN sub_motivo sm on sm.id = c.idsubmotivo \r\n"
+			+ "Where  c.statusintergrall = ?1 and sm.equipe = ?2\r\n"
+			+ "GROUP BY c.cpf HAVING COUNT(c.cpf) > 1)" , nativeQuery = true)
+	List<Chamado> buscaListaOcorrenciaCpf(String status_intergrall, String equipe); 
 }

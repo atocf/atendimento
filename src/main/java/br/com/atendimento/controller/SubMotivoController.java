@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.atendimento.dto.submotivo.SubMotivoDtoPost;
 import br.com.atendimento.dto.submotivo.SubMotivoDtoPut;
 import br.com.atendimento.entity.Analista;
+import br.com.atendimento.entity.Kibana;
 import br.com.atendimento.entity.SubMotivo;
 import br.com.atendimento.exception.RestExceptionCustom;
 import br.com.atendimento.exception.error.ErrorObject;
 import br.com.atendimento.services.AnalistaService;
+import br.com.atendimento.services.KibanaService;
 import br.com.atendimento.services.SubMotivoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +42,9 @@ public class SubMotivoController {
 	
 	@Autowired
 	private AnalistaService analistaService;
+	
+	@Autowired
+	private KibanaService kibanaService;
 	
 	@Autowired
 	private SubMotivoService service;
@@ -65,9 +70,10 @@ public class SubMotivoController {
 	@ApiOperation("Cria um novo submotivo.")
 	public ResponseEntity<?> create(@RequestBody @Valid SubMotivoDtoPost submotivo) {
 		Optional<Analista> analista = analistaService.findById(submotivo.getAnalista_id());
+		Optional<Kibana> kibana = kibanaService.findById(submotivo.getKibana_id());
 		
-		if (analista.isPresent()) {
-			return new ResponseEntity<SubMotivo>(service.save(submotivo.converter(analista.get())), HttpStatus.CREATED);
+		if (analista.isPresent() && kibana.isPresent()) {
+			return new ResponseEntity<SubMotivo>(service.save(submotivo.converter(analista.get(), kibana.get())), HttpStatus.CREATED);
 		}
 		
 		List<ErrorObject> errors = new ArrayList<ErrorObject>();
@@ -82,13 +88,20 @@ public class SubMotivoController {
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody @Valid SubMotivoDtoPut submotivo) {
 		
 		Optional<Analista> analista = analistaService.findById(submotivo.getAnalista_id());
+		Optional<Kibana> kibana = kibanaService.findById(submotivo.getKibana_id());
 		
 		List<ErrorObject> errors = new ArrayList<ErrorObject>();		
 		if (!analista.isPresent()) {
 			errors = RestExceptionCustom.setListError(errors, analistaService.returnError(submotivo.getAnalista_id()));
 			return ResponseEntity.badRequest()
 					.body(RestExceptionCustom.getErrorResponse("SubMotivoDtoPost", HttpStatus.BAD_REQUEST, errors));	
-		}		
+		}	
+		
+		if (!kibana.isPresent()) {
+			errors = RestExceptionCustom.setListError(errors, analistaService.returnError(submotivo.getKibana_id()));
+			return ResponseEntity.badRequest()
+					.body(RestExceptionCustom.getErrorResponse("SubMotivoDtoPost", HttpStatus.BAD_REQUEST, errors));	
+		}	
 		
 		return service.findById(id).map(record -> {
 			record.setAnalista(analista.get());
@@ -104,6 +117,7 @@ public class SubMotivoController {
 			record.setDgp041(submotivo.getDgp041());
 			record.setImp001(submotivo.getImp001());
 			record.setImp013(submotivo.getImp013());
+			record.setKibana(kibana.get());
 			SubMotivo updated = service.save(record);
 			return ResponseEntity.ok().body(updated);
 		}).orElse(ResponseEntity.notFound().build());

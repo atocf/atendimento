@@ -50,10 +50,10 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
-					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
-					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -63,14 +63,14 @@ public class ExportarService {
 
 		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente",
 				"BACKOFFICE DÍGITAL", false);
-
+		
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
-					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
-					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -84,10 +84,27 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "CARD", "SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO",
-					"CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO", "DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL",
-					"TELEFONE", "TELEFONE_SMS", "ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "ABRIR",
-					"FECHAR", "DEVOLVER", "MSG" };
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
+			excelExporter.export(response, "Atendimento", namesCell);
+		}
+	}
+	
+	public void exportarAtendimentoPfDuplicado(HttpServletResponse response) throws IOException, ParseException {
+		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
+
+		List<Chamado> list = chamadoService.buscaListaOcorrenciaCpf("Pendente",
+				"BACKOFFICE DÍGITAL");
+				
+		if (list.size() > 0) {
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
+			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
@@ -99,6 +116,9 @@ public class ExportarService {
 			e.setAnalista(chamado.getAnalista().getNome());
 			e.setC_atendimento(chamado.getCanalatendimento());
 			e.setSub_motivo(chamado.getSubmotivo().getNome());
+			if (chamado.getSubmotivo().getKibana() != null) {
+				e.setKibana(chamado.getSubmotivo().getKibana().getLink());
+			}
 			e.setEquipe(chamado.getSubmotivo().getEquipe());
 			e.setReabertura(chamado.getReabertura());
 			e.setOcorrencia(chamado.getOcorrencia());
