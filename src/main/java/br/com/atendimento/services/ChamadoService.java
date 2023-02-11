@@ -94,4 +94,8 @@ public class ChamadoService {
 	public List<Chamado> buscaListaOcorrenciaCpf(String status_intergrall, String equipe) {
 		return repository.buscaListaOcorrenciaCpf(status_intergrall, equipe);
 	}
+
+	public List<Chamado> buscaListaOcorrenciaPrioritarias(String status_intergrall, String equipe) {
+		return repository.buscaListaOcorrenciaPrioritarias(status_intergrall, equipe);
+	}
 }

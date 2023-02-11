@@ -50,5 +50,15 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 			+ "INNER JOIN sub_motivo sm on sm.id = c.idsubmotivo \r\n"
 			+ "Where  c.statusintergrall = ?1 and sm.equipe = ?2\r\n"
 			+ "GROUP BY c.cpf HAVING COUNT(c.cpf) > 1)" , nativeQuery = true)
-	List<Chamado> buscaListaOcorrenciaCpf(String status_intergrall, String equipe); 
+	List<Chamado> buscaListaOcorrenciaCpf(String status_intergrall, String equipe);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "SELECT c.*\r\n"
+			+ "FROM bmg_atendimento.chamado c\r\n"
+			+ "INNER JOIN bmg_atendimento.sub_motivo sm ON sm.id = c.idsubmotivo \r\n"
+			+ "LEFT OUTER JOIN bmg_atendimento.squad q ON c.idsquad = q.id \r\n"
+			+ "WHERE c.statusintergrall = ?1 AND sm.equipe = ?2 \r\n"
+			+ "AND c.canalatendimento in ('RECLAME AQUI', 'CONSUMIDOR.GOV', 'BACEN', 'OUVIDORIA CLIENTE', 'PROCON', 'PROCON FONE')" , nativeQuery = true)
+	List<Chamado> buscaListaOcorrenciaPrioritarias(String status_intergrall, String equipe); 
 }

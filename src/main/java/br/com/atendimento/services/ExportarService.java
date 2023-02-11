@@ -57,6 +57,31 @@ public class ExportarService {
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
+	
+	public void exportarAtendimentoPfDuplicado(HttpServletResponse response) throws IOException, ParseException {
+		log.info("Inicio do processo de gerar excel dos chamados duplicados para atendimento PF");
+
+		List<Chamado> list = chamadoService.buscaListaOcorrenciaCpf("Pendente",
+				"BACKOFFICE DÍGITAL");
+				
+		if (list.size() > 0) {
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
+			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
+					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
+			excelExporter.export(response, "Atendimento", namesCell);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
 		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
@@ -76,7 +101,7 @@ public class ExportarService {
 	}
 
 	public void exportarAtendimentoPfPix(HttpServletResponse response) throws IOException, ParseException {
-		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
+		log.info("Inicio do processo de gerar excel dos chamados de pix para atendimento PF");
 
 		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente",
 				"BACKOFFICE DÍGITAL", true);
@@ -92,10 +117,10 @@ public class ExportarService {
 		}
 	}
 	
-	public void exportarAtendimentoPfDuplicado(HttpServletResponse response) throws IOException, ParseException {
-		log.info("Inicio do processo de gerar excel dos chamados para atendimento PF");
+	public void exportarAtendimentoPfPriorizado(HttpServletResponse response) throws IOException, ParseException {
+		log.info("Inicio do processo de gerar excel dos chamados priorizados para atendimento PF");
 
-		List<Chamado> list = chamadoService.buscaListaOcorrenciaCpf("Pendente",
+		List<Chamado> list = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente",
 				"BACKOFFICE DÍGITAL");
 				
 		if (list.size() > 0) {
@@ -108,6 +133,22 @@ public class ExportarService {
 			excelExporter.export(response, "Atendimento", namesCell);
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private List<ExportDto> returnListExportDto(List<Chamado> list) throws ParseException {
 		ArrayList<ExportDto> listExportDto = new ArrayList<>();

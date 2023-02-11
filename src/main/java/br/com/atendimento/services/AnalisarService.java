@@ -18,6 +18,7 @@ import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
 import br.com.atendimento.entity.SubMotivo;
 import br.com.atendimento.services.utils.AnalisarUtilsServices;
+import br.com.atendimento.util.ChamadoUtils;
 import br.com.atendimento.util.DataUtils;
 
 @Service
@@ -152,7 +153,7 @@ public class AnalisarService {
 							"Pendente", s.getEquipe(), s.getNome(), data);
 			if (list.size() > 0) {
 				for (Chamado c : list) {
-					if (!(analisarUtilsServices.prioritario(c.getCanalatendimento()))) {
+					if (!(ChamadoUtils.prioritario(c.getCanalatendimento()))) {
 						c.setMassa(true);
 						analisarUtilsServices.atualizarChamado(c, "FECHAR", massa.getAnalista(), massa.getCausa_raiz(),
 								massa.getMsg(), false, true);
