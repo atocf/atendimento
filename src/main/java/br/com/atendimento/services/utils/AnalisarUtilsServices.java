@@ -72,15 +72,6 @@ public class AnalisarUtilsServices {
 		chamadoService.save(chamado);
 	}
 	
-	public boolean prioritario(String canalatendimento) {
-		if (canalatendimento.equals("RECLAME AQUI") || canalatendimento.equals("CONSUMIDOR.GOV")
-				|| canalatendimento.equals("BACEN") || canalatendimento.equals("OUVIDORIA CLIENTE")
-				|| canalatendimento.equals("PROCON") || canalatendimento.equals("PROCON FONE")) {
-			return true;
-		}
-		return false;
-	}
-	
 	public void resetOnboarding(Chamado chamado, Long cauzaRaiz, Boolean analisado, Boolean massa) {
 		dgp018Service.limpezaCadastro(chamado.getCpf());
 		dgp180Service.deleteRedis(chamado.getCpf());

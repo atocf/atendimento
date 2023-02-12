@@ -35,38 +35,10 @@ public class ExportarController {
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=sincronizar_" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
-		
+
 		service.exportarSincronismo(response);
 	}
-	
-	@GetMapping(path = { "/atendimento/pf/geral" })
-	@ApiOperation("Gerar planilha para atendimento PF.")
-	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
-		response.setContentType("application/octet-stream");
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
 
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
-		response.setHeader(headerKey, headerValue);
-		
-		service.exportarAtendimentoPfGeral(response);
-	}
-	
-	@GetMapping(path = { "/atendimento/pf/pix" })
-	@ApiOperation("Gerar planilha para atendimento PF.")
-	public void exportarAtendimentoPfPix(HttpServletResponse response) throws IOException, ParseException {
-		response.setContentType("application/octet-stream");
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=PIX" + currentDateTime + ".xlsx";
-		response.setHeader(headerKey, headerValue);
-		
-		service.exportarAtendimentoPfPix(response);
-	}
-	
 	@GetMapping(path = { "/atendimento/pj" })
 	@ApiOperation("Gerar planilha para atendimento PJ.")
 	public void exportarAtendimentoPj(HttpServletResponse response) throws IOException, ParseException {
@@ -77,7 +49,64 @@ public class ExportarController {
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=atendimento_pj_" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
-		
+
 		service.exportarAtendimentoPj(response);
 	}
+
+	@GetMapping(path = { "/atendimento/pf/duplicado" })
+	@ApiOperation("Gerar planilha dos atendimento duplicados do PF .")
+	public void exportarAtendimentoPfDuplicado(HttpServletResponse response) throws IOException, ParseException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=dupicados_pf" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		service.exportarAtendimentoPfDuplicado(response);
+	}
+
+	@GetMapping(path = { "/atendimento/pf/priorizados" })
+	@ApiOperation("Gerar planilha dos atendimento priorizados do PF .")
+	public void exportarAtendimentoPfPriorizado(HttpServletResponse response) throws IOException, ParseException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=priorizados_pf" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		service.exportarAtendimentoPfPriorizado(response);
+	}
+
+	@GetMapping(path = { "/atendimento/pf/geral" })
+	@ApiOperation("Gerar planilha para atendimento PF.")
+	public void exportarAtendimentoPfGeral(HttpServletResponse response) throws IOException, ParseException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=atendimento_pf_" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		service.exportarAtendimentoPfGeral(response);
+	}
+
+	@GetMapping(path = { "/atendimento/pf/pix" })
+	@ApiOperation("Gerar planilha para atendimento PF.")
+	public void exportarAtendimentoPfPix(HttpServletResponse response) throws IOException, ParseException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=pix_pf" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		service.exportarAtendimentoPfPix(response);
+	}
+
 }
