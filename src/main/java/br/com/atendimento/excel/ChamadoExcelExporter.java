@@ -293,7 +293,7 @@ public class ChamadoExcelExporter {
 				} else {
 					createCell(row, columnCount++, "", style, null);
 				}
-				if (e.getCard() != null) {
+				if (e.getCard() != null && !e.getCard().isEmpty()) {
 					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
 					linkJira.setAddress(abrirLinkJira + e.getCard());
 					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);

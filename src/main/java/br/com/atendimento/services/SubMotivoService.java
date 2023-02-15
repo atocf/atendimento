@@ -57,10 +57,9 @@ public class SubMotivoService {
 		Optional<SubMotivo> subMotivo = repository.findByNomeAndEquipe(nome, equipe);
 		Analista a = analistaService.findAnalista(analista);
 		if (subMotivo.isPresent()) {
-			if (a != null) {
-				a = subMotivo.get().getAnalista();
-			}
-			subMotivo.get().setAnalista(a);
+			if (analista != null) {
+				subMotivo.get().setAnalista(a);
+			} 		
 			return subMotivo.get();
 		}
 		return save(new SubMotivo(a, produto, tipopublico, variedadeproduto, motivo, nome, equipe, null));

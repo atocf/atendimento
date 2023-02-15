@@ -76,27 +76,27 @@ public class PlanilhaExcelImport {
 						atendimento.setOcorrencia(returnCellToLong(currentCell));
 						break;
 					
-					case 7:
+					case 11:
 						atendimento.setCard(returnCellToString(currentCell));
 						break;
 
-					case 8:
+					case 12:
 						atendimento.setSquad(returnCellToString(currentCell));
 						break;
 
-					case 9:
+					case 13:
 						atendimento.setStatus(returnCellToString(currentCell));
 						break;
 
-					case 10:
+					case 14:
 						atendimento.setData_status(returnCellToDate(currentCell));
 						break;
 
-					case 11:
+					case 15:
 						atendimento.setObservacao(returnCellToString(currentCell));
 						break;
 
-					case 12:
+					case 16:
 						atendimento.setCausa_raiz(returnCellToString(currentCell));
 						break;
 
