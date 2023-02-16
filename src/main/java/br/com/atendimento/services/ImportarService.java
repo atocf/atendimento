@@ -107,7 +107,10 @@ public class ImportarService {
 			chamado.setSubmotivo(
 					subMotivoService.findSubMotivo(pd.getProduto(), pd.getTp_publico(), pd.getVariedade_produto(),
 							pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(), null, pd.getSituacao(), pd.getCanal()));
-			chamado.setAnalista(chamado.getSubmotivo().getAnalista());
+			
+			if(chamado.getAnalista() == null) {
+				chamado.setAnalista(chamado.getSubmotivo().getAnalista());
+			}			
 
 			if (!pd.getDt_conclusao().equals("Não informado")) {
 				chamado.setDataconclusao(DataUtils.convert(pd.getDt_conclusao(), DataUtils.formatoData));

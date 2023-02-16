@@ -40,13 +40,13 @@ public class AnalisarService {
 
 	@Autowired
 	private SincronismoService sincronismoService;
-	
+
 	@Autowired
 	private OnboardingPjtService onboardingPjtService;
-	
+
 	@Autowired
 	private Pjdp007Service pjdp007Service;
-	
+
 	@Autowired
 	private IntegracaoService integracaoService;
 
@@ -254,54 +254,56 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado c : list) {
-				if(c.getCnpj() != null) {
-					if(c.getConta().size() > 0) {
-						Boolean contaInvalida = true;
-						for (Conta conta : c.getConta()) {
-							if (conta.getTipoconta() == 24 || conta.getTipoconta() == 30) {
-								contaInvalida = false; 
+				if (!(c.getSubmotivo().getNome().equals("PROBLEMAS NO ONBOARDING"))) {
+					if (c.getCnpj() != null) {
+						if (c.getConta().size() > 0) {
+							Boolean contaInvalida = true;
+							for (Conta conta : c.getConta()) {
+								if (conta.getTipoconta() == 24 || conta.getTipoconta() == 30) {
+									contaInvalida = false;
+								}
 							}
-						}
-						if(contaInvalida) {
+							if (contaInvalida) {
+								analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
+								fila++;
+							}
+						} else {
 							analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
 							fila++;
 						}
-					} else {
-						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
-						fila++;
-					}
-				} else if(c.getCpf() != null) {
-					Boolean buscarCnpj = true;
-					if(c.getConta().size() > 0) {
-						for (Conta conta : c.getConta()) {
-							if (conta.getDescricaosituacao().equals("LIBERADA") && conta.getTipoconta() == 46) {
-								buscarCnpj = false; 
+					} else if (c.getCpf() != null) {
+						Boolean buscarCnpj = true;
+						if (c.getConta().size() > 0) {
+							for (Conta conta : c.getConta()) {
+								if (conta.getTipoconta() == 46) {
+									buscarCnpj = false;
+								}
 							}
 						}
-					}
-					if(buscarCnpj) {
-						String cnpj = onboardingPjtService.consultaContrato(c.getCpf());
-						if(cnpj != null) {
-							c.setCnpj(cnpj);
-							integracaoService.buscarDados(chamadoService.save(c));
-							atualizado++;
-						} else {
-							cnpj = pjdp007Service.consultarGranito(c.getCpf());
-							if(cnpj != null) {
+						if (buscarCnpj) {
+							String cnpj = onboardingPjtService.consultaContrato(c.getCpf());
+							if (cnpj != null) {
 								c.setCnpj(cnpj);
 								integracaoService.buscarDados(chamadoService.save(c));
 								atualizado++;
+							} else {
+								cnpj = pjdp007Service.consultarGranito(c.getCpf());
+								if (cnpj != null) {
+									c.setCnpj(cnpj);
+									integracaoService.buscarDados(chamadoService.save(c));
+									atualizado++;
+								}
 							}
-						}
-						if(cnpj == null) {
-							analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 14L, true, false);
-							digital++;
+							if (cnpj == null) {
+								analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 14L, true, false);
+								digital++;
+							}
 						}
 					}
 				}
 			}
 		}
-		
+
 		resp.setTotal_devolver_fila_errada(fila);
 		resp.setTotal_atualizado_dados_pjtinha(atualizado);
 		resp.setTotal_devolver_fila_errada_digital(digital);
