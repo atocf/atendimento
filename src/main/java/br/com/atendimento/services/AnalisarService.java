@@ -244,6 +244,11 @@ public class AnalisarService {
 
 	public ResponseAnalisarDto pjtinha() throws KeyManagementException, NoSuchAlgorithmException, ParseException {
 		log.info("Inicio do processo analise dos chamados pjtinha");
+		
+//		TIPO PJinha - Falar Mira
+//		24    CONTA PAGAMENTO PJ - Consulta pelo CNPJ
+//		30    CONTA PAGAMENTO BMG - PJ MEI - Consulta pelo CNPJ
+//		46    CONTA PAGAMENTO GRANITO PF - Consulta pelo CPF 
 
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 		int digital = 0;
