@@ -1,5 +1,7 @@
 package br.com.atendimento.services;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +34,21 @@ public class AnalisarService {
 
 	@Autowired
 	private Dgp018Service dgp018Service;
+
+	@Autowired
+	private ContaService contaService;
+
+	@Autowired
+	private SincronismoService sincronismoService;
+	
+	@Autowired
+	private OnboardingPjtService onboardingPjtService;
+	
+	@Autowired
+	private Pjdp007Service pjdp007Service;
+	
+	@Autowired
+	private IntegracaoService integracaoService;
 
 	private static final Logger log = LoggerFactory.getLogger(AnalisarService.class);
 
@@ -166,34 +183,128 @@ public class AnalisarService {
 		resp.setTotal_fechar(fechar);
 		return resp;
 	}
-	
+
 	private ResponseAnalisarDto validaToken(ResponseAnalisarDto resp) {
-		
+
 		List<Chamado> list = new ArrayList<>();
-		
+
 		List<Chamado> list1 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
 				"Pendente", "BACKOFFICE DÍGITAL", "CLIENTE NÃO RECEBE TOKEN");
-		
-		if(list1.size() > 0) {
+
+		if (list1.size() > 0) {
 			list.addAll(list1);
 		}
-		
+
 		List<Chamado> list2 = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
 				"Pendente", "BACKOFFICE DÍGITAL", "ERRO DE TOKEN");
-		
-		if(list2.size() > 0) {
+
+		if (list2.size() > 0) {
 			list.addAll(list2);
 		}
-		
-		if(list.size() > 0) {
-			for(Chamado c : list) {
-				if(c.getStatus() == null) {
-					//validar e-mail valido 
-					//validar celular valido 
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if (c.getStatus() == null) {
+					// validar e-mail valido
+					// validar celular valido
+				}
+			}
+		}
+
+		return resp;
+	}
+
+	public ResponseAnalisarDto sincronizar() throws ParseException {
+		log.info("Inicio de sincronismo PF e PJ");
+
+		ResponseAnalisarDto resp = new ResponseAnalisarDto();
+		int countSinc = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Sincronismo("Pendente", true);
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if (c.getConta() != null && c.getConta().size() > 0) {
+					for (Conta conta : c.getConta()) {
+						if (conta.getDescricaosituacao().equals("LIBERADA") && !(conta.getSincronizado())) {
+							if (sincronismoService.sincronizarConta(conta.getAgencia(), conta.getNumeroconta())) {
+								conta.setSincronizado(true);
+								contaService.save(conta);
+								countSinc++;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		resp.setTotal_sincronizado(countSinc);
+		return resp;
+	}
+
+	public ResponseAnalisarDto pjtinha() throws KeyManagementException, NoSuchAlgorithmException, ParseException {
+		log.info("Inicio do processo analise dos chamados pjtinha");
+
+		ResponseAnalisarDto resp = new ResponseAnalisarDto();
+		int digital = 0;
+		int atualizado = 0;
+		int fila = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Equipe("Pendente", "BMG EMPRESAS");
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if(c.getCnpj() != null) {
+					if(c.getConta().size() > 0) {
+						Boolean contaInvalida = true;
+						for (Conta conta : c.getConta()) {
+							if (conta.getTipoconta() == 24 || conta.getTipoconta() == 30) {
+								contaInvalida = false; 
+							}
+						}
+						if(contaInvalida) {
+							analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
+							fila++;
+						}
+					} else {
+						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
+						fila++;
+					}
+				} else if(c.getCpf() != null) {
+					Boolean buscarCnpj = true;
+					if(c.getConta().size() > 0) {
+						for (Conta conta : c.getConta()) {
+							if (conta.getDescricaosituacao().equals("LIBERADA") && conta.getTipoconta() == 46) {
+								buscarCnpj = false; 
+							}
+						}
+					}
+					if(buscarCnpj) {
+						String cnpj = onboardingPjtService.consultaContrato(c.getCpf());
+						if(cnpj != null) {
+							c.setCnpj(cnpj);
+							integracaoService.buscarDados(chamadoService.save(c));
+							atualizado++;
+						} else {
+							cnpj = pjdp007Service.consultarGranito(c.getCpf());
+							if(cnpj != null) {
+								c.setCnpj(cnpj);
+								integracaoService.buscarDados(chamadoService.save(c));
+								atualizado++;
+							}
+						}
+						if(cnpj == null) {
+							analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 14L, true, false);
+							digital++;
+						}
+					}
 				}
 			}
 		}
 		
+		resp.setTotal_devolver_fila_errada(fila);
+		resp.setTotal_atualizado_dados_pjtinha(atualizado);
+		resp.setTotal_devolver_fila_errada_digital(digital);
 		return resp;
 	}
 

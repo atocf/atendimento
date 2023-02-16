@@ -80,7 +80,8 @@ public class ExportarService {
 		List<Chamado> list = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpoDuplicados(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -97,7 +98,8 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", false);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpoDuplicados(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -114,7 +116,8 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", true);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpoDuplicados(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -125,14 +128,14 @@ public class ExportarService {
 	}
 
 	private List<ExportDto> returnListExportDtoLimpoDuplicados(List<Chamado> list) throws ParseException {
-		
+
 		List<Chamado> listDuplicados = chamadoService.buscaListaOcorrenciaCpf("Pendente", "BACKOFFICE DÍGITAL");
 		List<ExportDto> exportDtoDuplicados = returnListExportDto(listDuplicados);
-		
+
 		List<ExportDto> exportDtoList = returnListExportDto(list);
-		
+
 		exportDtoList.removeAll(exportDtoDuplicados);
-		
+
 		return exportDtoList;
 	}
 

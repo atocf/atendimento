@@ -53,9 +53,9 @@ public class SubMotivoService {
 	}
 
 	public SubMotivo findSubMotivo(String produto, String tipopublico, String variedadeproduto, String motivo,
-			String nome, String equipe, String analista, String status_integrall) {
+			String nome, String equipe, String analista, String status_integrall, String canal) {
 		Optional<SubMotivo> subMotivo = repository.findByNomeAndEquipe(nome, equipe);
-		Analista a = analistaService.findAnalista(analista);
+		Analista a = analistaService.findAnalista(analista, canal);
 		if (subMotivo.isPresent()) {
 			if (analista != null) {
 				subMotivo.get().setAnalista(a);

@@ -71,12 +71,11 @@ public class IntegracaoService {
 		
 		String cpf_cnpj = null;
 		
-		if(chamado.getCpf() != null) {
-			cpf_cnpj = chamado.getCpf();
-		} else if(chamado.getCnpj() != null) {
+		if(chamado.getCnpj() != null) {
 			cpf_cnpj = chamado.getCnpj();
+		} else if(chamado.getCpf() != null) {
+			cpf_cnpj = chamado.getCpf();
 		}
-		
 
 		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(cartaoService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
 			log.info("Consulta dados cartão do cpf: {}", chamado.getCpf());
@@ -173,8 +172,8 @@ public class IntegracaoService {
 					c.setSituacao(conta.getSituacao());
 					c.setDescricaosituacao(conta.getDescricaoSituacao());
 					c.setAbertura(conta.getAbertura().toGregorianCalendar().getTime());
+					c.setSincronizado(false);
 					c.setChamado(chamado);
-
 					contaService.save(c);
 				}
 			}

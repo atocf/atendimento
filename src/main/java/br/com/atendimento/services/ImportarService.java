@@ -106,7 +106,7 @@ public class ImportarService {
 			chamado.setNome(pd.getNome());
 			chamado.setSubmotivo(
 					subMotivoService.findSubMotivo(pd.getProduto(), pd.getTp_publico(), pd.getVariedade_produto(),
-							pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(), null, pd.getSituacao()));
+							pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(), null, pd.getSituacao(), pd.getCanal()));
 			chamado.setAnalista(chamado.getSubmotivo().getAnalista());
 
 			if (!pd.getDt_conclusao().equals("Não informado")) {
@@ -182,7 +182,7 @@ public class ImportarService {
 			chamado.setNome(pd.getNome());
 			chamado.setSubmotivo(subMotivoService.findSubMotivo(pd.getProduto(), pd.getTipo_publico(),
 					pd.getVariedade_produto(), pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(),
-					pd.getAnalista(), pd.getSituacao()));
+					pd.getAnalista(), pd.getSituacao(), pd.getCanal()));
 			chamado.setAnalista(chamado.getSubmotivo().getAnalista());
 
 			if (!pd.getDt_conclusao().equals("Não informado")) {
