@@ -50,7 +50,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -153,11 +153,8 @@ public class ExportarService {
 			e.setReabertura(chamado.getReabertura());
 			e.setOcorrencia(chamado.getOcorrencia());
 			e.setProtocolo(chamado.getProtocolo());
-			if (chamado.getCpf() != null) {
-				e.setCpf_cnpj(chamado.getCpf());
-			} else if (chamado.getCnpj() != null) {
-				e.setCpf_cnpj(chamado.getCnpj());
-			}
+			e.setCpf(chamado.getCpf());
+			e.setCnpj(chamado.getCnpj());
 			e.setCard(chamado.getCard());
 			if (chamado.getSquad() != null) {
 				e.setSquad(chamado.getSquad().getNome());

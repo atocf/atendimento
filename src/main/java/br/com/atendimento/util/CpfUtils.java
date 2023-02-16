@@ -10,10 +10,10 @@ public class CpfUtils {
 
 	public static String valid(String cpf) {
 		log.info("Validando o formato do CPF {}", cpf);
-		if(cpf.length() < 11) {
+		if(cpf != null && cpf.length() < 11) {
 			log.info("CPF menor que 11 caracteres: {}", cpf);
 			cpf = StringUtils.leftPad(cpf, 11, "0");
-		} else if(cpf.length() > 11) {
+		} else if(cpf != null && cpf.length() > 11) {
 			log.info("CPF maior que 11 caracteres: {}", cpf);
 			return null;
 		} 

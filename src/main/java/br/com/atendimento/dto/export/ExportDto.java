@@ -17,7 +17,8 @@ public class ExportDto {
 	private Integer reabertura;
 	private Long ocorrencia;
 	private Long protocolo;
-	private String cpf_cnpj;
+	private String cpf;
+	private String cnpj;
 	private String card;
 	private String squad;
 	private String status;
