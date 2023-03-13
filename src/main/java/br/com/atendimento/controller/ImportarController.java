@@ -18,7 +18,6 @@ import br.com.atendimento.dto.ResponseMessage;
 import br.com.atendimento.dto.importar.ImportarAberturaDto;
 import br.com.atendimento.dto.importar.ImportarBacklogDto;
 import br.com.atendimento.dto.importar.ResponseImportDto;
-import br.com.atendimento.excel.PlanilhaAntigaExcelImport;
 import br.com.atendimento.excel.PlanilhaExcelImport;
 import br.com.atendimento.services.ImportarService;
 import br.com.atendimento.util.CsvUtils;
@@ -48,13 +47,13 @@ public class ImportarController {
 				HttpStatus.CREATED);
 	}
 
-	@PostMapping("/planilha_antiga/{sheet}")
-	public ResponseEntity<ResponseMessage> planilhaAntigaFile(@RequestParam("file") MultipartFile file, String sheet) {
+	@PostMapping("/planilha/pf/{sheet}")
+	public ResponseEntity<ResponseMessage> planilhaFilePf(@RequestParam("file") MultipartFile file, String sheet) {
 		String message = "";
 
-		if (PlanilhaAntigaExcelImport.hasExcelFormat(file)) {
+		if (PlanilhaExcelImport.hasExcelFormat(file)) {
 			try {
-				service.importarPlanilhaAntiga(file, sheet);
+				service.importarPlanilhaPf(file, sheet);
 
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -68,13 +67,13 @@ public class ImportarController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
 	}
 	
-	@PostMapping("/planilha/{sheet}")
-	public ResponseEntity<ResponseMessage> planilhaFile(@RequestParam("file") MultipartFile file, String sheet) {
+	@PostMapping("/planilha/pj/{sheet}")
+	public ResponseEntity<ResponseMessage> planilhaFilePj(@RequestParam("file") MultipartFile file, String sheet) {
 		String message = "";
 
 		if (PlanilhaExcelImport.hasExcelFormat(file)) {
 			try {
-				service.importarPlanilha(file, sheet);
+				service.importarPlanilhaPj(file, sheet);
 
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));

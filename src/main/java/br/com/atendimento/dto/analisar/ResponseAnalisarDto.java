@@ -20,5 +20,6 @@ public class ResponseAnalisarDto {
 	private int total_fechar;
 	private int total_sincronizado;
 	private int total_atualizado_dados_pjtinha;
+	private int total_limpo_redis;
 }
 

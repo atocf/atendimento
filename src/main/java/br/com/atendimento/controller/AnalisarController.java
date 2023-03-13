@@ -1,8 +1,6 @@
 package br.com.atendimento.controller;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 
 import javax.validation.Valid;
@@ -28,23 +26,24 @@ public class AnalisarController {
 	@Autowired
 	private AnalisarService service;
 
+	@PostMapping(value = "/ajustar/status")
+	public ResponseEntity<?> ajustarStatus() throws IOException, ParseException {
+		return new ResponseEntity<ResponseAnalisarDto>(service.ajustarStatus(), HttpStatus.CREATED);
+	}
+
 	@PostMapping()
 	public ResponseEntity<?> analisar() throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.analisar(), HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping(value = "/massa")
-	public ResponseEntity<?> massa(@RequestBody @Valid ResponseAnalisarMassaDto massa) throws IOException, ParseException {
+	public ResponseEntity<?> massa(@RequestBody @Valid ResponseAnalisarMassaDto massa)
+			throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.massa(massa), HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping(value = "/sincronizar")
 	public ResponseEntity<?> sincronizar() throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.sincronizar(), HttpStatus.CREATED);
-	}
-	
-	@PostMapping(value = "/pjtinha")
-	public ResponseEntity<?> pjtinha() throws IOException, ParseException, KeyManagementException, NoSuchAlgorithmException {
-		return new ResponseEntity<ResponseAnalisarDto>(service.pjtinha(), HttpStatus.CREATED);
 	}
 }

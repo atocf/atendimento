@@ -63,6 +63,12 @@ public class IntegracaoService {
 	
 	@Autowired
 	private ChamadoService chamadoService;
+	
+	@Autowired
+	private OnboardingPjtService onboardingPjtService;
+
+	@Autowired
+	private Pjdp007Service pjdp007Service;
 
 	private static final Logger log = LoggerFactory.getLogger(IntegracaoService.class);
 
@@ -70,6 +76,18 @@ public class IntegracaoService {
 			throws KeyManagementException, NoSuchAlgorithmException, ParseException {
 		
 		String cpf_cnpj = null;
+		
+		if(chamado.getSubmotivo().getEquipe().equals("BMG EMPRESAS") && chamado.getCpf() != null && chamado.getCnpj() == null) {
+			String cnpj = onboardingPjtService.consultaContrato(chamado.getCpf());
+			if (cnpj != null) {
+				chamado.setCnpj(cnpj);
+			} else {
+				cnpj = pjdp007Service.consultarGranito(chamado.getCpf());
+				if (cnpj != null) {
+					chamado.setCnpj(cnpj);
+				}
+			}
+		}
 		
 		if(chamado.getCnpj() != null) {
 			cpf_cnpj = chamado.getCnpj();
@@ -138,7 +156,9 @@ public class IntegracaoService {
 
 			log.info("Fim consulta scopo");
 		}
-
+		if(chamado.getOcorrencia() == 44456984) {
+			System.out.println("ddd");
+		}
 		if (chamado.getSubmotivo().getImp001() && !(contaService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
 			log.info("Consulta dados conta do cpf/cnpj: {}", cpf_cnpj);
 

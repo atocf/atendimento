@@ -302,7 +302,7 @@ public class ChamadoExcelExporter {
 				}
 				if (e.getCard() != null && !e.getCard().isEmpty()) {
 					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
-					linkJira.setAddress(abrirLinkJira + e.getCard());
+					linkJira.setAddress(abrirLinkJira + e.getCard().trim());
 					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
 				} else {
 					createCell(row, columnCount++, e.getCard(), style, null);
