@@ -72,6 +72,10 @@ public class AnalisarUtilsServices {
 		chamadoService.save(chamado);
 	}
 	
+	public void deleteRedis(String cnpf_cnpj) {
+		dgp180Service.deleteRedis(cnpf_cnpj);
+	}
+	
 	public void resetOnboarding(Chamado chamado, Long cauzaRaiz, Boolean analisado, Boolean massa) {
 		dgp018Service.limpezaCadastro(chamado.getCpf());
 		dgp180Service.deleteRedis(chamado.getCpf());

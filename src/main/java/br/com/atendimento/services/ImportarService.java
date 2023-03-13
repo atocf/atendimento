@@ -18,13 +18,11 @@ import br.com.atendimento.dto.importar.ErrosImportDto;
 import br.com.atendimento.dto.importar.ImportarAberturaDto;
 import br.com.atendimento.dto.importar.ImportarBacklogDto;
 import br.com.atendimento.dto.importar.ResponseImportDto;
-import br.com.atendimento.dto.planilhaantiga.PlanilhaAntigaDto;
 import br.com.atendimento.dto.planilhaantiga.PlanilhaDto;
 import br.com.atendimento.entity.Analista;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Squad;
 import br.com.atendimento.entity.Status;
-import br.com.atendimento.excel.PlanilhaAntigaExcelImport;
 import br.com.atendimento.excel.PlanilhaExcelImport;
 import br.com.atendimento.util.CnpjUtils;
 import br.com.atendimento.util.CpfUtils;
@@ -104,10 +102,13 @@ public class ImportarService {
 			chamado.setDatavencimento(DataUtils.convert(pd.getDt_previsao(), DataUtils.formatoData));
 			chamado.setDescricao(StringUtils.truncate(pd.getDescricao(), 10000));
 			chamado.setNome(pd.getNome());
-			chamado.setSubmotivo(
-					subMotivoService.findSubMotivo(pd.getProduto(), pd.getTp_publico(), pd.getVariedade_produto(),
-							pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(), null, pd.getSituacao()));
-			chamado.setAnalista(chamado.getSubmotivo().getAnalista());
+			chamado.setSubmotivo(subMotivoService.findSubMotivo(pd.getProduto(), pd.getTp_publico(),
+					pd.getVariedade_produto(), pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(), null,
+					pd.getSituacao(), pd.getCanal()));
+
+			if (chamado.getAnalista() == null) {
+				chamado.setAnalista(chamado.getSubmotivo().getAnalista());
+			}
 
 			if (!pd.getDt_conclusao().equals("Não informado")) {
 				chamado.setDataconclusao(DataUtils.convert(pd.getDt_conclusao(), DataUtils.formatoData));
@@ -182,7 +183,7 @@ public class ImportarService {
 			chamado.setNome(pd.getNome());
 			chamado.setSubmotivo(subMotivoService.findSubMotivo(pd.getProduto(), pd.getTipo_publico(),
 					pd.getVariedade_produto(), pd.getMotivo(), pd.getSubmotivo(), pd.getArea_responsavel(),
-					pd.getAnalista(), pd.getSituacao()));
+					pd.getAnalista(), pd.getSituacao(), pd.getCanal()));
 			chamado.setAnalista(chamado.getSubmotivo().getAnalista());
 
 			if (!pd.getDt_conclusao().equals("Não informado")) {
@@ -215,58 +216,25 @@ public class ImportarService {
 		return iDto;
 	}
 
-	public void importarPlanilhaAntiga(MultipartFile file, String sheet) throws ParseException {
+	public void importarPlanilhaPf(MultipartFile file, String sheet) throws ParseException {
 		try {
-			List<PlanilhaAntigaDto> list = PlanilhaAntigaExcelImport.excelToChamado(file.getInputStream(), sheet);
-			for (PlanilhaAntigaDto a : list) {
-				log.info("Ocorrência:{}", a.getOcorrencia());
-				if (a.getOcorrencia() != null) {
-
-					Optional<Chamado> chamadoExit = chamadoService.findById(a.getOcorrencia());
-
-					if (chamadoExit.isPresent()) {
-
-						Chamado chamado = chamadoExit.get();
-
-						if (a.getStatus() != null) {
-							Optional<Status> s = statusService.findByNome(a.getStatus());
-							if (s.isPresent()) {
-								chamado.setStatus(s.get());
-								if (!(s.get().getNome().equals("ENCAMINHADO"))) {
-									chamado.setStatusintergrall("Finalizado");
-								}
-							}
-						}
-
-						Optional<Analista> analista = analistaService.findByNome(a.getAnalista());
-						if (analista.isPresent()) {
-							chamado.setAnalista(analista.get());
-						}
-
-						if (a.getSquad() != null) {
-							Optional<Squad> s = squadService.findByNome(a.getSquad());
-							if (s.isPresent()) {
-								chamado.setSquad(s.get());
-							}
-						}
-						chamado.setCard(a.getCard());
-						chamado.setObservacao(StringUtils.truncate(a.getObservcao(), 5000));
-						chamado.setDatastatus(a.getData_status());
-						chamado.setCausaraiz(causaRaizService.findCausaRaiz(a.getCausa_raiz()));
-
-						chamadoService.save(chamado);
-					}
-
-				}
-			}
+			atualizaChamados(PlanilhaExcelImport.excelToChamadoPf(file.getInputStream(), sheet));
+		} catch (IOException e) {
+			throw new RuntimeException("fail to store excel data: " + e.getMessage());
+		}
+	}
+	
+	public void importarPlanilhaPj(MultipartFile file, String sheet) throws ParseException {
+		try {
+			atualizaChamados(PlanilhaExcelImport.excelToChamadoPj(file.getInputStream(), sheet));
 		} catch (IOException e) {
 			throw new RuntimeException("fail to store excel data: " + e.getMessage());
 		}
 	}
 
-	public void importarPlanilha(MultipartFile file, String sheet) throws ParseException {
-		try {
-			List<PlanilhaDto> list = PlanilhaExcelImport.excelToChamado(file.getInputStream(), sheet);
+	private void atualizaChamados(List<PlanilhaDto> list) {
+
+		if (list.size() > 0) {
 			for (PlanilhaDto a : list) {
 				log.info("Ocorrência:{}", a.getOcorrencia());
 				if (a.getOcorrencia() != null) {
@@ -305,12 +273,8 @@ public class ImportarService {
 
 						chamadoService.save(chamado);
 					}
-
 				}
 			}
-		} catch (IOException e) {
-			throw new RuntimeException("fail to store excel data: " + e.getMessage());
 		}
-
 	}
 }

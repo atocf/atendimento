@@ -26,13 +26,24 @@ public class AnalisarController {
 	@Autowired
 	private AnalisarService service;
 
+	@PostMapping(value = "/ajustar/status")
+	public ResponseEntity<?> ajustarStatus() throws IOException, ParseException {
+		return new ResponseEntity<ResponseAnalisarDto>(service.ajustarStatus(), HttpStatus.CREATED);
+	}
+
 	@PostMapping()
 	public ResponseEntity<?> analisar() throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.analisar(), HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping(value = "/massa")
-	public ResponseEntity<?> massa(@RequestBody @Valid ResponseAnalisarMassaDto massa) throws IOException, ParseException {
+	public ResponseEntity<?> massa(@RequestBody @Valid ResponseAnalisarMassaDto massa)
+			throws IOException, ParseException {
 		return new ResponseEntity<ResponseAnalisarDto>(service.massa(massa), HttpStatus.CREATED);
+	}
+
+	@PostMapping(value = "/sincronizar")
+	public ResponseEntity<?> sincronizar() throws IOException, ParseException {
+		return new ResponseEntity<ResponseAnalisarDto>(service.sincronizar(), HttpStatus.CREATED);
 	}
 }

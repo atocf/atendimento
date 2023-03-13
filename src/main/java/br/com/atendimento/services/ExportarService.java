@@ -50,7 +50,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF/CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -80,7 +80,8 @@ public class ExportarService {
 		List<Chamado> list = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpo(list, false));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -97,7 +98,8 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", false);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -114,7 +116,8 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", true);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpoDuplicados(list));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+					returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -124,14 +127,19 @@ public class ExportarService {
 		}
 	}
 
-	private List<ExportDto> returnListExportDtoLimpoDuplicados(List<Chamado> list) throws ParseException {
-		
-		List<Chamado> listDuplicados = chamadoService.buscaListaOcorrenciaCpf("Pendente", "BACKOFFICE DÍGITAL");
-		List<ExportDto> exportDtoDuplicados = returnListExportDto(listDuplicados);
-		
+	private List<ExportDto> returnListExportDtoLimpo(List<Chamado> list, Boolean priorizados) throws ParseException {
+
+		//List<Chamado> listDuplicados = chamadoService.buscaListaOcorrenciaCpf("Pendente", "BACKOFFICE DÍGITAL");
+		//List<ExportDto> exportDtoDuplicados = returnListExportDto(listDuplicados);
+
 		List<ExportDto> exportDtoList = returnListExportDto(list);
-		
-		exportDtoList.removeAll(exportDtoDuplicados);
+		//exportDtoList.removeAll(exportDtoDuplicados);
+
+		if(priorizados) {
+			List<Chamado> listPriorizados = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
+			List<ExportDto> exportDtoPriorizados = returnListExportDto(listPriorizados);
+			exportDtoList.removeAll(exportDtoPriorizados);
+		}
 		
 		return exportDtoList;
 	}
@@ -150,11 +158,8 @@ public class ExportarService {
 			e.setReabertura(chamado.getReabertura());
 			e.setOcorrencia(chamado.getOcorrencia());
 			e.setProtocolo(chamado.getProtocolo());
-			if (chamado.getCpf() != null) {
-				e.setCpf_cnpj(chamado.getCpf());
-			} else if (chamado.getCnpj() != null) {
-				e.setCpf_cnpj(chamado.getCnpj());
-			}
+			e.setCpf(chamado.getCpf());
+			e.setCnpj(chamado.getCnpj());
 			e.setCard(chamado.getCard());
 			if (chamado.getSquad() != null) {
 				e.setSquad(chamado.getSquad().getNome());

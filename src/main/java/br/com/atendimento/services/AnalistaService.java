@@ -60,12 +60,15 @@ public class AnalistaService {
 		return new ErrorObject("Analista selecionada/o não existe", "analista_id", id);
 	}
 	
-	public Analista findAnalista(String nome) {
+	public Analista findAnalista(String nome, String canal) {
 		if(nome != null) {
 			List<Analista> analista = findByNomeLike("%"+nome.split(" ")[0]+"%");
 			if(analista.size() > 0) {
 				return analista.get(0);
 			} 
+		} else if(canal.equals("CAPTAÇÃO")){
+			Optional<Analista> a = repository.findById(3L);
+			return a.get();
 		}
 		return findById(1L).get();
 	}

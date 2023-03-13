@@ -58,4 +58,6 @@ public class Conta {
 	@Column(nullable =  false, columnDefinition = "TIMESTAMP") 
 	private Date abertura;
 	
+	@Column(nullable = false, columnDefinition = "tinyint(0) DEFAULT 0")
+	private Boolean sincronizado = false;	
 }

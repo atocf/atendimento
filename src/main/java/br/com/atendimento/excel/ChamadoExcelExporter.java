@@ -249,7 +249,14 @@ public class ChamadoExcelExporter {
 				createCell(row, columnCount++, e.getReabertura(), style, null);
 				createCell(row, columnCount++, e.getOcorrencia(), style, null);
 				createCell(row, columnCount++, e.getProtocolo(), style, null);
-				createCell(row, columnCount++, e.getCpf_cnpj(), style, null);
+
+				if (e.getEquipe().equals("BMG EMPRESAS")) {
+					createCell(row, columnCount++, e.getCpf(), style, null);
+					createCell(row, columnCount++, e.getCnpj(), style, null);
+				} else {
+					createCell(row, columnCount++, e.getCpf(), style, null);
+				}
+
 				XSSFHyperlink linkAbrir = helper.createHyperlink(HyperlinkType.URL);
 				linkAbrir.setAddress(abrirLinkInicio + e.getOcorrencia() + abrirLinkFim);
 				createCell(row, columnCount++, "Abrir", linkStyle, linkAbrir);
@@ -273,7 +280,7 @@ public class ChamadoExcelExporter {
 					createCell(row, columnCount++, "", style, null);
 				}
 
-				if (CpfUtils.valid(e.getCpf_cnpj()) != null && e.getKibana() != null && e.getKibana().length > 0) {
+				if (CpfUtils.valid(e.getCpf()) != null && e.getKibana() != null && e.getKibana().length > 0) {
 					String uri = "";
 					String match = "";
 					int v = 0;
@@ -287,7 +294,7 @@ public class ChamadoExcelExporter {
 						v++;
 					}
 					XSSFHyperlink linkKibana = helper.createHyperlink(HyperlinkType.URL);
-					linkKibana.setAddress(kibanaLinkInicio + e.getCpf_cnpj() + kibanaLinkMeio1 + e.getCpf_cnpj()
+					linkKibana.setAddress(kibanaLinkInicio + e.getCpf() + kibanaLinkMeio1 + e.getCpf()
 							+ kibanaLinkMeio2 + uri + kibanaLinkMeio3 + match + kibanaLinkFim);
 					createCell(row, columnCount++, "Kibana", linkStyle, linkKibana);
 				} else {
@@ -295,7 +302,7 @@ public class ChamadoExcelExporter {
 				}
 				if (e.getCard() != null && !e.getCard().isEmpty()) {
 					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
-					linkJira.setAddress(abrirLinkJira + e.getCard());
+					linkJira.setAddress(abrirLinkJira + e.getCard().trim());
 					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
 				} else {
 					createCell(row, columnCount++, e.getCard(), style, null);
