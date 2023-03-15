@@ -50,12 +50,6 @@ public class ChamadoExcelExporter {
 	private String fecharLinkInicioPj = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DF%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String fecharLinkFimFinalizarPj = "%26flw_tema%3D027%26flw_tema_pai%3DFYBA5%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Finalizar&titulo=Tarefa%20-%20Finalizar";
 
-	private String kibanaLinkInicio = "https://83362e5bd5b2472bba402e27688896a6.us-east-1.aws.found.io:9243/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-7d%2Fd,to:now))&_a=(columns:!(detail.cpf,detail.uri,detail.responseCode,detail.request,detail.response),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.cpf,negate:!f,params:(query:'";
-	private String kibanaLinkMeio1 = "'),type:phrase),query:(match_phrase:(detail.cpf:'";
-	private String kibanaLinkMeio2 = "'))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.uri,negate:!f,params:!(";
-	private String kibanaLinkMeio3 = "),type:phrases),query:(bool:(minimum_should_match:1,should:!(";
-	private String kibanaLinkFim = ")))),('$state':(store:appState),meta:(alias:!n,disabled:!t,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,key:detail.responseCode,negate:!t,params:(query:200),type:phrase),query:(match_phrase:(detail.responseCode:200)))),hideChart:!t,index:c61abf30-eb89-11ea-95f6-6f8bace492a2,interval:auto,query:(language:lucene,query:''),sort:!(!(detail.responseCode,desc),!(content.HEADER.TIMESTAMP,desc)))";
-
 	private static final Logger log = LoggerFactory.getLogger(ChamadoExcelExporter.class);
 
 	public ChamadoExcelExporter(List<Chamado> listChamado, List<ExportDto> listExportDto) {
@@ -280,22 +274,10 @@ public class ChamadoExcelExporter {
 					createCell(row, columnCount++, "", style, null);
 				}
 
-				if (CpfUtils.valid(e.getCpf()) != null && e.getKibana() != null && e.getKibana().length > 0) {
-					String uri = "";
-					String match = "";
-					int v = 0;
-					for (String s : e.getKibana()) {
-						if (v > 0) {
-							uri = uri + ",";
-							match = match + ",";
-						}
-						uri = uri + s;
-						match = match + "(match_phrase:(detail.uri:" + s + "))";
-						v++;
-					}
+				if (CpfUtils.valid(e.getCpf()) != null && e.getKibana() != null) {
+					String uri = e.getKibana().replaceAll("cpf_var", e.getCpf());
 					XSSFHyperlink linkKibana = helper.createHyperlink(HyperlinkType.URL);
-					linkKibana.setAddress(kibanaLinkInicio + e.getCpf() + kibanaLinkMeio1 + e.getCpf()
-							+ kibanaLinkMeio2 + uri + kibanaLinkMeio3 + match + kibanaLinkFim);
+					linkKibana.setAddress(uri);
 					createCell(row, columnCount++, "Kibana", linkStyle, linkKibana);
 				} else {
 					createCell(row, columnCount++, "", style, null);

@@ -22,5 +22,5 @@ public class KibanaDtoPut {
 	String descricao;
 	
 	@NotNull
-	String[] link;
+	String link;
 }

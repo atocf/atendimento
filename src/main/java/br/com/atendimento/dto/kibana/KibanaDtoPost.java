@@ -25,7 +25,7 @@ public class KibanaDtoPost {
 	String descricao;
 	
 	@NotNull
-	String[] link;
+	String link;
 	
 	public Kibana converter() {		
 		return new Kibana(nome, descricao, link);

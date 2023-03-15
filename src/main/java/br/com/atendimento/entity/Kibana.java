@@ -38,13 +38,13 @@ public class Kibana {
 	@Column(nullable = false, unique = true)
 	private String nome;
 	
-	@Column(nullable = true, length = 10000)
+	@Column(nullable = true, length = 5000)
 	private String descricao;
 	
-	@Column(nullable = true)
-	private String[] link;
+	@Column(nullable = true, length = 10000)
+	private String link;
 	
-	public Kibana(String nome, String descricao, String[] link) {
+	public Kibana(String nome, String descricao, String link) {
 		super();
 		this.nome = nome;
 		this.descricao = descricao;
