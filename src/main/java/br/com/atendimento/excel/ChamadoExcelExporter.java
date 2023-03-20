@@ -43,12 +43,14 @@ public class ChamadoExcelExporter {
 	private String abrirLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
 	private String abrirLinkFim = "%26flw_tema%3D004%26flw_tema_pai%3DFYB83%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3DPNQ%26devolve_nivel_acesso%3D%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
 
-	private String fecharLinkInicioPf = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
-	private String fecharLinkFimDevolverPf = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
-	private String fecharLinkFimFinalizarPf = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Finalizar";
-
-	private String fecharLinkInicioPj = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DF%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
-	private String fecharLinkFimFinalizarPj = "%26flw_tema%3D027%26flw_tema_pai%3DFYBA5%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Finalizar&titulo=Tarefa%20-%20Finalizar";
+	private String direcionarLinkInicioPf = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
+	private String direcionarLinkFimPf = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26data_cri%3D%26bmg_fcr%3DN%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Finalizar";
+	
+	private String direcionarLinkInicioPj = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DRP%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
+	private String direcionarLinkFimPj = "%26flw_tema%3D038%26flw_tema_pai%3DFYB40%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D224%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D224%26data_cri%3D%26bmg_fcr%3DN%26bmg_classificacao_rec%3D%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Redirecionar%20Ocorr%EAncia&titulo=Tarefa%20-%20Redirecionar%20Ocorr%EAncia";
+	
+	private String fecharLinkInicio = "https://wwws.intergrall.com.br/callcenter/popup.php?programa=flw_pendencias_2_evento.php%3Facao%3DF%26mk_flag%3DMD%26mk_numero%3DYB%26grupo_acesso%3D1%26ativ_num%3D";
+	private String fecharLinkFim = "%26flw_tema%3D027%26flw_tema_pai%3DFYBA5%26flw_anexo_arquivo%3DN%26even_num%3D1%26contrato%3D%26ilha%3D%26deonde_prog%3Dfollow%26repre%3DBMG-OPER%26combo_area%3D226%26nivel%3D%26devolve_nivel_acesso%3D%26deonde_baixa_atd%3DPENDENCIA%26func_atualiza_hist_mk%3DatualizaFrameHistoricoMK%28%29%26deonde_pgm%3DPROMOTORA%26flag_altera_dados%3DN%26pend_nivel_acesso_hora_reserva%3D226%26tipo_popup%3DAJ2%26titulo%3DTarefa%20-%20Finalizar&titulo=Tarefa%20-%20Finalizar";
 
 	private static final Logger log = LoggerFactory.getLogger(ChamadoExcelExporter.class);
 
@@ -255,25 +257,20 @@ public class ChamadoExcelExporter {
 				linkAbrir.setAddress(abrirLinkInicio + e.getOcorrencia() + abrirLinkFim);
 				createCell(row, columnCount++, "Abrir", linkStyle, linkAbrir);
 
+				XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
+				linkFechar.setAddress(fecharLinkInicio + e.getOcorrencia() + fecharLinkFim);
+				createCell(row, columnCount++, "Fechar", linkStyle, linkFechar);
+				
 				if (e.getEquipe().equals("BACKOFFICE DÍGITAL")) {
-
-					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
-					linkFechar.setAddress(fecharLinkInicioPf + e.getOcorrencia() + fecharLinkFimFinalizarPf);
-					createCell(row, columnCount++, "Fechar", linkStyle, linkFechar);
-
 					XSSFHyperlink linkDevolver = helper.createHyperlink(HyperlinkType.URL);
-					linkDevolver.setAddress(fecharLinkInicioPf + e.getOcorrencia() + fecharLinkFimDevolverPf);
-					createCell(row, columnCount++, "Devolver", linkStyle, linkDevolver);
-
+					linkDevolver.setAddress(direcionarLinkInicioPf + e.getOcorrencia() + direcionarLinkFimPf);
+					createCell(row, columnCount++, "Direcionar", linkStyle, linkDevolver);
 				} else if (e.getEquipe().equals("BMG EMPRESAS")) {
-
-					XSSFHyperlink linkFechar = helper.createHyperlink(HyperlinkType.URL);
-					linkFechar.setAddress(fecharLinkInicioPj + e.getOcorrencia() + fecharLinkFimFinalizarPj);
-					createCell(row, columnCount++, "Fechar", linkStyle, linkFechar);
-
-					createCell(row, columnCount++, "", style, null);
+					XSSFHyperlink linkDevolver = helper.createHyperlink(HyperlinkType.URL);
+					linkDevolver.setAddress(direcionarLinkInicioPj + e.getOcorrencia() + direcionarLinkFimPj);
+					createCell(row, columnCount++, "Direcionar", linkStyle, linkDevolver);
 				}
-
+				
 				if (CpfUtils.valid(e.getCpf()) != null && e.getKibana() != null) {
 					String uri = e.getKibana().replaceAll("cpf_var", e.getCpf());
 					XSSFHyperlink linkKibana = helper.createHyperlink(HyperlinkType.URL);

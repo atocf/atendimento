@@ -68,6 +68,8 @@ public class AnalisarService {
 		resp = limpezaRedisPj(resp);
 		resp = limpezaRedisPf(resp);
 		resp = validaAberturaConta(resp);
+		resp = buscaListaRef6702(resp);
+		resp = buscaListaRef6901(resp);
 //		resp = validaToken(resp);
 //		ResponseAnalisarDto respTokenSenhaBloqqueada = validaSenhaBloqueada();
 //		ResponseAnalisarDto respSenhaEletronica = validarSenhaEletronica();
@@ -244,6 +246,34 @@ public class AnalisarService {
 		resp.setTotal_fechar(resp.getTotal_fechar() + total_fechar);
 		return resp;
 	}
+	
+	private ResponseAnalisarDto buscaListaRef6702(ResponseAnalisarDto resp) {
+		List<Chamado> list = chamadoService.buscaListaRef6702("Pendente");
+		
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 14L, 231L, 15L, true, false);
+			}
+			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
+		}
+				
+		return resp;
+	}
+	
+	private ResponseAnalisarDto buscaListaRef6901(ResponseAnalisarDto resp) {
+		List<Chamado> list = chamadoService.buscaListaRef6901("Pendente");
+		
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 14L, 231L, 16L, true, false);
+			}
+			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
+		}
+				
+		return resp;
+	}
+
+
 
 	public ResponseAnalisarDto massa(@Valid ResponseAnalisarMassaDto massa) throws ParseException {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();

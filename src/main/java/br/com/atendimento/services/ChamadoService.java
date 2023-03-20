@@ -99,6 +99,14 @@ public class ChamadoService {
 		return repository.buscaListaOcorrenciaPrioritarias(status_intergrall, equipe);
 	}
 
+	public List<Chamado> buscaListaRef6702(String status_intergrall) {
+		return repository.buscaListaRef6702(status_intergrall);
+	}
+	
+	public List<Chamado> buscaListaRef6901(String status_intergrall) {
+		return repository.buscaListaRef6901(status_intergrall);
+	}
+
 	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(String status_intergrall, String equipe,
 			String submotivo) {
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(status_intergrall, equipe, submotivo);

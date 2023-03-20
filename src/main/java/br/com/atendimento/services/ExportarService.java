@@ -50,7 +50,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -66,7 +66,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -83,7 +83,7 @@ public class ExportarService {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
 					returnListExportDtoLimpo(list, false));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -101,7 +101,7 @@ public class ExportarService {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
 					returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
