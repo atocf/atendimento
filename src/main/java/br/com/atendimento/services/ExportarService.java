@@ -212,7 +212,13 @@ public class ExportarService {
 				e.setCartoes("Não encontrada");
 			}
 			if (chamado.getMsg() != null) {
-				e.setMsg(chamado.getMsg().getDescricao());
+				if(chamado.getMsg().getId().equals(247L)) {
+					e.setMsg(chamado.getMsg().getDescricao() + " Erro 40307");
+				} else if(chamado.getMsg().getId().equals(263L)) {
+					e.setMsg(chamado.getMsg().getDescricao() + " Cod. 16");					
+				} else {
+					e.setMsg(chamado.getMsg().getDescricao());
+				}
 			}
 
 			listExportDto.add(e);
