@@ -71,7 +71,7 @@ public class PlanilhaExcelImport {
 						break;
 					
 					case 11:
-						atendimento.setCard(returnCellToString(currentCell));
+						atendimento.setCard(returnCellToString(currentCell).replace(" ", ""));
 						break;
 
 					case 12:
@@ -149,7 +149,7 @@ public class PlanilhaExcelImport {
 						break;
 					
 					case 12:
-						atendimento.setCard(returnCellToString(currentCell));
+						atendimento.setCard(returnCellToString(currentCell).replace(" ", ""));
 						break;
 
 					case 13:
@@ -192,7 +192,7 @@ public class PlanilhaExcelImport {
 
 	private static String returnCellToString(Cell currentCell) {
 		if (currentCell.getCellType().equals(CellType.STRING)) {
-			return currentCell.getStringCellValue();
+			return currentCell.getStringCellValue().trim();
 		} else if (currentCell.getCellType().equals(CellType.NUMERIC)) {
 			return String.valueOf((long) currentCell.getNumericCellValue());
 		}

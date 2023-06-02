@@ -39,14 +39,14 @@ public class AnalisarService {
 	@Autowired
 	private SincronismoService sincronismoService;
 
-	@Autowired
-	private OnboardingPjtService onboardingPjtService;
-
-	@Autowired
-	private Pjdp007Service pjdp007Service;
-
-	@Autowired
-	private IntegracaoService integracaoService;
+//	@Autowired
+//	private OnboardingPjtService onboardingPjtService;
+//
+//	@Autowired
+//	private Pjdp007Service pjdp007Service;
+//
+//	@Autowired
+//	private IntegracaoService integracaoService;
 
 	private static final Logger log = LoggerFactory.getLogger(AnalisarService.class);
 
@@ -63,11 +63,15 @@ public class AnalisarService {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 
 		resp = validaPjnoPf(resp);
-		resp = validarPixComplementar(resp);
+//		resp = validarPixComplementar(resp);
+		resp = validarPix(resp);
 //		resp = validarPj(resp);
 		resp = limpezaRedisPj(resp);
 		resp = limpezaRedisPf(resp);
 		resp = validaAberturaConta(resp);
+		resp = buscaListaRef6702(resp);
+		resp = buscaListaRef6901(resp);
+		resp = buscaListaAcessoBloqueado(resp);
 //		resp = validaToken(resp);
 //		ResponseAnalisarDto respTokenSenhaBloqqueada = validaSenhaBloqueada();
 //		ResponseAnalisarDto respSenhaEletronica = validarSenhaEletronica();
@@ -83,61 +87,62 @@ public class AnalisarService {
 
 		if (devolverBmgEmpresa.size() > 0) {
 			for (Chamado c : devolverBmgEmpresa) {
-				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 1L, 2L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 1L, 2L, true, false);
 			}
-			resp.setTotal_devolver_fila_errada_bmg_empresa(resp.getTotal_devolver_fila_errada_bmg_empresa() + devolverBmgEmpresa.size());
+			resp.setTotal_devolver_fila_errada_bmg_empresa(
+					resp.getTotal_devolver_fila_errada_bmg_empresa() + devolverBmgEmpresa.size());
 		}
 		return resp;
 	}
 
-	private ResponseAnalisarDto validarPixComplementar(ResponseAnalisarDto resp) {
-		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
-				"Pendente", "BACKOFFICE DÍGITAL", "VALOR NÃO CREDITADO - PIX COMPLEMENTAR");
+//	private ResponseAnalisarDto validarPixComplementar(ResponseAnalisarDto resp) {
+//		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+//				"Pendente", "BACKOFFICE DÍGITAL", "VALOR NÃO CREDITADO - PIX COMPLEMENTAR");
+//
+//		if (list.size() > 0) {
+//			for (Chamado c : list) {
+//				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 2L, 6L, true, false);
+//			}
+//			resp.setTotal_devolver_fila_errada_conta_corrente(resp.getTotal_devolver_fila_errada_conta_corrente() + list.size());
+//		}
+//
+//		return resp;
+//	}
 
-		if (list.size() > 0) {
-			for (Chamado c : list) {
-				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 2L, 6L, true, false);
-			}
-			resp.setTotal_devolver_fila_errada_conta_corrente(resp.getTotal_devolver_fila_errada_conta_corrente() + list.size());
-		}
-
-		return resp;
-	}
-
-	private ResponseAnalisarDto validarPj(ResponseAnalisarDto resp) {
-		log.info("Inicio do processo analise dos chamados pjtinha");
-
-		// 24    CONTA PAGAMENTO PJ - Consulta pelo CNPJ
-		// 30    CONTA PAGAMENTO BMG - PJ MEI - Consulta pelo CNPJ
-		// 46    CONTA PAGAMENTO GRANITO PF - Consulta pelo CPF
-
-		int filaerrada = 0;
-
-		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Equipe("Pendente", "BMG EMPRESAS");
-
-		if (list.size() > 0) {
-			for (Chamado c : list) {
-				if (!(c.getSubmotivo().getNome().equals("PROBLEMAS NO ONBOARDING"))) {
-					Boolean contaValida = false;
-					if (c.getConta().size() > 0) {
-						for (Conta conta : c.getConta()) {
-							if (conta.getTipoconta() == 24 || conta.getTipoconta() == 30
-									|| conta.getTipoconta() == 46) {
-								contaValida = true;
-							}
-						}
-					}
-					if (!(contaValida)) {
-						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
-						filaerrada++;
-					}
-				}
-			}
-		}
-
-		resp.setTotal_devolver_fila_errada(resp.getTotal_devolver_fila_errada() + filaerrada);
-		return resp;
-	}
+//	private ResponseAnalisarDto validarPj(ResponseAnalisarDto resp) {
+//		log.info("Inicio do processo analise dos chamados pjtinha");
+//
+//		// 24    CONTA PAGAMENTO PJ - Consulta pelo CNPJ
+//		// 30    CONTA PAGAMENTO BMG - PJ MEI - Consulta pelo CNPJ
+//		// 46    CONTA PAGAMENTO GRANITO PF - Consulta pelo CPF
+//
+//		int filaerrada = 0;
+//
+//		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Equipe("Pendente", "BMG EMPRESAS");
+//
+//		if (list.size() > 0) {
+//			for (Chamado c : list) {
+//				if (!(c.getSubmotivo().getNome().equals("PROBLEMAS NO ONBOARDING"))) {
+//					Boolean contaValida = false;
+//					if (c.getConta().size() > 0) {
+//						for (Conta conta : c.getConta()) {
+//							if (conta.getTipoconta() == 24 || conta.getTipoconta() == 30
+//									|| conta.getTipoconta() == 46) {
+//								contaValida = true;
+//							}
+//						}
+//					}
+//					if (!(contaValida)) {
+//						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 109L, 6L, true, false);
+//						filaerrada++;
+//					}
+//				}
+//			}
+//		}
+//
+//		resp.setTotal_devolver_fila_errada(resp.getTotal_devolver_fila_errada() + filaerrada);
+//		return resp;
+//	}
 
 	private ResponseAnalisarDto limpezaRedisPj(ResponseAnalisarDto resp) {
 
@@ -165,12 +170,12 @@ public class AnalisarService {
 
 		return resp;
 	}
-	
+
 	private ResponseAnalisarDto limpezaRedisPf(ResponseAnalisarDto resp) {
 
 		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome("Pendente",
 				"BACKOFFICE DÍGITAL", "PROBLEMAS PARA ATIVAR DEVICE ÚNICO");
-		
+
 		if (list.size() > 0) {
 			for (Chamado c : list) {
 				if (c.getCpf() != null) {
@@ -182,7 +187,7 @@ public class AnalisarService {
 
 		return resp;
 	}
-	
+
 	private ResponseAnalisarDto validaAberturaConta(ResponseAnalisarDto resp) {
 
 		int conta_existente = 0;
@@ -238,13 +243,136 @@ public class AnalisarService {
 				}
 			}
 		}
-		
+
 		resp.setTotal_limpo_redis(resp.getTotal_limpo_redis() + limpar_redis);
 		resp.setTotal_devolver_atendimento(resp.getTotal_devolver_atendimento() + conta_existente);
 		resp.setTotal_fechar(resp.getTotal_fechar() + total_fechar);
 		return resp;
 	}
 
+	private ResponseAnalisarDto buscaListaRef6702(ResponseAnalisarDto resp) {
+		List<Chamado> list = chamadoService.buscaListaRef6702("Pendente");
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 231L, 15L, true, false);
+			}
+			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
+		}
+
+		return resp;
+	}
+
+	private ResponseAnalisarDto buscaListaRef6901(ResponseAnalisarDto resp) {
+		List<Chamado> list = chamadoService.buscaListaRef6901("Pendente");
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 273L, 16L, true, false);
+			}
+			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
+		}
+
+		return resp;
+	}
+
+	private ResponseAnalisarDto buscaListaAcessoBloqueado(ResponseAnalisarDto resp) {
+
+		int fila_errada = 0;
+		int encaminhar = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "ACESSO BLOQUEADO");
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if (c.getDescricao().contains("BLOQUEIO PREVENTIVO 12") || c.getDescricao().contains("bloqueio 12") || c.getDescricao().contains("BLOQUEIO 12")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 13") || c.getDescricao().contains("bloqueio 13") || c.getDescricao().contains("BLOQUEIO 13")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 14") || c.getDescricao().contains("bloqueio 14") || c.getDescricao().contains("BLOQUEIO 14")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 15") || c.getDescricao().contains("bloqueio 15") || c.getDescricao().contains("BLOQUEIO 15")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 17") || c.getDescricao().contains("bloqueio 17") || c.getDescricao().contains("BLOQUEIO 17")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 18") || c.getDescricao().contains("bloqueio 18") || c.getDescricao().contains("BLOQUEIO 18")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 19") || c.getDescricao().contains("bloqueio 19") || c.getDescricao().contains("BLOQUEIO 19")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 20") || c.getDescricao().contains("bloqueio 20") || c.getDescricao().contains("BLOQUEIO 20")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 21") || c.getDescricao().contains("bloqueio 21") || c.getDescricao().contains("BLOQUEIO 21")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 22") || c.getDescricao().contains("bloqueio 22") || c.getDescricao().contains("BLOQUEIO 22")
+						   || c.getDescricao().contains("BLOQUEIO PREVENTIVO 23") || c.getDescricao().contains("bloqueio 23") || c.getDescricao().contains("BLOQUEIO 23")						
+						) {
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 5L, 308L, null, true, false);
+					encaminhar++;
+				} else if (c.getDescricao().contains("2200")) {
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 246L, null, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("2600")) {
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 250L, null, true, false);
+					encaminhar++;
+				} else if (c.getDescricao().contains("loas")) {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 245L, 18L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("40307")) {
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 247L, 17L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("Bloqueado Temporário") || c.getDescricao().contains("Temporário")
+						|| c.getDescricao().contains("temporario")) {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 248L, 21L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("Falcon")) {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 278L, 19L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("Cod. 16") || c.getDescricao().contains("Cod.16")
+						|| c.getDescricao().contains("Cod 16") || c.getDescricao().contains("Cod16")) {
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 263L, 17L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("cartao") || c.getDescricao().contains("cartão")
+						|| c.getDescricao().contains("Cartao") || c.getDescricao().contains("Cartão")) {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 22L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("usuario e senha") || c.getDescricao().contains("CPF e senha")
+						|| c.getDescricao().contains("CPF ou sua senha") || c.getDescricao().contains("CPF ou senha")
+						|| c.getDescricao().contains("SENHA ELETRONICA") || c.getDescricao().contains("CPF E SENHA")
+						|| c.getDescricao().contains("cpf ou senha") || c.getDescricao().contains("senha ou CPF")
+						|| c.getDescricao().contains("CPF e senhas") || c.getDescricao().contains("senha ou cpf")) {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 23L, true, false);
+					fila_errada++;
+				} else if (c.getDescricao().contains("motivo de segurança")
+						|| c.getDescricao().contains("motivos de segurança")) {
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
+					fila_errada++;
+				} else {
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 24L, true, false);
+					fila_errada++;
+				}
+			}
+		}
+		
+		resp.setTotal_encaminhar(resp.getTotal_encaminhar() + encaminhar);
+		resp.setTotal_devolver_fila_errada_fraude(resp.getTotal_devolver_fila_errada_fraude() + fila_errada);
+
+		return resp;
+	}
+
+	private ResponseAnalisarDto validarPix(ResponseAnalisarDto resp) {
+
+		int fila_errada = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente",
+				"BACKOFFICE DÍGITAL", true);
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if (c.getDescricao().contains("motivo de segurança")
+						|| c.getDescricao().contains("motivos de segurança")) {
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
+					fila_errada++;
+				} 
+			}
+		}
+		
+		resp.setTotal_devolver_fila_errada_fraude(resp.getTotal_devolver_fila_errada_fraude() + fila_errada);
+
+		return resp;
+	}
+	
 	public ResponseAnalisarDto massa(@Valid ResponseAnalisarMassaDto massa) throws ParseException {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 
@@ -258,7 +386,7 @@ public class AnalisarService {
 							"Pendente", s.getEquipe(), s.getNome(), data);
 			if (list.size() > 0) {
 				for (Chamado c : list) {
-					if (!(ChamadoUtils.prioritario(c.getCanalatendimento()))) {
+					if (!(ChamadoUtils.prioritario(c.getCanalatendimento())) && !(ChamadoUtils.validStatusEncaminhado(c.getStatus()))) {
 						c.setMassa(true);
 						analisarUtilsServices.atualizarChamado(c, "FECHAR", massa.getAnalista(), massa.getCausa_raiz(),
 								massa.getMsg(), false, true);
@@ -343,16 +471,16 @@ public class AnalisarService {
 //			for (Chamado c : list) {
 //				if (c.getStatussenha().equals("Ativo")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 14L, 60L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 60L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Bloqueado")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 14L, 16L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 16L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Inativo")) {

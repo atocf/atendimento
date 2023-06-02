@@ -37,7 +37,7 @@ public class ExportarService {
 
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list, null);
-			String[] namesCell = new String[] { "CPF ou CNPJ", "Agência", "Conta" };
+			String[] namesCell = new String[] { "Agência", "Conta" };
 			excelExporter.export(response, "Sincronizar", namesCell);
 		}
 	}
@@ -50,7 +50,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -66,7 +66,7 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -83,7 +83,7 @@ public class ExportarService {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
 					returnListExportDtoLimpo(list, false));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -101,7 +101,7 @@ public class ExportarService {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
 					returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
@@ -212,7 +212,13 @@ public class ExportarService {
 				e.setCartoes("Não encontrada");
 			}
 			if (chamado.getMsg() != null) {
-				e.setMsg(chamado.getMsg().getDescricao());
+				if(chamado.getMsg().getId().equals(247L)) {
+					e.setMsg(chamado.getMsg().getDescricao() + " Erro 40307");
+				} else if(chamado.getMsg().getId().equals(263L)) {
+					e.setMsg(chamado.getMsg().getDescricao() + " Cod. 16");					
+				} else {
+					e.setMsg(chamado.getMsg().getDescricao());
+				}
 			}
 
 			listExportDto.add(e);

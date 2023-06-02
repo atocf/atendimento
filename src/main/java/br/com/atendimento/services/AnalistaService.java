@@ -25,34 +25,34 @@ public class AnalistaService {
 	private static final Logger log = LoggerFactory.getLogger(AnalistaService.class);
 
 	public Page<Analista> findAll(int page, int size, Boolean ativo) {
-		log.info("Buscando a/o analista ordenando pelo nome");
+		log.debug("Buscando a/o analista ordenando pelo nome");
 		Pageable paging = PageRequest.of(page, size, Sort.by("nome").ascending());
 		return repository.findByAtivo(ativo, paging);
 	}
 
 	public Optional<Analista> findById(Long id) {
-		log.info("Buscando a/o analista por id: {}", id);
+		log.debug("Buscando a/o analista por id: {}", id);
 		return repository.findById(id);
 	}
 	
 	public Optional<Analista> findByNome(String nome) {
-		log.info("Buscando a/o analista pelo nome: {}", nome);
+		log.debug("Buscando a/o analista pelo nome: {}", nome);
 		return repository.findByNome(nome);
 	}
 	
 
 	public List<Analista> findByNomeLike(String nome) {
-		log.info("Buscando a/o analista pelo texto: {}", nome);
+		log.debug("Buscando a/o analista pelo texto: {}", nome);
 		return repository.findByNomeLike(nome);
 	}
 	
 	public Analista save(Analista x) {
-		log.info("Salvando ou Atualização a/o analista {}", x.getNome());
+		log.debug("Salvando ou Atualização a/o analista {}", x.getNome());
 		return repository.save(x);
 	}
 
 	public void deleteById(Long id) {
-		log.info("Deletando a/o Analista por id: {}", id);
+		log.debug("Deletando a/o Analista por id: {}", id);
 		repository.deleteById(id);
 	}
 	

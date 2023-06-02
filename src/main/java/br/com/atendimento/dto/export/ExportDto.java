@@ -12,7 +12,7 @@ public class ExportDto {
 	private String analista;
 	private String c_atendimento;
 	private String sub_motivo;
-	private String [] kibana;
+	private String kibana;
 	private String equipe;
 	private Integer reabertura;
 	private Long ocorrencia;

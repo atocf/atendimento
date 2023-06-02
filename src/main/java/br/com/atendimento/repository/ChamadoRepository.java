@@ -61,6 +61,22 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 			+ "WHERE c.statusintergrall = ?1 AND sm.equipe = ?2 \r\n"
 			+ "AND c.canalatendimento in ('CAPTAÇÃO', 'RECLAME AQUI', 'CONSUMIDOR.GOV', 'BACEN', 'OUVIDORIA CLIENTE', 'PROCON', 'PROCON FONE')" , nativeQuery = true)
 	List<Chamado> buscaListaOcorrenciaPrioritarias(String status_intergrall, String equipe);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "SELECT c.*\r\n"
+			+ "FROM bmg_atendimento.chamado c\r\n"
+			+ "WHERE c.statusintergrall = ?1 \r\n"
+			+ "AND (c.descricao  like '%desenvolvedor%' OR c.descricao  like '%Desenvolvedor%' OR c.descricao  like '%6702%')" , nativeQuery = true)
+	List<Chamado> buscaListaRef6702(String status_intergrall);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "SELECT c.*\r\n"
+			+ "FROM bmg_atendimento.chamado c\r\n"
+			+ "WHERE c.statusintergrall = ?1 \r\n"
+			+ "AND (c.descricao  like '%root%' OR c.descricao  like '%Root%' OR c.descricao  like '%6901%')" , nativeQuery = true)
+	List<Chamado> buscaListaRef6901(String status_intergrall);
 
 	List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Nome(String status_intergrall, String equipe,
 			String submotivo); 

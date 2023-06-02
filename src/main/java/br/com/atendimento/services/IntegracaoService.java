@@ -96,7 +96,7 @@ public class IntegracaoService {
 		}
 
 		if (chamado.getSubmotivo().getCdtp004() && chamado.getCpf() != null && !(cartaoService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
-			log.info("Consulta dados cartão do cpf: {}", chamado.getCpf());
+			log.debug("Consulta dados cartão do cpf: {}", chamado.getCpf());
 
 			ConsultarDadosCartao consultarDadosCartao = new ConsultarDadosCartao();
 
@@ -130,12 +130,12 @@ public class IntegracaoService {
 				}
 			}
 
-			log.info("Fim consulta dados cartão");
+			log.debug("Fim consulta dados cartão");
 		}
 
 		if (chamado.getSubmotivo().getDgp001() && chamado.getDataatualizacaocadastral() == null) {
 
-			log.info("Consulta dados cliente do cpf/cnpj: {}", cpf_cnpj);
+			log.debug("Consulta dados cliente do cpf/cnpj: {}", cpf_cnpj);
 
 			Dgp001Cliente resp = dgp001Service.consultaCliente(cpf_cnpj);
 			if (resp != null) {
@@ -146,21 +146,21 @@ public class IntegracaoService {
 				chamado.setStatussms(resp.getTelefone().getEnviaSms());
 			}
 
-			log.info("Fim consulta dados cliente");
+			log.debug("Fim consulta dados cliente");
 		}
 
 		if (chamado.getSubmotivo().getDgp041() && chamado.getCpf() != null && chamado.getEscopo() == null) {
-			log.info("Consulta scopo do cpf: {}", chamado.getCpf());
+			log.debug("Consulta scopo do cpf: {}", chamado.getCpf());
 
 			chamado.setEscopo(dgp041Service.consultaScopo(chamado.getCpf()));
 
-			log.info("Fim consulta scopo");
+			log.debug("Fim consulta scopo");
 		}
 		if(chamado.getOcorrencia() == 44456984) {
 			System.out.println("ddd");
 		}
 		if (chamado.getSubmotivo().getImp001() && !(contaService.findByChamado_Ocorrencia(chamado.getOcorrencia()).size() > 0)) {
-			log.info("Consulta dados conta do cpf/cnpj: {}", cpf_cnpj);
+			log.debug("Consulta dados conta do cpf/cnpj: {}", cpf_cnpj);
 
 			ObterContasCorrentesPessoa obterContasCorrentesPessoa = new ObterContasCorrentesPessoa();
 
@@ -198,15 +198,15 @@ public class IntegracaoService {
 				}
 			}
 
-			log.info("Fim consulta dados conta");
+			log.debug("Fim consulta dados conta");
 		}
 
 		if (chamado.getSubmotivo().getImp013() && chamado.getCpf() != null) {
-			log.info("Consulta status senha do cpf: {}", chamado.getCpf());
+			log.debug("Consulta status senha do cpf: {}", chamado.getCpf());
 
 			chamado.setStatussenha(imp003Service.consultaStatusPin(chamado.getCpf()));
 
-			log.info("Fim consulta status senha");
+			log.debug("Fim consulta status senha");
 		}
 		
 		chamadoService.save(chamado);

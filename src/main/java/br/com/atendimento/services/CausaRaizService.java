@@ -24,28 +24,28 @@ public class CausaRaizService {
 	private static final Logger log = LoggerFactory.getLogger(CausaRaizService.class);
 
 	public Page<CausaRaiz> findAll(int page, int size, Boolean ativo) {
-		log.info("Buscando a causa raiz ordenando pelo nome");
+		log.debug("Buscando a causa raiz ordenando pelo nome");
 		Pageable paging = PageRequest.of(page, size, Sort.by("nome").ascending());
 		return repository.findByAtivo(ativo, paging);
 	}
 
 	public Optional<CausaRaiz> findById(Long id) {
-		log.info("Buscando a causa raiz por id: {}", id);
+		log.debug("Buscando a causa raiz por id: {}", id);
 		return repository.findById(id);
 	}
 	
 	public Optional<CausaRaiz> findByNome(String nome) {
-		log.info("Buscando a causa raiz pelo nome: {}", nome);
+		log.debug("Buscando a causa raiz pelo nome: {}", nome);
 		return repository.findByNome(nome);
 	}
 	
 	public CausaRaiz save(CausaRaiz x) {
-		log.info("Salvando ou Atualização a causa raiz {}", x.getNome());
+		log.debug("Salvando ou Atualização a causa raiz {}", x.getNome());
 		return repository.save(x);
 	}
 
 	public void deleteById(Long id) {
-		log.info("Deletando a causa raiz por id: {}", id);
+		log.debug("Deletando a causa raiz por id: {}", id);
 		repository.deleteById(id);
 	}
 	
