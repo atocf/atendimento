@@ -90,6 +90,14 @@ public class SubMotivo {
 	@JoinColumn(name = "idkibana")
 	private Kibana kibana;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+	@Column(nullable =  true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP") 
+	private Date prazo;
+	
+	@Column(nullable = true, length = 10000)
+	private String observacao;
+	
 	public SubMotivo(Analista analista, String produto, String tipopublico, String variedadeproduto, String motivo, String nome, String equipe, Kibana kibana) {
 		super();
 		this.analista = analista;

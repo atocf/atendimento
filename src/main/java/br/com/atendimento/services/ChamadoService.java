@@ -22,17 +22,17 @@ public class ChamadoService {
 	private static final Logger log = LoggerFactory.getLogger(ChamadoService.class);
 
 	public Optional<Chamado> findById(Long id) {
-		log.info("Buscando o chamado por id: {}", id);
+		log.debug("Buscando o chamado por id: {}", id);
 		return repository.findById(id);
 	}
 
 	public Chamado save(Chamado x) {
-		log.info("Salvando ou Atualização o chamado {}", x.getOcorrencia());
+		log.debug("Salvando ou Atualização o chamado {}", x.getOcorrencia());
 		return repository.save(x);
 	}
 
 	public void deleteById(Long id) {
-		log.info("Deletando o chamado por id: {}", id);
+		log.debug("Deletando o chamado por id: {}", id);
 		repository.deleteById(id);
 	}
 
@@ -42,24 +42,24 @@ public class ChamadoService {
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_SincronismoAndSubmotivo_Equipe(String status_intergrall,
 			boolean sincronismo, String equipe) {
-		log.info("Buscar lista de chamados para sincronismo");
+		log.debug("Buscar lista de chamados para sincronismo");
 		return repository.findByStatusintergrallAndSubmotivo_SincronismoAndSubmotivo_Equipe(status_intergrall,
 				sincronismo, equipe);
 	}
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_Equipe(String status_intergrall, String equipe) {
-		log.info("Buscar lista de chamados para atendimento");
+		log.debug("Buscar lista de chamados para atendimento");
 		return repository.findByStatusintergrallAndSubmotivo_Equipe(status_intergrall, equipe);
 	}
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_Sincronismo(String status_intergrall, boolean sincronismo) {
-		log.info("Buscar lista de chamados para sincronismo");
+		log.debug("Buscar lista de chamados para sincronismo");
 		return repository.findByStatusintergrallAndSubmotivo_Sincronismo(status_intergrall, sincronismo);
 	}
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix(String status_intergrall,
 			String equipe, boolean pix) {
-		log.info("Buscar lista de chamados para atendimento");
+		log.debug("Buscar lista de chamados para atendimento");
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix(status_intergrall, equipe, pix);
 	}
 
@@ -69,20 +69,20 @@ public class ChamadoService {
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(String status_intergrall,
 			String equipe) {
-		log.info("Consultar protocolos que tem que ser devolvidos por serem CNPJ");
+		log.debug("Consultar protocolos que tem que ser devolvidos por serem CNPJ");
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndCnpjIsNotNull(status_intergrall, equipe);
 	}
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
 			String status_intergrall, String equipe, String submotivo) {
-		log.info("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
+		log.debug("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(status_intergrall,
 				equipe, submotivo);
 	}
 
 	public List<Chamado> findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNullAndDataabertura(
 			String status_intergrall, String equipe, String submotivo, Date data) {
-		log.info("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
+		log.debug("Buscando lista de chamados pelo sub-motivo: {} ", submotivo);
 		return repository.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNullAndDataabertura(
 				status_intergrall, equipe, submotivo, data);
 	}

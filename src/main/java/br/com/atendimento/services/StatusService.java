@@ -24,28 +24,28 @@ public class StatusService {
 	private static final Logger log = LoggerFactory.getLogger(StatusService.class);
 
 	public Page<Status> findAll(int page, int size, Boolean ativo) {
-		log.info("Buscando o status ordenando pelo nome");
+		log.debug("Buscando o status ordenando pelo nome");
 		Pageable paging = PageRequest.of(page, size, Sort.by("nome").ascending());
 		return repository.findByAtivo(ativo, paging);
 	}
 
 	public Optional<Status> findById(Long id) {
-		log.info("Buscando o status por id: {}", id);
+		log.debug("Buscando o status por id: {}", id);
 		return repository.findById(id);
 	}
 	
 	public Optional<Status> findByNome(String nome) {
-		log.info("Buscando o status pelo nome: {}", nome);
+		log.debug("Buscando o status pelo nome: {}", nome);
 		return repository.findByNome(nome);
 	}
 	
 	public Status save(Status x) {
-		log.info("Salvando ou Atualização o status {}", x.getNome());
+		log.debug("Salvando ou Atualização o status {}", x.getNome());
 		return repository.save(x);
 	}
 
 	public void deleteById(Long id) {
-		log.info("Deletando o status por id: {}", id);
+		log.debug("Deletando o status por id: {}", id);
 		repository.deleteById(id);
 	}
 	

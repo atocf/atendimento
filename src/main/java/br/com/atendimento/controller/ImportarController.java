@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.atendimento.dto.ResponseMessage;
-import br.com.atendimento.dto.importar.ImportarAberturaDto;
 import br.com.atendimento.dto.importar.ImportarBacklogDto;
 import br.com.atendimento.dto.importar.ResponseImportDto;
 import br.com.atendimento.excel.PlanilhaExcelImport;
@@ -31,14 +30,6 @@ public class ImportarController {
 	@Autowired
 	private ImportarService service;
 
-	@PostMapping("/integrall/abertura")
-	public ResponseEntity<?> importarAbertura(@RequestParam("file") MultipartFile fileCsv)
-			throws IOException, ParseException {
-		return new ResponseEntity<ResponseImportDto>(
-				service.importarAbertura(CsvUtils.read(ImportarAberturaDto.class, fileCsv.getInputStream())),
-				HttpStatus.CREATED);
-	}
-
 	@PostMapping("/integrall/backlog")
 	public ResponseEntity<?> importarBacklog(@RequestParam("file") MultipartFile fileCsv)
 			throws IOException, ParseException, KeyManagementException, NoSuchAlgorithmException {
@@ -46,6 +37,16 @@ public class ImportarController {
 				service.importarBacklog(CsvUtils.read(ImportarBacklogDto.class, fileCsv.getInputStream())),
 				HttpStatus.CREATED);
 	}
+	
+	@PostMapping("/planilha/import")
+	public  ResponseEntity<?> importPlanilhas(String sheet)  throws IOException, ParseException {
+		try {
+			return new ResponseEntity<ResponseImportDto>(service.importPlanilhas(sheet), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(e.getMessage()));
+		}		
+	}
+	
 
 	@PostMapping("/planilha/pf/{sheet}")
 	public ResponseEntity<ResponseMessage> planilhaFilePf(@RequestParam("file") MultipartFile file, String sheet) {
@@ -53,7 +54,7 @@ public class ImportarController {
 
 		if (PlanilhaExcelImport.hasExcelFormat(file)) {
 			try {
-				service.importarPlanilhaPf(file, sheet);
+				service.importarPlanilhaPf(file.getInputStream(), sheet);
 
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -73,7 +74,7 @@ public class ImportarController {
 
 		if (PlanilhaExcelImport.hasExcelFormat(file)) {
 			try {
-				service.importarPlanilhaPj(file, sheet);
+				service.importarPlanilhaPj(file.getInputStream(), sheet);
 
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));

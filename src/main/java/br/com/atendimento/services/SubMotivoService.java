@@ -27,28 +27,28 @@ public class SubMotivoService {
 	private static final Logger log = LoggerFactory.getLogger(SubMotivoService.class);
 
 	public Page<SubMotivo> findAll(int page, int size, String status) {
-		log.info("Buscando o submotivo ordenando pelo nome");
+		log.debug("Buscando o submotivo ordenando pelo nome");
 		Pageable paging = PageRequest.of(page, size, Sort.by("nome").ascending());
 		return repository.findByStatus(status, paging);
 	}
 
 	public Optional<SubMotivo> findById(Long id) {
-		log.info("Buscando o submotivo por id: {}", id);
+		log.debug("Buscando o submotivo por id: {}", id);
 		return repository.findById(id);
 	}
 
 	public Optional<SubMotivo> findByNome(String nome) {
-		log.info("Buscando o submotivo pelo nome: {}", nome);
+		log.debug("Buscando o submotivo pelo nome: {}", nome);
 		return repository.findByNome(nome);
 	}
 
 	public SubMotivo save(SubMotivo x) {
-		log.info("Salvando ou Atualização o submotivo {}", x.getNome());
+		log.debug("Salvando ou Atualização o submotivo {}", x.getNome());
 		return repository.save(x);
 	}
 
 	public void deleteById(Long id) {
-		log.info("Deletando o submotivo por id: {}", id);
+		log.debug("Deletando o submotivo por id: {}", id);
 		repository.deleteById(id);
 	}
 

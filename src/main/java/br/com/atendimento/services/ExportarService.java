@@ -37,7 +37,7 @@ public class ExportarService {
 
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(list, null);
-			String[] namesCell = new String[] { "CPF ou CNPJ", "Agência", "Conta" };
+			String[] namesCell = new String[] { "Agência", "Conta" };
 			excelExporter.export(response, "Sincronizar", namesCell);
 		}
 	}

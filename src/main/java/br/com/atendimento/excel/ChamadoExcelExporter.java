@@ -199,13 +199,13 @@ public class ChamadoExcelExporter {
 							Row row = sheet.createRow(rowCount++);
 							int columnCount = 0;
 
-							if (chamado.getCpf() != null) {
-								createCell(row, columnCount++, chamado.getCpf(), styleNormal, null);
-								log.info("CPF: {}", chamado.getCpf());
-							} else if (chamado.getCnpj() != null) {
-								createCell(row, columnCount++, chamado.getCnpj(), styleNormal, null);
-								log.info("CNPJ: {}", chamado.getCnpj());
-							}
+//							if (chamado.getCpf() != null) {
+//								createCell(row, columnCount++, chamado.getCpf(), styleNormal, null);
+//								log.info("CPF: {}", chamado.getCpf());
+//							} else if (chamado.getCnpj() != null) {
+//								createCell(row, columnCount++, chamado.getCnpj(), styleNormal, null);
+//								log.info("CNPJ: {}", chamado.getCnpj());
+//							}
 
 							createCell(row, columnCount++, conta.getAgencia(), styleNormal, null);
 							createCell(row, columnCount++, conta.getNumeroconta(), styleNormal, null);

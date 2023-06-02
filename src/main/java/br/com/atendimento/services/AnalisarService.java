@@ -64,6 +64,7 @@ public class AnalisarService {
 
 		resp = validaPjnoPf(resp);
 //		resp = validarPixComplementar(resp);
+		resp = validarPix(resp);
 //		resp = validarPj(resp);
 		resp = limpezaRedisPj(resp);
 		resp = limpezaRedisPf(resp);
@@ -86,7 +87,7 @@ public class AnalisarService {
 
 		if (devolverBmgEmpresa.size() > 0) {
 			for (Chamado c : devolverBmgEmpresa) {
-				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 1L, 2L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 1L, 2L, true, false);
 			}
 			resp.setTotal_devolver_fila_errada_bmg_empresa(
 					resp.getTotal_devolver_fila_errada_bmg_empresa() + devolverBmgEmpresa.size());
@@ -100,7 +101,7 @@ public class AnalisarService {
 //
 //		if (list.size() > 0) {
 //			for (Chamado c : list) {
-//				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 2L, 6L, true, false);
+//				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 2L, 6L, true, false);
 //			}
 //			resp.setTotal_devolver_fila_errada_conta_corrente(resp.getTotal_devolver_fila_errada_conta_corrente() + list.size());
 //		}
@@ -132,7 +133,7 @@ public class AnalisarService {
 //						}
 //					}
 //					if (!(contaValida)) {
-//						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 109L, 6L, true, false);
+//						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 109L, 6L, true, false);
 //						filaerrada++;
 //					}
 //				}
@@ -254,7 +255,7 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado c : list) {
-				analisarUtilsServices.atualizarChamado(c, "FECHAR", 14L, 231L, 15L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 231L, 15L, true, false);
 			}
 			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
 		}
@@ -267,7 +268,7 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado c : list) {
-				analisarUtilsServices.atualizarChamado(c, "FECHAR", 14L, 273L, 16L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 273L, 16L, true, false);
 			}
 			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
 		}
@@ -300,45 +301,45 @@ public class AnalisarService {
 					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 5L, 308L, null, true, false);
 					encaminhar++;
 				} else if (c.getDescricao().contains("2200")) {
-					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 14L, 246L, null, true, false);
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 246L, null, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("2600")) {
-					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 14L, 250L, null, true, false);
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 250L, null, true, false);
 					encaminhar++;
 				} else if (c.getDescricao().contains("loas")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 245L, 18L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 245L, 18L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("40307")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 247L, 17L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 247L, 17L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Bloqueado Temporário") || c.getDescricao().contains("Temporário")
 						|| c.getDescricao().contains("temporario")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 14L, 248L, 21L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 248L, 21L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Falcon")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 249L, 19L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 278L, 19L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Cod. 16") || c.getDescricao().contains("Cod.16")
 						|| c.getDescricao().contains("Cod 16") || c.getDescricao().contains("Cod16")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 263L, 17L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 263L, 17L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("cartao") || c.getDescricao().contains("cartão")
 						|| c.getDescricao().contains("Cartao") || c.getDescricao().contains("Cartão")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 6L, 22L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 22L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("usuario e senha") || c.getDescricao().contains("CPF e senha")
 						|| c.getDescricao().contains("CPF ou sua senha") || c.getDescricao().contains("CPF ou senha")
 						|| c.getDescricao().contains("SENHA ELETRONICA") || c.getDescricao().contains("CPF E SENHA")
 						|| c.getDescricao().contains("cpf ou senha") || c.getDescricao().contains("senha ou CPF")
 						|| c.getDescricao().contains("CPF e senhas") || c.getDescricao().contains("senha ou cpf")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 6L, 23L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 23L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("motivo de segurança")
 						|| c.getDescricao().contains("motivos de segurança")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 274L, 20L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
 					fila_errada++;
 				} else {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 14L, 6L, 24L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 24L, true, false);
 					fila_errada++;
 				}
 			}
@@ -350,6 +351,28 @@ public class AnalisarService {
 		return resp;
 	}
 
+	private ResponseAnalisarDto validarPix(ResponseAnalisarDto resp) {
+
+		int fila_errada = 0;
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix("Pendente",
+				"BACKOFFICE DÍGITAL", true);
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				if (c.getDescricao().contains("motivo de segurança")
+						|| c.getDescricao().contains("motivos de segurança")) {
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
+					fila_errada++;
+				} 
+			}
+		}
+		
+		resp.setTotal_devolver_fila_errada_fraude(resp.getTotal_devolver_fila_errada_fraude() + fila_errada);
+
+		return resp;
+	}
+	
 	public ResponseAnalisarDto massa(@Valid ResponseAnalisarMassaDto massa) throws ParseException {
 		ResponseAnalisarDto resp = new ResponseAnalisarDto();
 
@@ -363,7 +386,7 @@ public class AnalisarService {
 							"Pendente", s.getEquipe(), s.getNome(), data);
 			if (list.size() > 0) {
 				for (Chamado c : list) {
-					if (!(ChamadoUtils.prioritario(c.getCanalatendimento()))) {
+					if (!(ChamadoUtils.prioritario(c.getCanalatendimento())) && !(ChamadoUtils.validStatusEncaminhado(c.getStatus()))) {
 						c.setMassa(true);
 						analisarUtilsServices.atualizarChamado(c, "FECHAR", massa.getAnalista(), massa.getCausa_raiz(),
 								massa.getMsg(), false, true);
@@ -448,16 +471,16 @@ public class AnalisarService {
 //			for (Chamado c : list) {
 //				if (c.getStatussenha().equals("Ativo")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 14L, 60L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 60L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Bloqueado")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 14L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 14L, 16L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 15L, 16L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Inativo")) {
