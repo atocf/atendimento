@@ -59,7 +59,7 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
 			+ "INNER JOIN bmg_atendimento.sub_motivo sm ON sm.id = c.idsubmotivo \r\n"
 			+ "LEFT OUTER JOIN bmg_atendimento.squad q ON c.idsquad = q.id \r\n"
 			+ "WHERE c.statusintergrall = ?1 AND sm.equipe = ?2 \r\n"
-			+ "AND c.canalatendimento in ('CAPTAÇÃO', 'RECLAME AQUI', 'CONSUMIDOR.GOV', 'BACEN', 'OUVIDORIA CLIENTE', 'PROCON', 'PROCON FONE')" , nativeQuery = true)
+			+ "AND c.canalatendimento in ('CAPTAÇÃO', 'RECLAME AQUI', 'CONSUMIDOR.GOV', 'BACEN', 'OUVIDORIA CLIENTE', 'PROCON', 'PROCON FONE', 'ALTO ATRITO OUVIDORIA')" , nativeQuery = true)
 	List<Chamado> buscaListaOcorrenciaPrioritarias(String status_intergrall, String equipe);
 	
 	@Transactional

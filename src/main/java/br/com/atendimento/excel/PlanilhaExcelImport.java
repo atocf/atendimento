@@ -1,5 +1,8 @@
 package br.com.atendimento.excel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -65,11 +68,11 @@ public class PlanilhaExcelImport {
 					case 0:
 						atendimento.setAnalista(returnCellToString(currentCell));
 						break;
-						
+
 					case 4:
 						atendimento.setOcorrencia(returnCellToLong(currentCell));
 						break;
-					
+
 					case 11:
 						atendimento.setCard(returnCellToString(currentCell).replace(" ", ""));
 						break;
@@ -111,7 +114,7 @@ public class PlanilhaExcelImport {
 			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
 		}
 	}
-	
+
 	public static List<PlanilhaDto> excelToChamadoPj(InputStream is, String sheetName) throws ParseException {
 		try {
 			ZipSecureFile.setMinInflateRatio(0);
@@ -143,11 +146,11 @@ public class PlanilhaExcelImport {
 					case 0:
 						atendimento.setAnalista(returnCellToString(currentCell));
 						break;
-						
+
 					case 4:
 						atendimento.setOcorrencia(returnCellToLong(currentCell));
 						break;
-					
+
 					case 12:
 						atendimento.setCard(returnCellToString(currentCell).replace(" ", ""));
 						break;
@@ -198,22 +201,46 @@ public class PlanilhaExcelImport {
 		}
 		return "";
 	}
-	
+
 	private static Long returnCellToLong(Cell currentCell) {
-		if(currentCell.getCellType().equals(CellType.STRING)) {
+		if (currentCell.getCellType().equals(CellType.STRING)) {
 			return Long.parseLong(currentCell.getStringCellValue());
-		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+		} else if (currentCell.getCellType().equals(CellType.NUMERIC)) {
 			return (long) currentCell.getNumericCellValue();
-		} 
+		}
 		return null;
 	}
-	
+
 	private static Date returnCellToDate(Cell currentCell) throws ParseException {
-		if(currentCell.getCellType().equals(CellType.STRING)) {
+		if (currentCell.getCellType().equals(CellType.STRING)) {
 			return formato.parse(currentCell.getStringCellValue());
-		} else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+		} else if (currentCell.getCellType().equals(CellType.NUMERIC)) {
 			return currentCell.getDateCellValue();
-		} 
+		}
 		return null;
+	}
+
+	public static void removeRow(File p, String filePath, String sheetName) throws IOException {
+		
+		InputStream is = new FileInputStream(p);
+		Workbook workbook = new XSSFWorkbook(is);
+
+		Sheet sheet = workbook.getSheet(sheetName);
+		
+		int lastRowNum = sheet.getLastRowNum();
+		for(int i = 1; i < lastRowNum ; i++) {
+			Row removingRow = sheet.getRow(i);
+			if (removingRow != null) {
+				sheet.removeRow(removingRow);
+			}
+		}
+		
+		is.close();
+
+		FileOutputStream outFile = new FileOutputStream(new File(filePath));
+		workbook.write(outFile);
+		outFile.close();
+		
+		workbook.close();
 	}
 }

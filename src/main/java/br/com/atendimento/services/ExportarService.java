@@ -1,5 +1,6 @@
 package br.com.atendimento.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.atendimento.dto.export.ExportDto;
+import br.com.atendimento.dto.importar.ResponseImportDto;
 import br.com.atendimento.entity.Cartao;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
@@ -29,6 +31,13 @@ public class ExportarService {
 	private CartaoService cartaoService;
 
 	private static final Logger log = LoggerFactory.getLogger(ExportarService.class);
+
+	private static final String STR_PLANILHA_PJ = "PJ - Intergrall.xlsx";
+	private static final String STR_PLANILHA_PF = "PF - Intergrall.xlsx";
+	private static final String STR_PLANILHA_PF_PIX = "PIX- Intergrall.xlsx";
+	private static final String STR_PLANILHA_PF_PREFERENCIAL = "Priorizados PF - Intergrall.xlsx";
+	private static final String STR_PATH_GERAR = "C:\\workspace\\gerar\\";
+	private static final String STR_PATH_EXPORTADA = "C:\\workspace\\exportada\\";
 
 	public void exportarSincronismo(HttpServletResponse response) throws IOException, ParseException {
 		log.info("Inicio do processo de gerar excel dos chamados para sincronismo PF e PJ");
@@ -50,8 +59,8 @@ public class ExportarService {
 		if (list.size() > 0) {
 			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
-					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
-					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
+					"OCORRENCIA", "PROTOCOLO", "CPF", "CNPJ", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD",
+					"SQUAD", "STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
 					"DESCRIÇÃO", "NOME", "STATUS SENHA", "EMAIL", "TELEFONE", "TELEFONE_SMS",
 					"ULTIMAL_ATUALIZACAO_CADASTRAL", "ESCOPO", "CONTA", "CARTOES", "MSG" };
 			excelExporter.export(response, "Atendimento", namesCell);
@@ -80,8 +89,7 @@ public class ExportarService {
 		List<Chamado> list = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
-					returnListExportDtoLimpo(list, false));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpo(list, false));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -98,8 +106,7 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", false);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
-					returnListExportDtoLimpo(list, true));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DIRECIONAR", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -116,8 +123,7 @@ public class ExportarService {
 				"BACKOFFICE DÍGITAL", true);
 
 		if (list.size() > 0) {
-			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
-					returnListExportDtoLimpo(list, true));
+			ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDtoLimpo(list, true));
 			String[] namesCell = new String[] { "ANALISTA", "CANAL DE ATENDIMENTO", "SUBMOTIVO", "REABERTURA",
 					"OCORRENCIA", "PROTOCOLO", "CPF", "ABRIR", "FECHAR", "DEVOLVER", "KIBANA", "CARD", "SQUAD",
 					"STATUS", "DATA-STATUS", "OBSERVAÇÃO", "CAUSA RAIZ", "DATA ABERTURA", "DATA VENCIMENTO",
@@ -129,18 +135,20 @@ public class ExportarService {
 
 	private List<ExportDto> returnListExportDtoLimpo(List<Chamado> list, Boolean priorizados) throws ParseException {
 
-		//List<Chamado> listDuplicados = chamadoService.buscaListaOcorrenciaCpf("Pendente", "BACKOFFICE DÍGITAL");
-		//List<ExportDto> exportDtoDuplicados = returnListExportDto(listDuplicados);
+		// List<Chamado> listDuplicados =
+		// chamadoService.buscaListaOcorrenciaCpf("Pendente", "BACKOFFICE DÍGITAL");
+		// List<ExportDto> exportDtoDuplicados = returnListExportDto(listDuplicados);
 
 		List<ExportDto> exportDtoList = returnListExportDto(list);
-		//exportDtoList.removeAll(exportDtoDuplicados);
+		// exportDtoList.removeAll(exportDtoDuplicados);
 
-		if(priorizados) {
-			List<Chamado> listPriorizados = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
+		if (priorizados) {
+			List<Chamado> listPriorizados = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente",
+					"BACKOFFICE DÍGITAL");
 			List<ExportDto> exportDtoPriorizados = returnListExportDto(listPriorizados);
 			exportDtoList.removeAll(exportDtoPriorizados);
 		}
-		
+
 		return exportDtoList;
 	}
 
@@ -212,10 +220,10 @@ public class ExportarService {
 				e.setCartoes("Não encontrada");
 			}
 			if (chamado.getMsg() != null) {
-				if(chamado.getMsg().getId().equals(247L)) {
+				if (chamado.getMsg().getId().equals(247L)) {
 					e.setMsg(chamado.getMsg().getDescricao() + " Erro 40307");
-				} else if(chamado.getMsg().getId().equals(263L)) {
-					e.setMsg(chamado.getMsg().getDescricao() + " Cod. 16");					
+				} else if (chamado.getMsg().getId().equals(263L)) {
+					e.setMsg(chamado.getMsg().getDescricao() + " Cod. 16");
 				} else {
 					e.setMsg(chamado.getMsg().getDescricao());
 				}
@@ -224,5 +232,56 @@ public class ExportarService {
 			listExportDto.add(e);
 		}
 		return listExportDto;
+	}
+
+	public ResponseImportDto exportPlanilhas(String dt_de, String dt_para) throws IOException, ParseException {
+		File fPlanilhas = new File(STR_PATH_GERAR);
+		File[] aPLanilhas = fPlanilhas.listFiles();
+
+		for (File p : aPLanilhas) {
+
+			if (STR_PLANILHA_PJ.equals(p.getName())) {
+				List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_Equipe("Pendente",
+						"BMG EMPRESAS");
+
+				if (list.size() > 0) {
+					ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null, returnListExportDto(list));
+					excelExporter.exportNew(p, "Atendimento", dt_de, dt_para, STR_PATH_EXPORTADA + STR_PLANILHA_PJ);
+				}
+			} else if (STR_PLANILHA_PF.equals(p.getName())) {
+				List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix(
+						"Pendente", "BACKOFFICE DÍGITAL", false);
+
+				if (list.size() > 0) {
+					ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+							returnListExportDtoLimpo(list, true));
+
+					excelExporter.exportNew(p, "Atendimento", dt_de, dt_para, STR_PATH_EXPORTADA + STR_PLANILHA_PF);
+				}
+			} else if (STR_PLANILHA_PF_PIX.equals(p.getName())) {
+				List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_Pix(
+						"Pendente", "BACKOFFICE DÍGITAL", true);
+
+				if (list.size() > 0) {
+					ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+							returnListExportDtoLimpo(list, true));
+					excelExporter.exportNew(p, "Atendimento", dt_de, dt_para, STR_PATH_EXPORTADA + STR_PLANILHA_PF_PIX);
+				}
+
+			} else if (STR_PLANILHA_PF_PREFERENCIAL.equals(p.getName())) {
+				List<Chamado> list = chamadoService.buscaListaOcorrenciaPrioritarias("Pendente", "BACKOFFICE DÍGITAL");
+
+				if (list.size() > 0) {
+					ChamadoExcelExporter excelExporter = new ChamadoExcelExporter(null,
+							returnListExportDtoLimpo(list, false));
+					excelExporter.exportNew(p, "Atendimento", dt_de, dt_para,
+							STR_PATH_EXPORTADA + STR_PLANILHA_PF_PREFERENCIAL);
+				}
+			}
+
+			p.delete();
+		}
+
+		return null;
 	}
 }

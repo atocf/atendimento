@@ -14,11 +14,16 @@ import org.springframework.stereotype.Service;
 
 import br.com.atendimento.dto.analisar.ResponseAnalisarDto;
 import br.com.atendimento.dto.analisar.ResponseAnalisarMassaDto;
+import br.com.atendimento.dto.importar.CpfCnpjDto;
+import br.com.atendimento.dto.importar.ErrosImportDto;
+import br.com.atendimento.dto.importar.ResponseImportDto;
 import br.com.atendimento.entity.Chamado;
 import br.com.atendimento.entity.Conta;
 import br.com.atendimento.entity.SubMotivo;
 import br.com.atendimento.services.utils.AnalisarUtilsServices;
 import br.com.atendimento.util.ChamadoUtils;
+import br.com.atendimento.util.CnpjUtils;
+import br.com.atendimento.util.CpfUtils;
 import br.com.atendimento.util.DataUtils;
 
 @Service
@@ -72,6 +77,7 @@ public class AnalisarService {
 		resp = buscaListaRef6702(resp);
 		resp = buscaListaRef6901(resp);
 		resp = buscaListaAcessoBloqueado(resp);
+		resp = buscaOpenBanking(resp);
 //		resp = validaToken(resp);
 //		ResponseAnalisarDto respTokenSenhaBloqqueada = validaSenhaBloqueada();
 //		ResponseAnalisarDto respSenhaEletronica = validarSenhaEletronica();
@@ -87,7 +93,7 @@ public class AnalisarService {
 
 		if (devolverBmgEmpresa.size() > 0) {
 			for (Chamado c : devolverBmgEmpresa) {
-				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 1L, 2L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 1L, 2L, true, false);
 			}
 			resp.setTotal_devolver_fila_errada_bmg_empresa(
 					resp.getTotal_devolver_fila_errada_bmg_empresa() + devolverBmgEmpresa.size());
@@ -101,7 +107,7 @@ public class AnalisarService {
 //
 //		if (list.size() > 0) {
 //			for (Chamado c : list) {
-//				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 2L, 6L, true, false);
+//				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 2L, 6L, true, false);
 //			}
 //			resp.setTotal_devolver_fila_errada_conta_corrente(resp.getTotal_devolver_fila_errada_conta_corrente() + list.size());
 //		}
@@ -133,7 +139,7 @@ public class AnalisarService {
 //						}
 //					}
 //					if (!(contaValida)) {
-//						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 109L, 6L, true, false);
+//						analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 109L, 6L, true, false);
 //						filaerrada++;
 //					}
 //				}
@@ -255,7 +261,7 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado c : list) {
-				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 231L, 15L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 231L, 15L, true, false);
 			}
 			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
 		}
@@ -268,7 +274,7 @@ public class AnalisarService {
 
 		if (list.size() > 0) {
 			for (Chamado c : list) {
-				analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 273L, 16L, true, false);
+				analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 273L, 16L, true, false);
 			}
 			resp.setTotal_fechar(resp.getTotal_fechar() + list.size());
 		}
@@ -301,45 +307,45 @@ public class AnalisarService {
 					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 5L, 308L, null, true, false);
 					encaminhar++;
 				} else if (c.getDescricao().contains("2200")) {
-					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 246L, null, true, false);
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 16L, 246L, null, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("2600")) {
-					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 15L, 250L, null, true, false);
+					analisarUtilsServices.atualizarChamado(c, "ENCAMINHADO", 16L, 250L, null, true, false);
 					encaminhar++;
 				} else if (c.getDescricao().contains("loas")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 245L, 18L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 245L, 18L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("40307")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 247L, 17L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 247L, 17L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Bloqueado Temporário") || c.getDescricao().contains("Temporário")
 						|| c.getDescricao().contains("temporario")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 248L, 21L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 248L, 21L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Falcon")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 278L, 19L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 278L, 19L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("Cod. 16") || c.getDescricao().contains("Cod.16")
 						|| c.getDescricao().contains("Cod 16") || c.getDescricao().contains("Cod16")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 263L, 17L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 263L, 17L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("cartao") || c.getDescricao().contains("cartão")
 						|| c.getDescricao().contains("Cartao") || c.getDescricao().contains("Cartão")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 22L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 6L, 22L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("usuario e senha") || c.getDescricao().contains("CPF e senha")
 						|| c.getDescricao().contains("CPF ou sua senha") || c.getDescricao().contains("CPF ou senha")
 						|| c.getDescricao().contains("SENHA ELETRONICA") || c.getDescricao().contains("CPF E SENHA")
 						|| c.getDescricao().contains("cpf ou senha") || c.getDescricao().contains("senha ou CPF")
 						|| c.getDescricao().contains("CPF e senhas") || c.getDescricao().contains("senha ou cpf")) {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 23L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 6L, 23L, true, false);
 					fila_errada++;
 				} else if (c.getDescricao().contains("motivo de segurança")
 						|| c.getDescricao().contains("motivos de segurança")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 274L, 20L, true, false);
 					fila_errada++;
 				} else {
-					analisarUtilsServices.atualizarChamado(c, "FECHAR", 15L, 6L, 24L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "FECHAR", 16L, 6L, 24L, true, false);
 					fila_errada++;
 				}
 			}
@@ -362,7 +368,7 @@ public class AnalisarService {
 			for (Chamado c : list) {
 				if (c.getDescricao().contains("motivo de segurança")
 						|| c.getDescricao().contains("motivos de segurança")) {
-					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 15L, 274L, 20L, true, false);
+					analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 274L, 20L, true, false);
 					fila_errada++;
 				} 
 			}
@@ -457,6 +463,60 @@ public class AnalisarService {
 		resp.setTotal_sincronizado(countSinc);
 		return resp;
 	}
+	
+	private ResponseAnalisarDto buscaOpenBanking(ResponseAnalisarDto resp) {
+		log.info("Buscando lista de chamados para devolver devido a fila errada");
+
+		List<Chamado> list = chamadoService.findByStatusintergrallAndSubmotivo_EquipeAndSubmotivo_NomeAndCpfIsNotNull(
+				"Pendente", "BACKOFFICE DÍGITAL", "ERRO COMPARTILHAMENTO DE DADOS OPEN BANKING");
+
+		if (list.size() > 0) {
+			for (Chamado c : list) {
+				analisarUtilsServices.atualizarChamado(c, "DEVOLVER", 16L, 6L, 27L, true, false);
+			}
+			resp.setTotal_devolver_fila_errada_bmg_empresa(
+					resp.getTotal_devolver_fila_errada() + list.size());
+		}
+		return resp;
+	}
+
+	public ResponseImportDto redis(List<CpfCnpjDto> list) {
+
+		log.info("Inicio limpeza redis");
+
+		List<ErrosImportDto> listErros = new ArrayList<ErrosImportDto>();
+		int total_importado = 0;
+
+		ResponseImportDto iDto = new ResponseImportDto();
+		iDto.setStatus(true);
+		iDto.setTotal_enviados(list.size());
+
+		if (!(list.size() > 0)) {
+			iDto.setStatus(false);
+			iDto.setMsg("Nenhum item encontrado para importação");
+			return iDto;
+		}
+
+		for (CpfCnpjDto pd : list) {
+			String cpf_ou_cnpj = CpfUtils.valid(pd.getCpf_ou_cnpj());
+			if (cpf_ou_cnpj != null) {
+				analisarUtilsServices.deleteRedis(cpf_ou_cnpj);				
+				total_importado++;
+			} else {
+				cpf_ou_cnpj = CnpjUtils.valid(pd.getCpf_ou_cnpj());
+				if (cpf_ou_cnpj != null) {
+					analisarUtilsServices.deleteRedis(cpf_ou_cnpj);	
+					total_importado++;
+				}
+			}				
+		}
+		
+		iDto.setErros(listErros);
+		iDto.setTotal_importados(total_importado);
+
+		log.info("Fim da limpeza redis");
+		return iDto;
+	}
 
 //	private ResponseAnalisarDto validarSenhaEletronica() {
 //		ResponseAnalisarDto resp = new ResponseAnalisarDto();
@@ -471,16 +531,16 @@ public class AnalisarService {
 //			for (Chamado c : list) {
 //				if (c.getStatussenha().equals("Ativo")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 16L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 15L, 60L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 16L, 60L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Bloqueado")) {
 //					if (validarTexto(c.getDescricao(), "alterar", "alteração")) {
-//						atualizarChamado(c, "DEVOLVER", 15L, 20L, 8L);
+//						atualizarChamado(c, "DEVOLVER", 16L, 20L, 8L);
 //					} else {
-//						atualizarChamado(c, "DEVOLVER", 15L, 16L, 7L);
+//						atualizarChamado(c, "DEVOLVER", 16L, 16L, 7L);
 //					}
 //					devolver++;
 //				} else if (c.getStatussenha().equals("Inativo")) {

@@ -55,6 +55,11 @@ public class ImportarService {
 
 	@Autowired
 	private SquadService squadService;
+	
+	@Autowired
+	private AnalisarService analisarService;
+	
+	@Autowired
 
 	private static final Logger logger = LoggerFactory.getLogger(ImportarService.class);
 	private static final String STR_PLANILHA_PJ = "PJ - Intergrall.xlsx";
@@ -63,6 +68,9 @@ public class ImportarService {
 	private static final String STR_PLANILHA_PF_PREFERENCIAL = "Priorizados PF - Intergrall.xlsx";
 	private static final String STR_BACKOFFICE_DIGITAL = "BACKOFFICE DÍGITAL";
 	private static final String STR_BMG_EMPRESA = "BMG EMPRESAS"; 
+	private static final String STR_PATH_IMPORTAR_PLANILHAS = "C:\\\\workspace\\\\importar\\\\planilhas\\";
+	private static final String STR_PATH_IMPORTAR_INTERGRALL = "C:\\workspace\\importar\\intergrall\\";
+	private static final String STR_PATH_GERAR = "C:\\workspace\\gerar\\";
 
 	public ResponseImportDto importarBacklog(List<ImportarBacklogDto> list)
 			throws ParseException, KeyManagementException, NoSuchAlgorithmException {
@@ -205,7 +213,7 @@ public class ImportarService {
 	public ResponseImportDto importPlanilhas(String sheet) throws ParseException, FileNotFoundException, IOException, KeyManagementException, NoSuchAlgorithmException {
 		ResponseImportDto responseImportDto = new ResponseImportDto();
 		
-		File fPlanilhas = new File(getClass().getResource("/import/planilhas").getPath());
+		File fPlanilhas = new File(STR_PATH_IMPORTAR_PLANILHAS);
 		File[] aPLanilhas = fPlanilhas.listFiles(); 
 		
 		for(File p : aPLanilhas) {
@@ -213,18 +221,24 @@ public class ImportarService {
 			if(STR_PLANILHA_PJ.equals(p.getName())) {
 				logger.info("Iniciar Importação:{}", p.getName());
 				int t = importarPlanilhaPj(new FileInputStream(p), sheet);
-				responseImportDto.setTotal_Pj(t);				
+				responseImportDto.setTotal_Pj(t);		
+				PlanilhaExcelImport.removeRow(p, STR_PATH_GERAR+STR_PLANILHA_PJ, sheet);
 			} else { 
 				logger.info("Iniciar Importação:{}", p.getName());
 				int t = importarPlanilhaPf(new FileInputStream(p), sheet);
 				if(STR_PLANILHA_PF.equals(p.getName())) {
 					responseImportDto.setTotal_Pf(t);
+					PlanilhaExcelImport.removeRow(p, STR_PATH_GERAR+STR_PLANILHA_PF, sheet);
 				} else if(STR_PLANILHA_PF_PIX.equals(p.getName())) {
 					responseImportDto.setTotal_Pf_Pix(t);
+					PlanilhaExcelImport.removeRow(p, STR_PATH_GERAR+STR_PLANILHA_PF_PIX, sheet);
 				} else if(STR_PLANILHA_PF_PREFERENCIAL.equals(p.getName())) {
 					responseImportDto.setTotal_Pf_Preferencial(t);
+					PlanilhaExcelImport.removeRow(p, STR_PATH_GERAR+STR_PLANILHA_PF_PREFERENCIAL, sheet);
 				}
+				
 			} 
+			
 			p.delete();
 			
 			logger.info("Fim Importação");
@@ -233,7 +247,7 @@ public class ImportarService {
 			logger.info("--------------");
 		}
 		
-		File fIntergrall = new File(getClass().getResource("/import/intergrall").getPath());
+		File fIntergrall = new File(STR_PATH_IMPORTAR_INTERGRALL);
 		File[] aIntergrall = fIntergrall.listFiles(); 
 		
 		for(File p : aIntergrall) {
@@ -250,6 +264,9 @@ public class ImportarService {
 			logger.info("--------------");
 			logger.info("--------------");
 		}
+		
+		analisarService.ajustarStatus();
+		responseImportDto.setAnalisados(analisarService.analisar());
 
 		return responseImportDto;
 	}

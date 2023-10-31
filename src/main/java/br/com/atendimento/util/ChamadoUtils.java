@@ -11,8 +11,8 @@ public class ChamadoUtils {
 	
 	public static boolean prioritario(String canalatendimento) {
 		log.info("Validando se o canal {} é prioritario", canalatendimento);
-		if (canalatendimento.equals("RECLAME AQUI") || canalatendimento.equals("CONSUMIDOR.GOV")
-				|| canalatendimento.equals("BACEN") || canalatendimento.equals("OUVIDORIA CLIENTE")
+		if (canalatendimento.equals("CAPTAÇÃO") || canalatendimento.equals("RECLAME AQUI") || canalatendimento.equals("CONSUMIDOR.GOV")
+				|| canalatendimento.equals("BACEN") || canalatendimento.equals("OUVIDORIA CLIENTE") || canalatendimento.equals("ALTO ATRITO OUVIDORIA")
 				|| canalatendimento.equals("PROCON") || canalatendimento.equals("PROCON FONE")) {
 			return true;
 		}
