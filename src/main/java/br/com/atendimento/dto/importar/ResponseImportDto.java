@@ -2,6 +2,7 @@ package br.com.atendimento.dto.importar;
 
 import java.util.List;
 
+import br.com.atendimento.dto.analisar.ResponseAnalisarDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,5 @@ public class ResponseImportDto {
 	private int total_BackOffice_Digital;	
 	private String msg;
 	private List<ErrosImportDto> erros;
+	private ResponseAnalisarDto analisados;
 }

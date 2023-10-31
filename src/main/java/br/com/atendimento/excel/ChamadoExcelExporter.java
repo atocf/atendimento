@@ -1,6 +1,10 @@
 package br.com.atendimento.excel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -281,6 +285,7 @@ public class ChamadoExcelExporter {
 				}
 				if (e.getCard() != null && !e.getCard().isEmpty()) {
 					XSSFHyperlink linkJira = helper.createHyperlink(HyperlinkType.URL);
+					log.info("Gerando link ocorrencia card: {}", e.getOcorrencia());
 					linkJira.setAddress(abrirLinkJira + e.getCard().trim());
 					createCell(row, columnCount++, e.getCard(), linkStyle, linkJira);
 				} else {
@@ -396,5 +401,25 @@ public class ChamadoExcelExporter {
 		style.setAlignment(HorizontalAlignment.CENTER);
 
 		return style;
+	}
+
+	public void exportNew(File p, String tipo, String oldSheet, String newSheet, String filePath) throws IOException, ParseException {
+		
+		InputStream is = new FileInputStream(p);
+		workbook = new XSSFWorkbook(is);
+		
+		sheet = workbook.getSheet(oldSheet);
+		
+		writeDataLines(tipo);
+		
+		workbook.setSheetName(0, newSheet);
+		
+		is.close();
+
+		FileOutputStream outFile = new FileOutputStream(new File(filePath));
+		workbook.write(outFile);
+		outFile.close();
+		
+		workbook.close();		
 	}
 }

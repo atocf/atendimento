@@ -22,7 +22,7 @@ public class Swagger2Config extends WebMvcConfigurationSupport {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("br.com.atendimento.controller"))
+				.apis(RequestHandlerSelectors.basePackage("br.com.atendimento.gerador"))
 				.paths(PathSelectors.regex("/.*"))
 				.build()
 				.apiInfo(apiEndPointsInfo());
